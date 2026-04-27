@@ -1,0 +1,87 @@
+@use '../abstracts' as *;
+
+.site-footer{
+    padding-block-start: rem(32.3px);
+    background-color: $color-bg;
+    color: white;
+    a{
+        color: $color-link;
+    }
+
+    .footer_branding{
+        column-gap: 10vw;
+        row-gap: 8vw;
+        .footerLogoIcon{
+            max-width: 200px;
+        }
+        .footerLogoText{
+            max-width: 280px;
+        }
+    }
+    .footerNav{
+        @include fluid(padding-block-start, 200px, 400px);
+        @include fluid(padding-block-end, 100px, 150px);
+        
+    }
+    .footerNav, .footerLegalMenu{
+        .nav-list{
+            align-items: start;
+            width: 100%;
+            flex-wrap: wrap;
+            flex-direction: column;
+            .sub-menu{
+                list-style: none;
+                display: flex;
+                gap: 8px;
+                flex-direction: column;
+                margin-block-start: 8px;
+                padding-inline-start: 8px;
+                opacity: .6;
+            }
+        }
+    }
+    .footerSeparator{
+        width: 100%;
+        height: 1px;
+        border-top: 1px solid transparent;
+        border-image: repeating-linear-gradient(to right, #6F453C 0 5px, transparent 5px 10px) 1;
+    }
+    .footerBottom{
+        @include fluid(padding-block-start, 42px, 51.56px);
+        .siteCredits{
+            a{
+                background-color: $color-primary;
+                @include fluid(width, 50px, 60px );
+                @include fluid(height, 61px, 73px );
+                margin-left: clamp(15px, 1vw, 1vw);
+                display: grid;
+                align-items: center;
+                justify-content: center;
+                svg{
+                    width: 50%;
+                    margin: auto;
+                }
+            }
+        }
+    }
+    .bottom-pd{
+        @include fluid(padding-block-end, 18px, 24px);
+    }
+   @media(min-width: 480px) { 
+        .footerNav, .footerLegalMenu{
+            .nav-list{
+                align-items: start;
+                flex-direction: row;
+                width: max-content;
+                margin-left: auto;
+                .sub-menu{
+                    gap: 0px;
+                    flex-direction: column;
+                    margin-block-start: 0;
+                    padding-inline-start: 0;
+                    opacity: .6;
+                }
+            }
+        }
+     }
+}

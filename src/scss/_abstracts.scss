@@ -1,0 +1,106 @@
+@use "sass:map";
+@use "sass:math";
+
+// ─── Tokens ───────────────────────────────────────────────────────────────────
+
+$base-font-size: 16;
+
+$color-gray: #2B2B2B;
+$color-primary: #3C150C;
+$color-bg:   #5A2216;
+$color-text: #000000;
+$color-accent: #FF3B00;
+$color-link: #FFFFFF;
+
+$container-mobile: calc(100% - 30px);
+$container-tablet: calc(100% - 30px);
+$container-desktop: 1400px;
+$container-wide: 1960px;
+
+$font-primary: 'Urbanist', sans-serif;
+
+$ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+
+// ─── Functions ────────────────────────────────────────────────────────────────
+
+// Strip unit (modern)
+@function strip-unit($number) {
+  @return math.div($number, ($number * 0 + 1));
+}
+
+// PX → REM converter
+@function rem($value, $base: $base-font-size) {
+  @if math.is-unitless($value) {
+    @return math.div($value, $base) * 1rem;
+  }
+
+  @if math.unit($value) == "px" {
+    @return math.div(strip-unit($value), $base) * 1rem;
+  }
+
+  @error "rem() only accepts px or unitless values. Got: #{$value}";
+}
+
+$border-radius: rem(20px);
+
+// ─── Breakpoints ──────────────────────────────────────────────────────────────
+
+$breakpoints: (
+  'sm':  400px,
+  'md':  768px,
+  'lg':  1024px,
+  'xl':  1440px,
+);
+
+@mixin bp($key) {
+  $value: map.get($breakpoints, $key);
+
+  @if $value == null {
+    @error "Breakpoint `#{$key}` not found.";
+  }
+
+  @media (min-width: $value) {
+    @content;
+  }
+}
+
+// ─── Fluid type ───────────────────────────────────────────────────────────────
+
+// Font-size specific
+@mixin fluid-type($min-size, $max-size, $min-width: 375px, $max-width: 1440px) {
+  font-size: clamp(
+    rem($min-size),
+    calc(
+      #{rem($min-size)} +
+      #{strip-unit($max-size - $min-size)} *
+      ((100vw - #{$min-width}) / #{strip-unit($max-width - $min-width)})
+    ),
+    rem($max-size)
+  );
+}
+
+// Generic fluid property
+@mixin fluid($property, $min-size, $max-size, $min-width: 375px, $max-width: 1440px) {
+  #{$property}: clamp(
+    rem($min-size),
+    calc(
+      #{rem($min-size)} +
+      #{strip-unit($max-size - $min-size)} *
+      ((100vw - #{$min-width}) / #{strip-unit($max-width - $min-width)})
+    ),
+    rem($max-size)
+  );
+}
+
+// ─── Optional Helpers ─────────────────────────────────────────────────────────
+
+// Apply rem to multiple values (fixed append deprecation-safe)
+@mixin rem-prop($property, $values...) {
+  $result: ();
+
+  @each $val in $values {
+    $result: append($result, rem($val));
+  }
+
+  #{$property}: $result;
+}

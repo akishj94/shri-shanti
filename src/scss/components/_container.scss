@@ -1,0 +1,10 @@
+@use '../abstracts' as *;
+.container {
+  max-width: $container-mobile;
+  margin: auto;
+  width: 100%;
+
+  @include bp('md') { max-width: $container-tablet; }
+  @include bp('lg') { max-width: $container-desktop; padding-inline: 60px; }
+  @include bp('xl') { max-width: $container-wide;    padding-inline: 80px; }
+}

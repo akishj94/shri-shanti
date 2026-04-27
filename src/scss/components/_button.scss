@@ -1,0 +1,29 @@
+@use '../abstracts' as *;
+
+@mixin cta(
+  $bg: white,
+  $color: $color-text,
+  $radius: 12px,
+  $py-min: 12px,
+  $py-max: 10px,
+  $px-min: 24px,
+  $px-max: 18px
+) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  text-transform: uppercase;
+  text-decoration: none;
+
+  background-color: $bg;
+  color: $color;
+
+  border-radius: rem($radius);
+
+  @include fluid(padding-block, $py-min, $py-max);
+  @include fluid(padding-inline, $px-min, $px-max);
+}
+.site_cta {
+  @include cta;
+}

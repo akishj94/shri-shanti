@@ -1,0 +1,26 @@
+
+// Layout
+.flex        { display: flex; flex-wrap: wrap; }
+.grid        { display: grid; }
+.relative    { position: relative; }
+.absolute    { position: absolute; }
+// Alignment
+.text-center     { text-align: center; }
+.text-right     { text-align: right; }
+.align-center    { align-items: center; }
+.align-end    { align-items: end; }
+.space-between   { justify-content: space-between; }
+.justify-center  { justify-content: center; }
+
+// Background
+.bg-cover    { background-size: cover; }
+.bg-center   { background-position: center; }
+.bg-contain  { background-size: contain; }
+.no-repeat   { background-repeat: no-repeat; }
+.bg-transparent{background-color: transparent; section, div{background-color: transparent;}}
+
+// Misc
+.m0          { margin: 0; }
+.m-auto          { margin: auto; }
+.itl         { font-style: italic; }
+.unstyledList { list-style-type: none; margin: 0; padding: 0; }
