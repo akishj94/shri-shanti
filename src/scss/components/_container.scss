@@ -8,3 +8,23 @@
   @include bp('lg') { max-width: $container-desktop; padding-inline: 60px; }
   @include bp('xl') { max-width: $container-wide;    padding-inline: 80px; }
 }
+
+main{
+  &>.wp-block-group {
+    > .wp-block-group__inner-container  {
+        max-width: $container-mobile;
+        margin-inline: auto;
+        width: 100%;
+
+        @include bp('md') { max-width: $container-tablet; }
+        @include bp('lg') { 
+          max-width: $container-desktop; 
+          padding-inline: 60px; 
+        }
+        @include bp('xl') { 
+          max-width: $container-wide;    
+          padding-inline: 80px; 
+        }
+      }
+  }
+}

@@ -9,9 +9,11 @@
 
 ?>
 
-<div id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
+<!-- #post-<?php the_ID(); ?>" <?php post_class(); ?> -->
 
-	<?php get_the_post_thumbnail(); ?>
+	
+
+<?php get_the_post_thumbnail(); ?>
 
 	<?php
 		the_content();
@@ -40,4 +42,3 @@
 			?>
 		</footer><!-- .entry-footer -->
 	<?php endif; ?>
-	</div><!-- #post-<?php the_ID(); ?> -->

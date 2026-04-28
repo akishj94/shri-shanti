@@ -1,7 +1,7 @@
 <?php
 
 defined( 'ABSPATH' ) || exit;
-
+require_once get_template_directory() . '/inc/disable-comments.php';
 // ─── Constants ────────────────────────────────────────────────────────────────
 
 define( 'THEME_DIR', get_template_directory() );
@@ -52,7 +52,7 @@ function theme_enqueue_dev(): void {
     add_filter( 'script_loader_tag', 'theme_add_module_type', 10, 2 );
     wp_enqueue_style(
         'google-fonts',
-        'https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap',
+        'https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:ital,wght@0,400..900;1,400..900&family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap',
         array(),
         null
     );
@@ -91,7 +91,7 @@ function theme_enqueue_prod(): void {
 
     wp_enqueue_style(
         'google-fonts',
-        'https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap',
+        'https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:ital,wght@0,400..900;1,400..900&family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap',
         array(),
         null
     );
@@ -194,3 +194,24 @@ add_filter( 'should_load_separate_core_block_assets', '__return_false' );
 
 remove_action( 'wp_head', 'print_emoji_detection_script', 7 );
 remove_action( 'wp_print_styles', 'print_emoji_styles' );
+
+add_filter('upload_mimes', function($mimes) {
+  if (!current_user_can('manage_options')) {
+    return $mimes;
+  }
+  $mimes['svg'] = 'image/svg+xml';
+  return $mimes;
+});
+add_action('admin_head', function() {
+  echo '<style>
+    .attachment-266x266, .thumbnail img {
+      width: 100% !important;
+      height: auto !important;
+    }
+  </style>';
+});
+
+add_filter('render_block', function ($content, $block) {
+    error_log('BLOCK: ' . $block['blockName']);
+    return $content;
+}, 10, 2);

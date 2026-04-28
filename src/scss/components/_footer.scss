@@ -21,7 +21,6 @@
     .footerNav{
         @include fluid(padding-block-start, 200px, 400px);
         @include fluid(padding-block-end, 100px, 150px);
-        
     }
     .footerNav, .footerLegalMenu{
         .nav-list{
@@ -29,6 +28,8 @@
             width: 100%;
             flex-wrap: wrap;
             flex-direction: column;
+            text-transform: uppercase;
+
             .sub-menu{
                 list-style: none;
                 display: flex;

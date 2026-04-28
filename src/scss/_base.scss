@@ -17,6 +17,7 @@ body {
   font-family: $font-primary;
   line-height: 1.2;
   overflow-x: hidden;
+  @include fluid-type(16.5px, 18px, 600px, 1440px);
 }
 
 img, video {
@@ -44,6 +45,9 @@ html.lenis {
 }
 sup{
   font-size: max(10px, 40%);
+}
+h1,h2,h3,h4,h5,h6{
+  font-weight: normal;
 }
 h2{
   @include fluid-type(32px, 40px);

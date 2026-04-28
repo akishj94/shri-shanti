@@ -8,8 +8,10 @@ $nav-transition:   0.22s cubic-bezier(0.4, 0, 0.2, 1);
 // ── Base ──────────────────────────────────────────────────────────────────────
 .site-header{
     @include fluid(padding-block-start, 14px, 18px);
-    background: gray;
-    position: sticky;
+    // background: gray;
+    position: fixed;
+    width: 100%;
+    left: 0px;
     top: 0;
     z-index: 9;
     font-weight: 600;
@@ -30,15 +32,15 @@ $nav-transition:   0.22s cubic-bezier(0.4, 0, 0.2, 1);
 .nav-inner {
     @include fluid(padding-block, 16px, 12px);
     @include fluid(padding-inline-start, 16px, 24px);
-    padding-inline-end: rem(4px);
-    @include fluid-type(13px, 10px);    
+    padding-inline-end: rem(4px); 
     display: flex;
     align-items: center;
     @include fluid(gap, 16px, 22px);
     border-radius: $border-radius;
     position: relative;
     @media(min-width: 768px){
-        background-color: $color-gray;
+        backdrop-filter: blur(45px);
+        background-color: rgba($color-gray, 0.45);
     }
 }
 
@@ -50,6 +52,7 @@ $nav-transition:   0.22s cubic-bezier(0.4, 0, 0.2, 1);
     display: flex;
     align-items: center;
     @include fluid(gap, 16px, 22px);
+    font-size: rem(13px);
     flex: 1;
 
     // ── Items ─────────────────────────────────────────────────────────────────────

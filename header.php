@@ -11,7 +11,7 @@
 <?php wp_body_open(); ?>
 
 <header class="site-header" data-animate>
-  <div class="menuBg"></div>
+  <!-- <div class="menuBg"></div> -->
   <div class="container">
     <div class="flex space-between align-center">
       <!-- Site Logo -->
