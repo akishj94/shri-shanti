@@ -1,18 +1,31 @@
 {
-  "name": "wp-theme",
+  "name": "shri-shanti",
   "version": "1.0.0",
-  "private": true,
+  "description": "Minimal WordPress theme with Vite, GSAP, Lenis, and SCSS.",
+  "main": "index.js",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
+    "js": "esbuild src/js/index.js --bundle --outfile=assets/js/main.js",
+    "css": "sass src/scss/main.scss assets/css/main.css",
+    "watch": "start cmd /k npm run js -- --watch ^& npm run css -- --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/akishj94/shri-shanti.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/akishj94/shri-shanti/issues"
+  },
+  "homepage": "https://github.com/akishj94/shri-shanti#readme",
+  "devDependencies": {
+    "esbuild": "^0.28.0",
+    "sass": "^1.99.0"
   },
   "dependencies": {
-    "gsap": "^3.12.5",
-    "lenis": "^1.1.9"
-  },
-  "devDependencies": {
-    "sass": "^1.77.0",
-    "vite": "^5.2.0"
+    "gsap": "^3.15.0",
+    "lenis": "^1.3.23"
   }
 }
