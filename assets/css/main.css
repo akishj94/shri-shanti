@@ -11,7 +11,7 @@ html {
 
 body {
   color: #000000;
-  font-family: "Schibsted Grotesk", sans-serif;
+  font-family: "Inter", sans-serif;
   line-height: 1.2;
   overflow-x: hidden;
   font-size: clamp(1.03125rem, 1.03125rem + 1.5 * (100vw - 600px) / 840, 1.125rem);
@@ -45,6 +45,7 @@ sup {
 
 h1, h2, h3, h4, h5, h6 {
   font-weight: normal;
+  margin-block-end: 1.25rem;
 }
 
 h2 {
@@ -55,7 +56,7 @@ h3 {
   font-size: clamp(1.375rem, 1.375rem + 6 * (100vw - 375px) / 1065, 1.75rem);
 }
 
-.flex {
+.flex, .home .demanding_applications .unstyledList, .home .demanding_applications .unstyledList li {
   display: flex;
   flex-wrap: wrap;
 }
@@ -80,7 +81,7 @@ h3 {
   text-align: right;
 }
 
-.align-center {
+.align-center, .home .demanding_applications .unstyledList li {
   align-items: center;
 }
 
@@ -591,6 +592,7 @@ main > .wp-block-group > .wp-block-group__inner-container {
 }
 .home .home_landing h1, .home .home_landing h2 {
   margin-block-start: clamp(7.5rem, 7.5rem + 111 * (100vw - 375px) / 1065, 14.4375rem);
+  margin-block-end: 0px;
 }
 .home .featureGrid_home {
   background-color: #F8F8F8;
@@ -692,23 +694,82 @@ main > .wp-block-group > .wp-block-group__inner-container {
   }
 }
 .home .demanding_applications {
-  background-image: url(./images/bg_boxed.jpg);
+  background-image: url("../../assets/images/bg_boxed.jpg");
   background-size: cover;
-  background-position: bottom;
+  background-position: center top;
   position: relative;
+  color: white;
+  padding-block: 1.875rem;
+}
+.home .demanding_applications:after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  left: 0%;
+  background: linear-gradient(0deg, rgba(113, 43, 26, 0) 0%, #5A2216 100%);
+  transform: rotate(180deg);
+  height: 52.37%;
+  z-index: 0;
+  bottom: 0px;
+}
+.home .demanding_applications .wp-block-heading span {
+  color: #9F4631;
 }
 .home .demanding_applications .wp-block-columns {
   display: grid;
   position: relative;
+  z-index: 1;
+}
+.home .demanding_applications .unstyledList {
+  margin-block-start: clamp(7.5rem, 7.5rem + 82 * (100vw - 375px) / 1065, 12.625rem);
+  font-size: clamp(1.125rem, 1.125rem + 6 * (100vw - 360px) / 1080, 1.5rem);
+  gap: 20px;
+  flex-direction: column;
+}
+.home .demanding_applications .unstyledList li {
+  gap: clamp(1.25rem, 1.25rem + 8 * (100vw - 375px) / 1065, 1.75rem);
+}
+.home .demanding_applications .unstyledList li:before {
+  content: "";
+  background-image: url("../../assets/images/icons_sprites.svg");
+  width: clamp(2.5rem, 2.5rem + 8 * (100vw - 375px) / 1065, 3rem);
+  height: clamp(2.5rem, 2.5rem + 8 * (100vw - 375px) / 1065, 3rem);
+  background-size: 100%;
+  background-position: 0 0;
+}
+.home .demanding_applications .unstyledList li:nth-child(2):before {
+  background-position: 0px -100%;
+}
+.home .demanding_applications .unstyledList li:nth-child(3):before {
+  background-position: 0px -200%;
+}
+.home .demanding_applications .media_col {
+  width: 100%;
+}
+.home .demanding_applications .media_col figure {
+  margin-block-start: 12px;
+}
+.home .demanding_applications .media_col figure img {
+  margin: auto;
+  border-radius: 16px;
 }
 @media (min-width: 768px) {
+  .home .demanding_applications {
+    padding-block: 0px;
+  }
+  .home .demanding_applications.wp-block-group > .wp-block-group__inner-container {
+    padding-inline-end: 11px;
+  }
   .home .demanding_applications .wp-block-columns {
     column-gap: clamp(3.125rem, 3.125rem + 38 * (100vw - 375px) / 1065, 5.5rem);
-    grid-template-columns: 40% 65%;
+    grid-template-columns: 2fr 3fr;
   }
   .home .demanding_applications .wp-block-columns .wp-block-column:first-child {
     padding-block-start: 30px;
     padding-block-end: clamp(4.6875rem, 4.6875rem + 18 * (100vw - 375px) / 1065, 5.8125rem);
+  }
+  .home .demanding_applications .unstyledList {
+    margin-inline-start: clamp(0.9375rem, 0.9375rem + 143 * (100vw - 375px) / 1065, 9.875rem);
   }
 }
 

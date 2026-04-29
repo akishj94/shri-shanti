@@ -1,4 +1,5 @@
 @use 'abstracts' as *;
+@use 'global' as *;
 
 .home{
     .home_landing{
@@ -29,6 +30,7 @@
         padding-block-end: rem(27px);
         h1, h2{
             @include fluid(margin-block-start, 120px, 231px);
+            margin-block-end: 0px;
         }
     }
     .featureGrid_home{
@@ -142,25 +144,93 @@
         }
     }
     .demanding_applications{
-        background-image: url(./images/bg_boxed.jpg);
+        background-image: url('../../assets/images/bg_boxed.jpg');
         background-size: cover;
-        background-position: bottom;
+        background-position: center top;
         position: relative;
-        
+        color: white;
+        padding-block: rem(30px);
+        &:after{
+            content:'';
+            position: absolute;
+            width: 100%;
+            left: 0%;
+            background: linear-gradient(0deg, rgba(113, 43, 26, 0) 0%, #5A2216 100%);
+            transform: rotate(180deg);
+            height: 52.37%;
+            z-index: 0;
+            bottom: 0px;
+        }
+        .wp-block-heading{
+            span{
+                color: #9F4631;
+            }
+        }
         .wp-block-columns{
             display: grid;
             position: relative;
+            z-index: 1;
         }
+        .unstyledList{
+            @include fluid(margin-block-start, 120px, 202px);
+            @include fluid-type(18px, 24px, 360px, 1440px);
+             @extend .flex;
+             gap: 20px;
+             flex-direction: column;
+            li{
+                @extend .flex;
+                @extend .align-center;
+                @include fluid(gap, 20px, 28px);
+                &:before{
+                    content: '';
+                    background-image: url('../../assets/images/icons_sprites.svg');
+                    @include fluid(width, 40px, 48px);
+                    @include fluid(height, 40px, 48px);
+                    background-size: 100%;
+                    background-position: 0 0;
+                }
+                &:nth-child(2){
+                   &:before{
+                     background-position: 0px calc(100% * -1);
+                   }
+                }
+                &:nth-child(3){
+                   &:before{
+                     background-position: 0px calc(100% * -2);
+                   }
+                }
+            }
+        }
+        .media_col{
+            width: 100%;
+            figure{
+                margin-block-start: 12px;
+                img{
+                    margin: auto;
+                    border-radius: 16px;
+                }
+            }
+        }
+       
         @include bp('md'){
+            padding-block: 0px;
+             &.wp-block-group {
+                &>.wp-block-group__inner-container{
+                    padding-inline-end: 11px;
+                }
+            }
             .wp-block-columns{
                 @include fluid(column-gap, 50px, 88px);
-                grid-template-columns: 40% 65%;
+                grid-template-columns: 2fr 3fr;
                 .wp-block-column{
                     &:first-child{
                        padding-block-start: 30px;
                        @include fluid(padding-block-end, 75px, 93px);
                     }
                 }
+            }
+            .unstyledList{
+                @include fluid(margin-inline-start, 15px, 158px);
             }
         }
     }

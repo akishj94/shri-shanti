@@ -48,6 +48,7 @@ sup{
 }
 h1,h2,h3,h4,h5,h6{
   font-weight: normal;
+  margin-block-end: rem(20px);
 }
 h2{
   @include fluid-type(32px, 40px);
