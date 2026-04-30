@@ -43,20 +43,28 @@ sup {
   font-size: max(10px, 40%);
 }
 
+p {
+  margin-block-end: 1.25rem;
+}
+
 h1, h2, h3, h4, h5, h6 {
   font-weight: normal;
   margin-block-end: 1.25rem;
 }
 
 h2 {
-  font-size: clamp(2rem, 2rem + 8 * (100vw - 375px) / 1065, 2.5rem);
+  font-size: clamp(1.875rem, 1.875rem + 10 * (100vw - 768px) / 600, 2.5rem);
 }
 
-h3 {
-  font-size: clamp(1.375rem, 1.375rem + 6 * (100vw - 375px) / 1065, 1.75rem);
+h4 {
+  font-size: clamp(1.375rem, 1.375rem + 6 * (100vw - 768px) / 600, 1.75rem);
 }
 
-.flex, .home .demanding_applications .unstyledList, .home .demanding_applications .unstyledList li {
+h5 {
+  font-size: clamp(1.125rem, 1.125rem + 7 * (100vw - 768px) / 600, 1.5625rem);
+}
+
+.flex, .home .demanding_applications .unstyledList {
   display: flex;
   flex-wrap: wrap;
 }
@@ -81,7 +89,7 @@ h3 {
   text-align: right;
 }
 
-.align-center, .home .demanding_applications .unstyledList li {
+.align-center {
   align-items: center;
 }
 
@@ -542,6 +550,9 @@ main > .wp-block-group > .wp-block-group__inner-container {
   width: 50%;
   margin: auto;
 }
+.site-footer .footerBottom h4 {
+  margin: 0px;
+}
 .site-footer .bottom-pd {
   padding-block-end: clamp(1.125rem, 1.125rem + 6 * (100vw - 375px) / 1065, 1.5rem);
 }
@@ -627,6 +638,9 @@ main > .wp-block-group > .wp-block-group__inner-container {
   padding-block-end: clamp(2.25rem, 2.25rem + 19 * (100vw - 375px) / 1065, 3.4375rem);
   width: clamp(3rem, 3rem + 7 * (100vw - 375px) / 1065, 3.4375rem);
 }
+.home .featureGridWrapper > .wp-block-group__inner-container > div .wp-block-group__inner-container p {
+  margin: 0px;
+}
 @media (min-width: 768px) {
   .home .featureGridWrapper > .wp-block-group__inner-container {
     display: grid;
@@ -634,7 +648,6 @@ main > .wp-block-group > .wp-block-group__inner-container {
   }
   .home .featureGridWrapper > .wp-block-group__inner-container > div .wp-block-group__inner-container {
     width: auto;
-    height: 100%;
   }
 }
 .home .learn_solutions {
@@ -719,15 +732,20 @@ main > .wp-block-group > .wp-block-group__inner-container {
   display: grid;
   position: relative;
   z-index: 1;
+  row-gap: 40px;
+  align-items: start;
 }
 .home .demanding_applications .unstyledList {
-  margin-block-start: clamp(7.5rem, 7.5rem + 82 * (100vw - 375px) / 1065, 12.625rem);
-  font-size: clamp(1.125rem, 1.125rem + 6 * (100vw - 360px) / 1080, 1.5rem);
+  margin-block-start: clamp(7.5rem, 7.5rem + 82 * (100vw - 768px) / 600, 12.625rem);
+  font-size: clamp(1.125rem, 1.125rem + 6 * (100vw - 768px) / 600, 1.5rem);
   gap: 20px;
   flex-direction: column;
 }
 .home .demanding_applications .unstyledList li {
-  gap: clamp(1.25rem, 1.25rem + 8 * (100vw - 375px) / 1065, 1.75rem);
+  display: grid;
+  align-items: center;
+  gap: clamp(0.75rem, 0.75rem + 16 * (100vw - 768px) / 432, 1.75rem);
+  grid-template-columns: 48px 1fr;
 }
 .home .demanding_applications .unstyledList li:before {
   content: "";
@@ -752,6 +770,7 @@ main > .wp-block-group > .wp-block-group__inner-container {
 .home .demanding_applications .media_col figure img {
   margin: auto;
   border-radius: 16px;
+  height: auto;
 }
 @media (min-width: 768px) {
   .home .demanding_applications {
@@ -761,15 +780,98 @@ main > .wp-block-group > .wp-block-group__inner-container {
     padding-inline-end: 11px;
   }
   .home .demanding_applications .wp-block-columns {
-    column-gap: clamp(3.125rem, 3.125rem + 38 * (100vw - 375px) / 1065, 5.5rem);
-    grid-template-columns: 2fr 3fr;
+    column-gap: clamp(1.875rem, 1.875rem + 58 * (100vw - 768px) / 672, 5.5rem);
+    grid-template-columns: 2.5fr 3fr;
   }
   .home .demanding_applications .wp-block-columns .wp-block-column:first-child {
     padding-block-start: 30px;
     padding-block-end: clamp(4.6875rem, 4.6875rem + 18 * (100vw - 375px) / 1065, 5.8125rem);
   }
+}
+@media (min-width: 1024px) {
+  .home .demanding_applications .wp-block-columns {
+    grid-template-columns: 2fr 3fr;
+  }
+  .home .demanding_applications .wp-block-heading {
+    max-width: max(420px, 60%);
+  }
   .home .demanding_applications .unstyledList {
-    margin-inline-start: clamp(0.9375rem, 0.9375rem + 143 * (100vw - 375px) / 1065, 9.875rem);
+    margin-inline-start: clamp(0rem, 0rem + 158 * (100vw - 768px) / 672, 9.875rem);
+  }
+}
+.home .trusted_leader {
+  padding-block: 3.9375rem 1.75rem;
+}
+.home .trusted_leader .wp-block-columns {
+  display: grid;
+  gap: 2rem;
+  margin-block-start: 1.78125rem;
+}
+.home .trusted_leader .bordered_separator {
+  width: 105%;
+  height: 1px;
+  border-top: 1px solid transparent;
+  border-image: repeating-linear-gradient(to right, #B1B1B1 0 5px, transparent 5px 10px) 1;
+  position: relative;
+  left: -2.5%;
+}
+.home .trusted_leader .bordered_separator span {
+  content: "";
+  width: 100%;
+  height: 1px;
+  border-top: 1px solid transparent;
+  border-image: repeating-linear-gradient(to right, #FF3B00 0 5px, transparent 5px 10px) 1;
+  position: absolute;
+  left: 0%;
+  top: -1px;
+}
+.home .trusted_leader .title_col {
+  display: flex;
+  align-items: center;
+}
+.home .trusted_leader .accordion_col {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.home .trusted_leader .accordion_col h4, .home .trusted_leader .accordion_col h5 {
+  margin-block-end: clamp(1.375rem, 1.375rem + 14 * (100vw - 375px) / 1065, 2.25rem);
+}
+.home .trusted_leader .accordion_panel {
+  background-color: #F5F5F5;
+  border-radius: clamp(1.25rem, 1.25rem + 4 * (100vw - 375px) / 1065, 1.5rem);
+  padding-inline: clamp(1.5rem, 1.5rem + 8 * (100vw - 768px) / 672, 2rem);
+  padding-block: clamp(1.5rem, 1.5rem + 6 * (100vw - 768px) / 672, 1.875rem);
+  position: relative;
+  overflow: hidden;
+}
+.home .trusted_leader .accordion_panel:after {
+  content: "";
+  position: absolute;
+  bottom: -50%;
+  right: -5%;
+  width: clamp(200px, 13.0208333333vw, 250px);
+  aspect-ratio: 1/1;
+  background-image: url("../../assets/images/bg_gradient.png");
+  pointer-events: none;
+  z-index: 0;
+}
+.home .trusted_leader .accordion_panel img {
+  max-height: 63px;
+  margin-block-end: 4.25rem;
+}
+.home .trusted_leader .accordion_panel p:last-of-type {
+  font-size: clamp(0.8125rem, 0.8125rem + 2 * (100vw - 375px) / 1065, 0.9375rem);
+  text-transform: uppercase;
+  margin: 0px;
+}
+@media (min-width: 768px) {
+  .home .trusted_leader .title_col {
+    max-width: clamp(13.75rem, 13.75rem + 124 * (100vw - 375px) / 1065, 21.5rem);
+  }
+  .home .trusted_leader .wp-block-columns {
+    grid-template-columns: 1fr clamp(320px, 37vw, 560px);
+    gap: 2rem;
   }
 }
 

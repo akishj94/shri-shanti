@@ -25,6 +25,9 @@ function pageEnter() {
     stagger: 0.08,
     clearProps: 'all',
   });
+  document.querySelectorAll("video").forEach(video => {
+    video.removeAttribute("controls");
+  });
 }
 
 // ─── Init ─────────────────────────────────────────────────

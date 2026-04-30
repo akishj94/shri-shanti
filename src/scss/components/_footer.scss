@@ -64,6 +64,9 @@
                 }
             }
         }
+        h4{
+            margin: 0px;
+        }
     }
     .bottom-pd{
         @include fluid(padding-block-end, 18px, 24px);

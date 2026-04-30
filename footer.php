@@ -27,7 +27,7 @@
     <div class="footerBottom">
       <div class="flex align-end space-between">
           <div class="footerSiteTitle bottom-pd">
-            <h3>Where Every <br> Roll Shapes Reliability. <sup>TM</sup></h3>
+            <h4>Where Every <br> Roll Shapes Reliability. <sup>TM</sup></h4>
           </div>
           <div class="footerLegalMenu bottom-pd">
             <?php
