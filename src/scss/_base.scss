@@ -46,12 +46,19 @@ html.lenis {
 sup{
   font-size: max(10px, 40%);
 }
+strong{
+  font-weight: 600;
+}
 p{
   margin-block-end: rem(20px);
 }
 h1,h2,h3,h4,h5,h6{
   font-weight: normal;
   margin-block-end: rem(20px);
+  em{
+    font-style: normal;
+    color: $color-accent;
+  }
 }
 h2{
   @include fluid-type(30px, 40px, 768px, 1368px);

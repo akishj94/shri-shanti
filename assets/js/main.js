@@ -7599,8 +7599,64 @@
           video.removeAttribute("controls");
         });
       }
+      function stickyPanels() {
+        const section = document.querySelector(".trusted_leader");
+        if (!section) return;
+        const panels = Array.from(section.querySelectorAll(".accordion_panel"));
+        const separator = section.querySelector(".bordered_separator span");
+        if (!panels.length) return;
+        const getContent = (panel) => panel.querySelector(".wp-block-group__inner-container > .wp-block-group");
+        gsapWithCSS.set(separator, { width: "0%" });
+        panels.forEach((panel, i) => {
+          const content = getContent(panel);
+          if (!content) return;
+          gsapWithCSS.set(content, {
+            opacity: i === 0 ? 1 : 0,
+            y: i === 0 ? 0 : 14,
+            height: i === 0 ? "auto" : 0,
+            overflow: "hidden"
+          });
+        });
+        const totalScroll = window.innerHeight * 0.5 * (panels.length - 1) + window.innerHeight * 0.3;
+        const tl = gsapWithCSS.timeline({
+          scrollTrigger: {
+            trigger: section,
+            start: "top top",
+            end: `+=${totalScroll * 1.5}`,
+            pin: true,
+            pinSpacing: true,
+            scrub: 1
+          }
+        });
+        tl.to(separator, { width: "100%", ease: "none", duration: 1 }, 0);
+        const segDuration = 1 / (panels.length - 1 || 1);
+        for (let i = 0; i < panels.length - 1; i++) {
+          const segStart = i * segDuration;
+          const currentContent = getContent(panels[i]);
+          const nextContent = getContent(panels[i + 1]);
+          if (!currentContent || !nextContent) continue;
+          const nextHeight = nextContent.scrollHeight;
+          gsapWithCSS.set(nextContent, { height: 0 });
+          tl.to(currentContent, {
+            opacity: 0,
+            y: -10,
+            height: 0,
+            ease: "power2.inOut",
+            duration: segDuration
+          }, segStart);
+          tl.to(nextContent, {
+            opacity: 1,
+            y: 0,
+            height: nextHeight,
+            ease: "power2.inOut",
+            duration: segDuration
+          }, segStart);
+        }
+      }
       function init4() {
         pageEnter();
+        stickyPanels();
+        ScrollTrigger2.refresh();
       }
       document.addEventListener("DOMContentLoaded", init4);
     }
