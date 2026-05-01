@@ -809,7 +809,7 @@ main > .wp-block-group > .wp-block-group__inner-container {
 }
 .home .trusted_leader {
   padding-block-start: clamp(3.125rem, 3.125rem + 13 * (100vw - 375px) / 1065, 3.9375rem);
-  padding-block-end: 1.75rem;
+  padding-block-end: 3.5rem;
 }
 .home .trusted_leader .wp-block-columns {
   display: grid;

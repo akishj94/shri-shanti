@@ -7651,6 +7651,9 @@
             ease: "power2.inOut",
             duration: segDuration
           }, segStart);
+          tl.set(nextContent, {
+            height: "auto"
+          }, segStart + segDuration);
         }
       }
       function init4() {

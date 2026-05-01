@@ -252,7 +252,7 @@
     .trusted_leader{
         @include fluid(padding-block-start, 50px, 63px);
         // height: 100lvh;
-        padding-block-end: rem(28px);
+        padding-block-end: rem(56px);
         &>div{
             @extend .container;
         }

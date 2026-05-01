@@ -82,35 +82,38 @@ function stickyPanels() {
   const segDuration = 1 / (panels.length - 1 || 1);
 
   for (let i = 0; i < panels.length - 1; i++) {
-  const segStart       = i * segDuration;
-  const currentContent = getContent(panels[i]);
-  const nextContent    = getContent(panels[i + 1]);
+    const segStart       = i * segDuration;
+    const currentContent = getContent(panels[i]);
+    const nextContent    = getContent(panels[i + 1]);
 
-  if (!currentContent || !nextContent) continue;
+    if (!currentContent || !nextContent) continue;
 
-  // Measure next height upfront
-  const nextHeight = nextContent.scrollHeight;
+    // Measure next height upfront
+    const nextHeight = nextContent.scrollHeight;
 
-  // Ensure next starts from 0 height
-  gsap.set(nextContent, { height: 0 });
+    // Ensure next starts from 0 height
+    gsap.set(nextContent, { height: 0 });
 
-  // Run BOTH animations at the SAME TIME
-  tl.to(currentContent, {
-    opacity: 0,
-    y: -10,
-    height: 0,
-    ease: 'power2.inOut',
-    duration: segDuration
-  }, segStart);
+    // Run BOTH animations at the SAME TIME
+    tl.to(currentContent, {
+      opacity: 0,
+      y: -10,
+      height: 0,
+      ease: 'power2.inOut',
+      duration: segDuration
+    }, segStart);
 
-  tl.to(nextContent, {
-    opacity: 1,
-    y: 0,
-    height: nextHeight,
-    ease: 'power2.inOut',
-    duration: segDuration
-  }, segStart);
-}
+    tl.to(nextContent, {
+      opacity: 1,
+      y: 0,
+      height: nextHeight,
+      ease: 'power2.inOut',
+      duration: segDuration
+    }, segStart);
+    tl.set(nextContent, {
+      height: 'auto'
+    }, segStart + segDuration);
+  }
 }
 
 // ─── Init ─────────────────────────────────────────────────
