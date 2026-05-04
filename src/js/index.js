@@ -1,17 +1,18 @@
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Lenis from 'lenis';
+import { catalogScroll } from './shri-catalog';
 gsap.registerPlugin(ScrollTrigger);
 
 // ─── Smooth scroll (Lenis) ─────────────────────────────────
 
-const lenis = new Lenis({
-  duration: 1.2,
-  easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-});
+// const lenis = new Lenis({
+//   duration: 1.2,
+//   easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+// });
 
 // Sync Lenis with GSAP ticker
-gsap.ticker.add((time) => lenis.raf(time * 1000));
+// gsap.ticker.add((time) => lenis.raf(time * 1000));
 gsap.ticker.lagSmoothing(0);
 
 // ─── Page enter animation ──────────────────────────────────
@@ -121,6 +122,7 @@ function stickyPanels() {
 function init() {
   pageEnter();
   stickyPanels();
+  // catalogScroll(lenis);
   ScrollTrigger.refresh();
 }
 

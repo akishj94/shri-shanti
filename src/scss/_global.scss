@@ -1,4 +1,4 @@
-
+@use 'abstracts' as *;
 // Layout
 .flex        { display: flex; flex-wrap: wrap; }
 .grid        { display: grid; }
@@ -24,3 +24,22 @@
 .m-auto          { margin: auto; }
 .itl         { font-style: italic; }
 .unstyledList { list-style-type: none; margin: 0; padding: 0; }
+
+.bordered_separator {
+    width: 105%;
+    height: 1px;
+    border-top: 1px solid transparent;
+    border-image: repeating-linear-gradient(to right, #B1B1B1 0 5px, transparent 5px 10px) 1;
+    position: relative;
+    left: -2.5%;
+    span{
+        content: '';
+            width: 100%;
+        height: 1px;
+        border-top: 1px solid transparent;
+        border-image: repeating-linear-gradient(to right, $color-accent 0 5px, transparent 5px 10px) 1;
+        position: absolute;
+        left: 0%;
+        top: -1px;
+    }
+}

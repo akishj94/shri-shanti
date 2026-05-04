@@ -1,0 +1,174 @@
+// _shri-catalog.scss
+// @use this file after your base/tokens partial.
+// Expects: $color-primary, $color-link, $font-primary, rem(), bp(), fluid-type(), $ease-out-expo
+
+@use '../abstracts' as *;
+@use 'sass:math';
+
+// ─── Tokens ───────────────────────────────────────────────
+
+$catalog-card-aspect:    3 / 4;
+$catalog-card-mobile-vw: 72vw;
+$catalog-card-md:        260px;
+$catalog-card-xl:        300px;
+$catalog-gap-mobile:     rem(16px);
+$catalog-gap-md:         rem(28px);
+$catalog-gap-xl:         rem(36px);
+$catalog-px-mobile:      rem(15px);
+$catalog-px-md:          rem(80px);
+
+// ─── Section ──────────────────────────────────────────────
+
+.shri-catalog-section {
+  background-color: $color-bg;
+  color: $color-link;
+  padding: rem(60px) 0 rem(40px);
+  overflow: hidden;
+  font-family: $font-primary;
+
+  @include bp('lg') {
+    padding: 0;
+    overflow: visible;
+  }
+}
+
+// ─── Header ───────────────────────────────────────────────
+
+.shri-catalog-header {
+  padding: 0 $catalog-px-mobile rem(40px);
+
+  @include bp('lg') {
+    padding: rem(48px) $catalog-px-md rem(32px);
+    flex-shrink: 0;
+  }
+}
+
+.shri-catalog-label {
+  font-size: rem(11px);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba($color-link, 0.45);
+  margin: 0 0 rem(14px);
+
+  span { color: rgba($color-link, 0.3); }
+}
+
+.shri-catalog-title {
+  margin: 0;
+}
+
+// ─── Sticky wrappers (desktop pin — driven by GSAP) ───────
+
+.shri-catalog-sticky-outer {
+  @include bp('lg') {
+    position: relative;
+  }
+}
+
+.shri-catalog-sticky-inner {
+  @include bp('lg') {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+}
+
+// ─── Track ────────────────────────────────────────────────
+
+.shri-catalog-track {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  gap: $catalog-gap-mobile;
+  padding: 0 $catalog-px-mobile rem(32px);
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar { display: none; }
+
+  @include bp('lg') {
+    overflow-x: visible;
+    scroll-snap-type: none;
+    padding: 0 $catalog-px-md rem(48px);
+    gap: $catalog-gap-md;
+  }
+
+  @include bp('xl') {
+    gap: $catalog-gap-xl;
+  }
+}
+
+// ─── Card ─────────────────────────────────────────────────
+
+.shri-catalog-item {
+  flex: 0 0 $catalog-card-mobile-vw;
+  max-width: rem(300px);
+  scroll-snap-align: start;
+  list-style: none;
+
+  @include bp('lg') {
+    flex: 0 0 $catalog-card-md;
+    max-width: $catalog-card-md;
+    scroll-snap-align: unset;
+  }
+
+  @include bp('xl') {
+    flex: 0 0 $catalog-card-xl;
+    max-width: $catalog-card-xl;
+  }
+}
+
+.shri-catalog-item-inner {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+
+  &:hover .shri-catalog-image-wrap img {
+    transform: scale(1.04);
+  }
+}
+
+.shri-catalog-image-wrap {
+  width: 100%;
+  aspect-ratio: $catalog-card-aspect;
+  overflow: hidden;
+  border-radius: $border-radius;
+  background-color: rgba($color-link, 0.07);
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.5s $ease-out-expo;
+  }
+}
+
+.shri-catalog-placeholder {
+  width: 100%;
+  height: 100%;
+  background-color: rgba($color-link, 0.1);
+}
+
+.shri-catalog-item-name {
+  margin: rem(12px) 0 0;
+  font-size: rem(12px);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba($color-link, 0.85);
+  line-height: 1.5;
+}
+
+// ─── Empty state ──────────────────────────────────────────
+
+.shri-catalog-empty {
+  padding: rem(40px) $catalog-px-mobile;
+  color: rgba($color-link, 0.5);
+  font-size: rem(13px);
+}

@@ -3,7 +3,8 @@
 defined('ABSPATH') || exit;
 
 require_once get_template_directory() . '/inc/disable-comments.php';
-
+require_once get_template_directory() . '/inc/custom-catalog.php';
+require get_template_directory() . '/class-social-walker.php';
 // ─── Constants ─────────────────────────────────────────────
 
 define('THEME_DIR', get_template_directory());
@@ -60,6 +61,7 @@ function theme_setup(): void {
     register_nav_menus([
         'primary' => __('Primary Menu', 'wp-theme'),
         'legal'   => __('Legal Menu', 'wp-theme'),
+        'social'  => __('Social Menu'),
     ]);
 }
 

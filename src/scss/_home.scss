@@ -260,25 +260,7 @@
             display: grid;
             gap: 2rem;
             margin-block-start: rem(28.5px);
-        }
-        .bordered_separator{
-            width: 105%;
-            height: 1px;
-            border-top: 1px solid transparent;
-            border-image: repeating-linear-gradient(to right, #B1B1B1 0 5px, transparent 5px 10px) 1;
-            position: relative;
-            left: -2.5%;
-            span{
-                content: '';
-                 width: 100%;
-                height: 1px;
-                border-top: 1px solid transparent;
-                border-image: repeating-linear-gradient(to right, $color-accent 0 5px, transparent 5px 10px) 1;
-                position: absolute;
-                left: 0%;
-                top: -1px;
-            }
-        }
+        }        
         .title_col{
             display: flex;
             align-items: center;

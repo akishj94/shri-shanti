@@ -22,7 +22,17 @@
         ]);
         ?>
     </div>
-    <div class="footerSeparator"></div>
+    <div class="footerSocial">
+      <?php
+        wp_nav_menu([
+            'theme_location' => 'social',
+            'menu_class'     => 'social-menu',
+            'walker'         => new Social_Nav_Walker(),
+            'depth'          => 1,
+        ]);
+      ?>
+    </div>
+    <div class="bordered_separator"></div>
     
     <div class="footerBottom">
       <div class="flex align-end space-between">
