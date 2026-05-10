@@ -89,6 +89,22 @@
     .learn_solutions{
         @include fluid(padding-block-start, 190px, 251px);
         @include fluid(padding-block-end, 26px, 38.5px);
+        position: relative;
+        overflow: hidden;
+        .learn-solutions-pattern{
+            position: absolute;
+            inset: -20%;
+            opacity: 0.5;
+            will-change: transform;
+            pointer-events: none;
+            background-image: url('../../assets/images/brand_bg.svg');
+            background-size: clamp(300px, 21.875vw, 420px) auto;
+            background-repeat: repeat;
+            background-size: 420px auto;
+            background-position: 0 0;
+            will-change: background-position;
+            z-index: -1;
+        }
         .wp-block-heading{
             display: grid;
             justify-content: center;

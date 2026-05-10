@@ -23,14 +23,7 @@
         ?>
     </div>
     <div class="footerSocial">
-      <?php
-        wp_nav_menu([
-            'theme_location' => 'social',
-            'menu_class'     => 'social-menu',
-            'walker'         => new Social_Nav_Walker(),
-            'depth'          => 1,
-        ]);
-      ?>
+      <?php smi_nav_menu( 'social-menu' ); ?>
     </div>
     <div class="bordered_separator"></div>
     
@@ -50,11 +43,10 @@
               ]);
             ?>
           </div>
-          <div class="footerSocialMenu bottom-pd"></div>
           <div class="siteCredits flex align-end">
             <span class="bottom-pd">Branding & Website by</span>
-              <a href="" target="_blank">
-								<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 29 38.337">
+              <a href="https://dabrande.com/" target="_blank" title="DaBrande">
+								<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 29 38.337" role="img">
 									<defs>
 										<clipPath id="clip-path">
 											<rect id="Rectangle_4883" data-name="Rectangle 4883" width="29" height="38.337" fill="#fff"></rect>
