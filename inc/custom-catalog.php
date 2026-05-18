@@ -12,10 +12,6 @@
  *   [shri_catalog title="false"]   ← hides the title
  *   [shri_catalog posts_per_page="12"]
  *
- * Expects the compiled CSS at:
- *   get_stylesheet_directory_uri() . '/assets/css/shri-catalog.css'
- *
- * Compile shri-catalog.scss → assets/css/shri-catalog.css before deploying.
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -119,10 +115,3 @@ function shri_catalog_shortcode( $atts ) {
     <?php
     return ob_get_clean();
 }
-
-
-/*
- * 3. JAVASCRIPT
- *    JS is handled via your bundled module (shri-catalog.js).
- *    Call catalogScroll(lenis) inside your existing init().
- */

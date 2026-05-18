@@ -5,6 +5,7 @@ defined('ABSPATH') || exit;
 require_once get_template_directory() . '/inc/disable-comments.php';
 require_once get_template_directory() . '/inc/custom-catalog.php';
 require get_template_directory() . '/inc/class-social-walker.php';
+require get_template_directory() . '/inc/site-cta.php';
 // ─── Constants ─────────────────────────────────────────────
 
 define('THEME_DIR', get_template_directory());

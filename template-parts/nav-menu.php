@@ -14,14 +14,7 @@
     <div class="nav-inner">
         <!-- WordPress menu output -->
         <?php
-        // wp_nav_menu([
-        //     'theme_location' => 'primary',
-        //     'container'      => false,
-        //     'menu_class'     => 'nav-list',
-        //     'menu_id'        => 'nav-list',
-        //     'walker'         => new Nav_Walker(),
-        //     'fallback_cb'    => false,
-        // ]);
+        
         Nav_Walker::render([
             'theme_location'  => 'primary',
             'container'       => 'nav',

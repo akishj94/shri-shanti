@@ -1,0 +1,41 @@
+@use '../abstracts' as *;
+@use '../global' as *;
+
+.shri-cta-section{
+    .shri-cta-wrapper{
+        background-color: $color-light-gray;
+        border-radius: $border-radius;
+    }
+    &.shri-cta-section--align-left{
+        .shri-cta-wrapper{
+            @include fluid(padding-block-start, 100px, 165px);
+            @include fluid(padding-block-end, 85px, 144,44px);
+            position: relative;
+            background-image: url('../../assets/images/shri_bg_cta.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: right bottom;
+        }
+        .shri-cta-inner{
+            // padding-left: 27.291666666666668vw;
+            max-width: max(27.65625vw, rem(560px));
+            padding-inline: rem(24px);
+        }
+    }
+
+    &.shri-cta-section--align-center{
+        text-align: center;
+    }
+    .shri-cta-btn{
+        display: block;
+        @include fluid(margin-block-start, 32px, 57px);        
+    }
+
+    @include bp('md'){
+        .shri-cta-inner{
+            margin-inline-end: 20%;
+            margin-inline-start: auto;
+            padding-inline: 0px !important;
+        }
+    }
+}

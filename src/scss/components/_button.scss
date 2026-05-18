@@ -27,3 +27,11 @@
 .site_cta {
   @include cta;
 }
+
+.cta_xl{
+  @include cta;
+  background-color: #36160F;
+  @include fluid(padding-block, 24px, 30px);
+  @include fluid(padding-inline, 42px, 54.5px);
+  color: white;
+}

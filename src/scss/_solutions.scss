@@ -1,0 +1,95 @@
+@use 'abstracts' as *;
+@use 'global' as *;
+@use 'components/container' as *;
+
+.solutions_landing{
+    position: relative;
+    display: grid;
+    align-items: end;
+    background-color: #E5E5E5;
+    overflow: hidden;
+    @include fluid(padding-block-start, 80px, 139px);
+    @include fluid(padding-block-end, 42px, 66px);
+    &>.wp-block-group__inner-container{
+        padding-inline: 0px !important;
+        max-width: 100% !important;
+        display: flex;
+        flex-direction: column;
+        .container{
+            &>.wp-block-group__inner-container{
+                @include fluid(padding-block-start, 53px, 73px);
+                display: grid;
+                align-items: center;
+                row-gap: 24px;
+                justify-content: space-between;
+            }
+        }        
+    }
+    figure{
+        margin-left: auto;
+        transform: translateX(25%);
+        img{
+            max-height: 35vh;
+            object-fit: contain;
+        }
+    }
+    h2, p{
+        margin: 0px;
+    }
+    @include bp('md') {
+        &>.wp-block-group__inner-container{
+           .container{
+                &>.wp-block-group__inner-container{
+                    grid-template-columns: clamp(320px, 27.65625vw, 531px) clamp(300px, 23.697916666666668vw, 455px);
+                    @include fluid(column-gap, 100px, 275px);
+                    @include fluid(row-gap, 30px, 73px);
+                }
+           }
+        }
+        figure{
+            img{
+                max-height: none;
+            }
+        }
+    }
+}
+.solutions_sec_2{
+    @include fluid(padding-block-start, 24px, 31px);
+    @include fluid(padding-block-end, 42px, 64px);
+    &>.wp-block-group__inner-container{
+        display: grid;
+        @include fluid(gap, 50px, 121px);
+        h2{
+            margin: 0px;
+            span{
+                color: #8B8B8B;
+            }
+        }
+    }
+    @include bp('md'){
+        h2{
+            max-width: min(60vw, rem(915px));
+        }
+        p{
+            max-width: min(52.895833333333332vw, rem(382px));
+            margin-inline-start: auto;
+            margin-inline-end: 8.125vw;
+            margin-block: 0px;
+        }
+    }
+}
+.solutions_system{
+    @include fluid(padding-block-start, 42px, 64px);
+    @include fluid(padding-block-end, 31px, 51px);
+    figure{
+        img{
+            margin: auto;
+            height: auto;
+        }
+    }
+    @include bp('md'){
+        figure{
+            @include fluid(margin-inline, 36px, 50px);
+        }
+    }
+}
