@@ -43,3 +43,11 @@
         top: -1px;
     }
 }
+%shri_text_sm{
+    font-family: $font-secondary;
+    font-size: 13px;
+    text-transform: uppercase;
+}
+.shri_text_sm{
+    @extend %shri_text_sm;
+}
