@@ -53,7 +53,9 @@ function shri_cta_shortcode( $atts ) {
     $link      = esc_url( $atts['link'] );
     $link_text = sanitize_text_field( $atts['link_text'] );
     $align     = in_array( $atts['align'], array( 'left', 'center' ), true ) ? $atts['align'] : 'left';
-    $button    = in_array( $atts['button'], array( 'arrow', 'filled' ), true ) ? $atts['button'] : 'arrow';
+    $button = in_array( $atts['button'], array( 'arrow', 'filled' ), true )
+    ? ( 'arrow' === $atts['button'] ? 'site_btn_link' : 'cta_xl' )
+    : 'cta_xl';
 
     /* ---- CSS modifier classes ---- */
     $section_classes = implode( ' ', array_filter( array(
@@ -81,18 +83,9 @@ function shri_cta_shortcode( $atts ) {
 
                 <a
                     href="<?php echo $link; ?>"
-                    class="shri-cta-btn shri-cta-btn--<?php echo esc_attr( $button ); ?>"
+                    class="shri-cta-btn <?php echo esc_attr( $button ); ?>"
                 >
-                    <span class="shri-cta-btn__text"><?php echo esc_html( $link_text ); ?></span>
-
-                    <?php if ( $button === 'arrow' ) : ?>
-                        <span class="shri-cta-btn__arrow" aria-hidden="true">
-                            <svg width="16" height="13" viewBox="0 0 16 13" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M9.86 0L15.172 5.312V6.8L9.86 12.112L8.351 10.625L11.836 7.119H0V4.994H11.836L8.33 1.487L9.86 0Z" fill="black"/>
-                            </svg>
-
-                        </span>
-                    <?php endif; ?>
+                    <?php echo esc_html( $link_text ); ?>
                 </a>
 
             </div><!-- /.shri-cta-inner -->

@@ -1,6 +1,8 @@
 @use '../abstracts' as *;
+@use '../global';
 
 .site-footer{
+    @include fluid(margin-block-start, 22px, 35px);
     padding-block-start: rem(32.3px);
     background-color: $color-bg;
     color: white;
@@ -12,23 +14,27 @@
         column-gap: 10vw;
         row-gap: 8vw;
         .footerLogoIcon{
-            max-width: 200px;
+            @include fluid(max-width, 160px, 260px);
         }
         .footerLogoText{
-            max-width: 280px;
+            @include fluid(max-width, 220px, 355px, 320px, 992px);
         }
     }
     .footerNav{
-        @include fluid(padding-block-start, 200px, 400px);
+        // @include fluid(padding-block-start, 200px, 400px);
+        @include fluid(padding-block-start, 70px, 116.8px);
         @include fluid(padding-block-end, 100px, 150px);
+        display: grid;
+        justify-content: start;
     }
     .footerNav, .footerLegalMenu{
-        .nav-list{
+        .footer-nav-list{
             align-items: start;
             width: 100%;
             flex-wrap: wrap;
             flex-direction: column;
             text-transform: uppercase;
+            @extend %shri_text_sm;
             .sub-menu{
                 list-style: none;
                 display: flex;
@@ -36,13 +42,51 @@
                 flex-direction: column;
                 margin-block-start: 8px;
                 padding-inline-start: 8px;
-                opacity: .6;
+            }
+        }
+    }
+    .footerContact{
+        grid-template-columns: auto;
+        justify-content: space-between;
+        align-items: end;
+        @include fluid(padding-block-end, 24px, 34px);
+        row-gap: rem(36px);
+        .contactInfo{
+            ul{
+                display: grid;
+                gap: 20px;
+                li{
+                    display: grid;
+                    grid-template-columns: auto;
+                    row-gap: 8px;
+                    &>:not(span){
+                        text-transform: none;
+                    }
+                    address{
+                        font-style: normal;
+                    }
+                }
+            }
+        }
+        .contactLinks{
+            ul{
+                color: #FF9474;
+                @include fluid(column-gap, 24px, 38px);
+                row-gap: 12px;
+                a{
+                    color: inherit;
+                    font-weight: bold;
+                }
             }
         }
     }
     .footerLegalMenu{
-        .nav-list{
+        display: grid;
+        gap: 20px;
+        .footer-nav-list{
             font-size: 0.75rem;
+            display: grid;
+            gap: 6px;
         }
     }
     .footerSocial{        
@@ -55,11 +99,12 @@
         @include fluid(padding-block-start, 42px, 51.56px);
         font-size: 0.8125rem;
         &>.flex{
-            gap: 2rem;
+            gap: 1rem;
             flex-direction: column;
             align-items: start;
         }
         .siteCredits{
+            @extend %shri_text_sm;
             a{
                 background-color: $color-primary;
                 @include fluid(width, 50px, 60px );
@@ -68,6 +113,7 @@
                 display: grid;
                 align-items: center;
                 justify-content: center;
+                
                 svg{
                     width: 50%;
                     margin: auto;
@@ -81,32 +127,43 @@
     .bottom-pd{
         @include fluid(padding-block-end, 18px, 24px);
     }
-   @media(min-width: 480px) { 
+   @include bp('sm'){
         .footerNav, .footerLegalMenu{
-            .nav-list{
+            .footer-nav-list{
                 align-items: start;
                 flex-direction: row;
                 width: max-content;
                 margin-left: auto;
                 .sub-menu{
-                    gap: 0px;
                     flex-direction: column;
-                    margin-block-start: 0;
                     padding-inline-start: 0;
-                    opacity: .6;
                 }
             }
+        }
+        .footerNav{
+            justify-content:center;
         }
         .footerSocial{
             text-align: right;
         }
+        .footerContact{
+            grid-template-columns: auto auto;
+            .contactInfo{
+                ul{
+                    li{
+                        grid-template-columns: 80px 1fr;
+                    }
+                }
+            }
+        }
      }
-     @media(min-width: 768px) { 
-        // .footerLegalMenu {
-        //     .nav-list{
-        //         font-size: inherit;
-        //     }
-        // }
+    @include bp('md'){
+        
+        .footerNav {
+            .footer-nav-list{
+                margin-inline-start: 18%;
+            }
+        }
         .footerBottom{
             & > .flex{
                 flex-direction: row;

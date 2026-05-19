@@ -27,7 +27,6 @@
         text-align: center;
     }
     .shri-cta-btn{
-        display: block;
         @include fluid(margin-block-start, 32px, 57px);        
     }
 
@@ -37,5 +36,16 @@
             margin-inline-start: auto;
             padding-inline: 0px !important;
         }
+    }
+
+    .shri-cta-label{
+        @extend %shri_text_sm;
+    }
+}
+
+.manifesto_media_wrapper{
+    img, video{
+        width: 100%;
+        height: 100%;
     }
 }

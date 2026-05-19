@@ -6,6 +6,7 @@ require_once get_template_directory() . '/inc/disable-comments.php';
 require_once get_template_directory() . '/inc/custom-catalog.php';
 require get_template_directory() . '/inc/class-social-walker.php';
 require get_template_directory() . '/inc/site-cta.php';
+require get_template_directory() . '/inc/shri-catalog-post.php';
 // ─── Constants ─────────────────────────────────────────────
 
 define('THEME_DIR', get_template_directory());
@@ -62,6 +63,7 @@ function theme_setup(): void {
     register_nav_menus([
         'primary' => __('Primary Menu', 'wp-theme'),
         'legal'   => __('Legal Menu', 'wp-theme'),
+        'social-menu'   => __('Social Menu', 'wp-theme'),
     ]);
 }
 
@@ -121,8 +123,21 @@ add_action('admin_head', function () {
     </style>';
 });
 
-// Debug block rendering (optional)
-add_filter('render_block', function ($content, $block) {
-    error_log('BLOCK: ' . $block['blockName']);
-    return $content;
+
+add_filter('render_block', function ($block_content, $block) {
+
+    // Target only core paragraph blocks
+    if ($block['blockName'] !== 'core/paragraph') {
+        return $block_content;
+    }
+
+    // If content is just an anchor tag, wrap it in <p>
+    if (
+        preg_match('/^\s*<a\b[^>]*>.*?<\/a>\s*$/is', trim($block_content))
+    ) {
+        $block_content = '<p>' . $block_content . '</p>';
+    }
+
+    return $block_content;
+
 }, 10, 2);
