@@ -7,7 +7,9 @@
       </div>
 
       <div class="footerLogoText">
-        <img src="<?php echo get_template_directory_uri().'/assets/images/shri_logo_text.svg'; ?>" alt="Shri Shanti Engineering">
+        <a href="<?php echo home_url();?>">
+          <img src="<?php echo get_template_directory_uri().'/assets/images/shri_logo_text.svg'; ?>" alt="Shri Shanti Engineering">
+        </a>
       </div>
     </div>
 
@@ -91,7 +93,16 @@
                   'fallback_cb'    => false,
               ]);
             ?>
-            <?php smi_nav_menu( 'social-menu' ); ?>
+            <?php
+              wp_nav_menu([
+                  'theme_location' => 'social-menu',
+                  'container'      => 'nav',
+                  'menu_class'     => 'unstyledList shri_social_menu',
+                  'menu_id'        => 'shri_social_menu',
+                  'fallback_cb'    => false,
+                  'walker'         => new Social_Nav_Walker(),
+              ]);
+              ?>
           </div>
           <div class="siteCredits flex align-end">
             <span class="bottom-pd">Branding & Website by</span>

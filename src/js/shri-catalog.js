@@ -3,72 +3,135 @@
 // lenis param is optional — falls back to native scroll if omitted.
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-export function catalogScroll(lenis = null) {
-  const MQ = window.matchMedia('(min-width: 1024px)');
+export function initShriCatalogScroll() {
+  const sections = document.querySelectorAll(".shri-catalog-section");
+  if (!sections.length) return;
 
-  // Wire Lenis → ScrollTrigger if an instance is provided
-  if (lenis) {
-    lenis.on('scroll', ScrollTrigger.update);
-    ScrollTrigger.scrollerProxy(document.body, {
-      scrollTop(value) {
-        if (arguments.length) lenis.scrollTo(value, { immediate: true });
-        return lenis.scroll;
-      },
-      getBoundingClientRect() {
-        return { top: 0, left: 0, width: window.innerWidth, height: window.innerHeight };
-      },
-      pinType: document.body.style.transform ? 'transform' : 'fixed',
-    });
-  }
+  const isDesktop = () => window.innerWidth > 768;
 
-  function initSection(section) {
-    const outer  = section.querySelector('.shri-catalog-sticky-outer');
-    const track  = section.querySelector('.shri-catalog-track');
-    const header = section.querySelector('.shri-catalog-header');
+  const instances = [];
 
-    let st = null;
+  sections.forEach((section) => {
+    const stickyOuter = section.querySelector(".shri-catalog-sticky-outer");
+    const stickyInner = section.querySelector(".shri-catalog-sticky-inner");
+    const track = section.querySelector(".shri-catalog-track");
 
-    function build() {
-      if (st) { st.kill(); st = null; }
+    if (!stickyOuter || !stickyInner || !track) return;
 
-      if (!MQ.matches) {
-        gsap.set(track, { clearProps: 'x,transform' });
-        outer.style.height = '';
+    let tween;
+    let trigger;
+
+    const setup = () => {
+      // Reset mobile
+      if (!isDesktop()) {
+        gsap.set(track, { clearProps: "all" });
+        gsap.set(stickyInner, { clearProps: "all" });
+
+        if (trigger) {
+          trigger.kill();
+          trigger = null;
+        }
+
+        if (tween) {
+          tween.kill();
+          tween = null;
+        }
+
         return;
       }
 
-      const headerH    = header ? header.offsetHeight : 0;
-      const available  = window.innerHeight - headerH - 80;
-      const travelDist = Math.max(0, track.scrollWidth - available);
+      // Wait for layout
+      ScrollTrigger.refresh();
 
-      outer.style.height = `${window.innerHeight + travelDist}px`;
+      const trackScroll =
+        track.scrollWidth - stickyInner.clientWidth;
 
-      st = gsap.to(track, {
-        x: -travelDist,
-        ease: 'none',
-        scrollTrigger: {
-          trigger:             outer,
-          scroller:            lenis ? document.body : window,
-          start:               'top top',
-          end:                 'bottom bottom',
-          scrub:               lenis ? 1 : true,
-          pin:                 '.shri-catalog-sticky-inner',
-          pinSpacing:          false,
-          invalidateOnRefresh: true,
+      // No overflow = no animation
+      if (trackScroll <= 0) return;
+
+      tween = gsap.to(track, {
+        x: -trackScroll,
+        ease: "none",
+      });
+
+      trigger = ScrollTrigger.create({
+        animation: tween,
+
+        trigger: section,
+
+        start: "bottom bottom",
+        end: () => `+=${trackScroll}`,
+
+        pin: sections,
+        scrub: true,
+        pinSpacing: true,
+
+        invalidateOnRefresh: true,
+
+
+        onRefresh: () => {
+          gsap.set(track, { x: 0 });
+
+          const updatedScroll =
+            track.scrollWidth - stickyInner.clientWidth;
+
+          tween.vars.x = -updatedScroll;
+          tween.invalidate();
         },
       });
-    }
 
-    MQ.addEventListener('change', build);
+      // Lenis support
+      if (window.lenis) {
+        window.lenis.resize?.();
+      }
+    };
 
-    let resizeTimer;
-    window.addEventListener('resize', () => {
-      clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(() => { ScrollTrigger.refresh(); build(); }, 150);
-    }, { passive: true });
+    setup();
 
-    build();
-  }
+    instances.push({
+      section,
+      setup,
+      destroy() {
+        tween?.kill();
+        trigger?.kill();
+      },
+    });
+  });
 
-  document.querySelectorAll('.shri-catalog-section').forEach(initSection);
+  //
+  // Resize handling
+  //
+
+  let resizeTimer;
+
+  const handleResize = () => {
+    clearTimeout(resizeTimer);
+
+    resizeTimer = setTimeout(() => {
+      instances.forEach((instance) => {
+        instance.destroy();
+        instance.setup();
+      });
+
+      ScrollTrigger.refresh();
+
+      if (window.lenis) {
+        window.lenis.resize?.();
+      }
+    }, 150);
+  };
+
+  window.addEventListener("resize", handleResize);
+
+  //
+  // Cleanup support
+  //
+
+  return () => {
+    window.removeEventListener("resize", handleResize);
+
+    instances.forEach((instance) => {
+      instance.destroy();
+    });
+  };
 }

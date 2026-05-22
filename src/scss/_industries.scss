@@ -1,0 +1,86 @@
+@use 'abstracts' as *;
+@use 'global' as *;
+
+.industries_landing{
+    @include fluid(padding-block-start, 190px, 255px);
+    @include fluid(padding-block-end, 50px, 77px);
+    &>.wp-block-group__inner-container{
+        & > .wp-block-group{
+            &>.wp-block-group__inner-container{
+                display: grid;
+                justify-content: space-between;
+                row-gap: 4.5vw;
+                align-items: end;
+                h2, p{
+                    margin: 0px;
+                }                
+                @include bp('md'){
+                    grid-template-columns: auto auto;
+                    column-gap: 2rem;
+                    h2{
+                        max-width: min(48vw, rem(476px));
+                    }
+                    p{
+                        max-width: min(48vw, rem(469px));
+                    }
+                }
+            }
+        }
+    }    
+}
+.industries_landing_media{
+    @include fluid(padding-block-end, 28.5px, 41.5px);
+    .wp-block-image{        
+        img{
+            width: 100%;
+        }
+    }
+}
+.industries_folio{
+    background-color: #1B0500;
+    @include fluid(padding-block-start, 45px, 73px);
+    @include fluid(padding-block-end, 80px, 116px);
+    @include fluid(margin-block-end, 28.5px, 41.5px);
+    color: white;
+
+    p{
+        span{
+            color: $color-accent;
+        }
+    }
+    &>.wp-block-group__inner-container{
+        & > .wp-block-group{
+            &>.wp-block-group__inner-container{
+                display: grid;
+                align-items: start;
+                justify-content: space-between;
+                row-gap: 4.5vw;
+                h2, p{
+                    margin: 0px;
+                }                
+                @include bp('md'){
+                    grid-template-columns: auto auto;
+                    column-gap: 2rem;
+                    h2{
+                        max-width: min(48vw, rem(376px));
+                    }
+                    p{
+                        max-width: min(48vw, rem(469px));
+                    }
+                }
+            }
+        }
+    }
+}
+.industries_excellence{
+    text-align: center;
+    h2{
+        color: #36160F;
+        span{
+            color: $color-accent;
+        }
+    }
+    @include fluid(padding-block-start, 28.5px, 41.5px);
+    @include fluid(padding-block-end, 50px, 83px);
+    
+}

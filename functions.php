@@ -7,6 +7,7 @@ require_once get_template_directory() . '/inc/custom-catalog.php';
 require get_template_directory() . '/inc/class-social-walker.php';
 require get_template_directory() . '/inc/site-cta.php';
 require get_template_directory() . '/inc/shri-catalog-post.php';
+require get_template_directory() . '/inc/shri-industry-folio.php';
 // ─── Constants ─────────────────────────────────────────────
 
 define('THEME_DIR', get_template_directory());
@@ -123,19 +124,21 @@ add_action('admin_head', function () {
     </style>';
 });
 
+add_action( 'wp_body_open', function() {
+    include get_template_directory() . '/assets/images/social-sprite.svg';
+});
 
 add_filter('render_block', function ($block_content, $block) {
 
-    // Target only core paragraph blocks
     if ($block['blockName'] !== 'core/paragraph') {
         return $block_content;
     }
 
-    // If content is just an anchor tag, wrap it in <p>
-    if (
-        preg_match('/^\s*<a\b[^>]*>.*?<\/a>\s*$/is', trim($block_content))
-    ) {
-        $block_content = '<p>' . $block_content . '</p>';
+    $trimmed = trim($block_content);
+
+    // Match paragraph containing only an anchor tag
+    if (preg_match('#^<p>\s*(<a[^>]+>.*?</a>)\s*</p>$#is', $trimmed, $matches)) {
+        return $matches[1];
     }
 
     return $block_content;

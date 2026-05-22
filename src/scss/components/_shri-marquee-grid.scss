@@ -1,0 +1,52 @@
+@use '../abstracts' as *;
+@use '../global' as *;
+
+.shri_marquee_grid {
+    width: 100%;
+    overflow: hidden;
+    display: flex;
+    min-width: 0;
+    grid-column: 1/-1;
+    overflow-x: auto;
+    @include fluid(margin-block-start, 76px, 122px);
+    &::-webkit-scrollbar{
+        display: none;
+    }
+    .group {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        animation: marquee 24s linear infinite reverse;        
+        flex: 0 0 auto;
+        @include fluid(gap, 24px, 51px);
+        @include fluid(padding-inline-end, 24px, 51px);
+        .grid__item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background-color: #36160F;
+            aspect-ratio: 165/105;
+            border-radius: $border-radius;
+            @include fluid(padding-block, 16px, 28px);
+            @include fluid(padding-inline, 36px, 52px);
+            min-width: 165px;
+            img {
+                object-fit: contain;
+                display: block;
+            }
+        }
+        @include bp('md'){
+            
+            .grid__item{
+                // flex: 1;
+            }
+        }
+    }
+}
+
+@keyframes marquee {
+    to {
+        transform: translate(-50%);
+    }
+}

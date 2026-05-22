@@ -4,30 +4,25 @@
 
 @use '../abstracts' as *;
 @use 'sass:math';
+@use '../global' as *;
 
 // ─── Tokens ───────────────────────────────────────────────
 
-$catalog-card-aspect:    3 / 4;
-$catalog-card-mobile-vw: 72vw;
-$catalog-card-md:        260px;
-$catalog-card-xl:        300px;
-$catalog-gap-mobile:     rem(16px);
-$catalog-gap-md:         rem(28px);
-$catalog-gap-xl:         rem(36px);
-$catalog-px-mobile:      rem(15px);
-$catalog-px-md:          rem(80px);
+$catalog-card-aspect:    409/490;
+$catalog-card-mobile-vw: 75vw;
 
 // ─── Section ──────────────────────────────────────────────
 
 .shri-catalog-section {
   background-color: $color-bg;
   color: $color-link;
-  padding: rem(60px) 0 rem(40px);
+  @include fluid(padding-block-start, 50px, 96px);
+  @include fluid(padding-block-end, 45px, 77px);
   overflow: hidden;
-  font-family: $font-primary;
-
-  @include bp('lg') {
-    padding: 0;
+  min-height: 100lvh;
+  display: grid;
+  align-items: end;
+  @include bp('lg') {    
     overflow: visible;
   }
 }
@@ -35,22 +30,37 @@ $catalog-px-md:          rem(80px);
 // ─── Header ───────────────────────────────────────────────
 
 .shri-catalog-header {
-  padding: 0 $catalog-px-mobile rem(40px);
-
-  @include bp('lg') {
-    padding: rem(48px) $catalog-px-md rem(32px);
-    flex-shrink: 0;
+  position: relative;
+  @include fluid(row-gap, 32px, 52px);
+  .shri-catalog-label{
+    @extend %shri_text_sm;
+    &:last-of-type{
+      grid-row: 3;
+    }
   }
-}
-
-.shri-catalog-label {
-  font-size: rem(11px);
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: rgba($color-link, 0.45);
-  margin: 0 0 rem(14px);
-
-  span { color: rgba($color-link, 0.3); }
+  .bordered_separator{
+    position: absolute;
+    left: -5px;
+    width: calc(100% + 10px);
+    border-image: repeating-linear-gradient(to right, #D73404 0 5px, transparent 5px 10px) 1;
+    top: 30px;
+  }
+  @include bp('md'){
+    grid-template-columns: 1fr 2fr;
+    h2{
+      grid-column: 2;
+      max-width: min(55vw, rem(530px));
+    }
+    .shri-catalog-label{
+      &:last-of-type{
+        grid-row: unset;
+      }
+    }
+    .bordered_separator{
+      top: 25%;
+    }
+  }
+  
 }
 
 .shri-catalog-title {
@@ -60,6 +70,7 @@ $catalog-px-md:          rem(80px);
 // ─── Sticky wrappers (desktop pin — driven by GSAP) ───────
 
 .shri-catalog-sticky-outer {
+  @include fluid(margin-block-start, 62px, 93px);
   @include bp('lg') {
     position: relative;
   }
@@ -67,9 +78,6 @@ $catalog-px-md:          rem(80px);
 
 .shri-catalog-sticky-inner {
   @include bp('lg') {
-    position: sticky;
-    top: 0;
-    height: 100vh;
     overflow: hidden;
     display: flex;
     flex-direction: column;
@@ -83,8 +91,7 @@ $catalog-px-md:          rem(80px);
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
-  gap: $catalog-gap-mobile;
-  padding: 0 $catalog-px-mobile rem(32px);
+  gap: rem(11px);
   overflow-x: auto;
   scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch;
@@ -92,35 +99,42 @@ $catalog-px-md:          rem(80px);
 
   &::-webkit-scrollbar { display: none; }
 
-  @include bp('lg') {
+  @include bp('md') {
     overflow-x: visible;
     scroll-snap-type: none;
-    padding: 0 $catalog-px-md rem(48px);
-    gap: $catalog-gap-md;
-  }
-
-  @include bp('xl') {
-    gap: $catalog-gap-xl;
   }
 }
 
 // ─── Card ─────────────────────────────────────────────────
 
 .shri-catalog-item {
-  flex: 0 0 $catalog-card-mobile-vw;
-  max-width: rem(300px);
-  scroll-snap-align: start;
+  scroll-snap-align: center;
   list-style: none;
-
-  @include bp('lg') {
-    flex: 0 0 $catalog-card-md;
-    max-width: $catalog-card-md;
-    scroll-snap-align: unset;
+  flex: 0 0 75%;
+  &:first-of-type{
+    margin-inline-start: 11px;
   }
+  &:last-of-type{
+    margin-inline-end: 11px;
+  }
+  @media (min-width: 600px) {
+    flex: 0 0 40%;
+  }  
+  @include bp('md') {
+    scroll-snap-align: unset;
 
+     &:first-of-type{
+      margin-inline-start: 10vw;
+    }
+    &:last-of-type{
+      margin-inline-end: 0;
+    }
+  }
+  @include bp('lg') {
+    flex: 0 0 30%;
+  }
   @include bp('xl') {
-    flex: 0 0 $catalog-card-xl;
-    max-width: $catalog-card-xl;
+    // flex: 0 0 auto;
   }
 }
 
@@ -128,18 +142,15 @@ $catalog-px-md:          rem(80px);
   display: block;
   text-decoration: none;
   color: inherit;
-
-  &:hover .shri-catalog-image-wrap img {
-    transform: scale(1.04);
-  }
+ 
 }
 
 .shri-catalog-image-wrap {
   width: 100%;
-  aspect-ratio: $catalog-card-aspect;
+  aspect-ratio: 0.825;
+  max-height: max(25.520833333333332vw, rem(490px));
   overflow: hidden;
   border-radius: $border-radius;
-  background-color: rgba($color-link, 0.07);
 
   img {
     width: 100%;
@@ -157,18 +168,12 @@ $catalog-px-md:          rem(80px);
 }
 
 .shri-catalog-item-name {
-  margin: rem(12px) 0 0;
-  font-size: rem(12px);
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: rgba($color-link, 0.85);
-  line-height: 1.5;
+  margin-block: rem(20px) 0px;
 }
 
 // ─── Empty state ──────────────────────────────────────────
 
 .shri-catalog-empty {
-  padding: rem(40px) $catalog-px-mobile;
   color: rgba($color-link, 0.5);
   font-size: rem(13px);
 }

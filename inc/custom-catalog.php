@@ -63,12 +63,14 @@ function shri_catalog_shortcode( $atts ) {
 
     <section class="shri-catalog-section" id="<?php echo esc_attr( $uid ); ?>" aria-label="<?php echo esc_attr( $atts['title'] ); ?>">
     
-        <div class="container">
+        <div class="container_fluid">
 
         
             <?php if ( ! empty( $atts['title'] ) && strtolower( $atts['title'] ) !== 'false' ) : ?>
-                <div class="shri-catalog-header">
-                    <p class="shri-catalog-label">SOLUTIONS <span>/ BY USE CASE</span></p>
+                <div class="shri-catalog-header grid">
+                    <div class="bordered_separator"></div>
+                    <span class="shri-catalog-label">SOLUTIONS </span>
+                    <span class="shri-catalog-label">/ By use case </span>
                     <h2 class="shri-catalog-title"><?php echo wp_kses_post( $atts['title'] ); ?></h2>
                 </div>
             <?php endif; ?>
@@ -87,7 +89,7 @@ function shri_catalog_shortcode( $atts ) {
                         ?>
 
                         <article class="shri-catalog-item" role="listitem">
-                            <a href="<?php echo esc_url( $link ); ?>" class="shri-catalog-item-inner">
+                            <!-- <a href="<@?php echo esc_url( $link ); ?>" class="shri-catalog-item-inner"> -->
                                 <div class="shri-catalog-image-wrap">
                                     <?php if ( $thumb ) : ?>
                                         <img
@@ -99,8 +101,8 @@ function shri_catalog_shortcode( $atts ) {
                                         <div class="shri-catalog-placeholder" aria-hidden="true"></div>
                                     <?php endif; ?>
                                 </div>
-                                <p class="shri-catalog-item-name"><?php echo esc_html( $title ); ?></p>
-                            </a>
+                                <h5 class="shri-catalog-item-name"><?php echo esc_html( $title ); ?></h5>
+                            <!-- </a> -->
                         </article>
 
                         <?php endwhile; ?>

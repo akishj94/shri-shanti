@@ -1,4 +1,5 @@
 @use '../abstracts' as *;
+@use '../global';
 
 @mixin cta(
   $bg: white,
@@ -23,6 +24,7 @@
 
   @include fluid(padding-block, $py-min, $py-max);
   @include fluid(padding-inline, $px-min, $px-max);
+  @extend %shri_text_sm;
 }
 .site_cta {
   @include cta;
@@ -47,7 +49,7 @@
   display: inline-flex;
   align-items: center;
   gap: rem(6.8px);
-
+  width: max-content;
   color: inherit;
   text-decoration: none;
   font-weight: inherit;

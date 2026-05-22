@@ -6662,6 +6662,9 @@
         const separator = section.querySelector(".bordered_separator span");
         if (!panels.length) return;
         const getContent = (panel) => panel.querySelector(".wp-block-group__inner-container > .wp-block-group");
+        const sectionStyle = getComputedStyle(section);
+        const paddingBottom = parseFloat(sectionStyle.paddingBlockEnd || sectionStyle.paddingBottom) || 0;
+        const accordionCol = section.querySelector(".accordion_col");
         gsapWithCSS.set(separator, { width: "0%" });
         panels.forEach((panel, i) => {
           const content = getContent(panel);
@@ -6681,7 +6684,12 @@
             end: `+=${totalScroll * 1.5}`,
             pin: true,
             pinSpacing: true,
-            scrub: 1
+            scrub: 1,
+            onUpdate: (self) => {
+              if (accordionCol) {
+                accordionCol.style.paddingBlockEnd = `${paddingBottom * self.progress}px`;
+              }
+            }
           }
         });
         tl.to(separator, { width: "100%", ease: "none", duration: 1 }, 0);
@@ -6707,9 +6715,7 @@
             ease: "power2.inOut",
             duration: segDuration
           }, segStart);
-          tl.set(nextContent, {
-            height: "auto"
-          }, segStart + segDuration);
+          tl.set(nextContent, { height: "auto" }, segStart + segDuration);
         }
       }
       function initPatternBg() {
@@ -6966,8 +6972,8 @@
       }
       function init4() {
         pageEnter();
-        initNav();
         stickyPanels();
+        initNav();
         initPatternBg();
         ScrollTrigger2.refresh();
       }

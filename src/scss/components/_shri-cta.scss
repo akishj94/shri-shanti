@@ -9,9 +9,9 @@
     &.shri-cta-section--align-left{
         .shri-cta-wrapper{
             @include fluid(padding-block-start, 100px, 165px);
-            @include fluid(padding-block-end, 85px, 144,44px);
+            @include fluid(padding-block-end, 85px, 144.44px);
             position: relative;
-            background-image: url('../../assets/images/shri_bg_cta.png');
+            background-image: url('../../assets/images/shri_bg_cta.webp');
             background-size: contain;
             background-repeat: no-repeat;
             background-position: right bottom;
@@ -20,6 +20,19 @@
             // padding-left: 27.291666666666668vw;
             max-width: max(27.65625vw, rem(560px));
             padding-inline: rem(24px);
+        }
+    }
+    &.shri-cta-section--align-center{
+        .shri-cta-wrapper{
+            @include fluid(padding-block-start, 90px, 160px);
+            @include fluid(padding-block-end, 45px, 71px);
+            background-image: url('../../assets/images/shri_bg_cta_ct.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center bottom;
+        }
+        h2{
+            margin: auto;
         }
     }
 
@@ -31,16 +44,24 @@
     }
 
     @include bp('md'){
-        .shri-cta-inner{
-            margin-inline-end: 20%;
-            margin-inline-start: auto;
-            padding-inline: 0px !important;
+        &.shri-cta-section--align-left{
+            .shri-cta-inner{
+                margin-inline-end: 20%;
+                margin-inline-start: auto;
+                padding-inline: 0px !important;
+            }
+        }
+        &.shri-cta-section--align-center{
+            h2{
+                max-width: min(42.34375vw, 440px);
+            }
         }
     }
 
     .shri-cta-label{
         @extend %shri_text_sm;
     }
+    
 }
 
 .manifesto_media_wrapper{

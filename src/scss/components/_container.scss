@@ -28,3 +28,9 @@ main{
       }
   }
 }
+
+.container_fluid{
+  max-width: $container-mobile;
+  margin: auto;
+  width: 100%;
+}
