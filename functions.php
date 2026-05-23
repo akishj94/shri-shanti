@@ -63,6 +63,7 @@ function theme_setup(): void {
 
     register_nav_menus([
         'primary' => __('Primary Menu', 'wp-theme'),
+        'footer' => __('Footer Menu', 'wp-theme'),
         'legal'   => __('Legal Menu', 'wp-theme'),
         'social-menu'   => __('Social Menu', 'wp-theme'),
     ]);

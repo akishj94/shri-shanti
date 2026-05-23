@@ -16,7 +16,7 @@
     <div class="footerNav">
       <?php
         wp_nav_menu([
-            'theme_location' => 'primary',
+            'theme_location' => 'footer',
             'container'      => false,
             'menu_class'     => 'footer-nav-list nav-list',
             'menu_id'        => 'footer-nav-list nav-list',

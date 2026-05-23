@@ -6766,10 +6766,6 @@
         const mobileBg = document.querySelector(".navbar_background-mobile");
         const BREAKPOINT = 768;
         if (!header || !toggler || !navList) return;
-        function setNavBarHeight() {
-          const h = header.getBoundingClientRect().height;
-          document.documentElement.style.setProperty("--nav-bar-height", `${h}px`);
-        }
         let mobileOpen = false;
         let mobileCtx = null;
         const openDropdowns = /* @__PURE__ */ new Set();
@@ -6782,9 +6778,8 @@
           navList.style.pointerEvents = "auto";
           const items = navList.querySelectorAll(":scope > .nav-item");
           mobileCtx = gsapWithCSS.context(() => {
-            gsapWithCSS.to(toggler.children[0], { y: 7, rotation: 45, duration: 0.25, ease: "power2.inOut" });
-            gsapWithCSS.to(toggler.children[1], { scaleX: 0, opacity: 0, duration: 0.2, ease: "power2.inOut" });
-            gsapWithCSS.to(toggler.children[2], { y: -7, rotation: -45, duration: 0.25, ease: "power2.inOut" });
+            gsapWithCSS.to(toggler.children[0], { y: 4, rotation: 45, duration: 0.25, ease: "power2.inOut" });
+            gsapWithCSS.to(toggler.children[1], { y: -3, rotation: -45, duration: 0.25, ease: "power2.inOut" });
             gsapWithCSS.fromTo(
               items,
               { opacity: 0, y: 14 },
@@ -6799,176 +6794,6 @@
             );
           });
         }
-        function closeMobileMenu() {
-          if (!mobileOpen) return;
-          mobileOpen = false;
-          toggler.setAttribute("aria-expanded", "false");
-          toggler.classList.remove("is-active");
-          const items = navList.querySelectorAll(":scope > .nav-item");
-          navList.querySelectorAll(".nav-dropdown--default.is-open").forEach((d) => closeMobileSubmenu(d.closest(".nav-item")));
-          gsapWithCSS.to(toggler.children[0], { y: 0, rotation: 0, duration: 0.22, ease: "power2.inOut" });
-          gsapWithCSS.to(toggler.children[1], { scaleX: 1, opacity: 1, duration: 0.18, ease: "power2.inOut" });
-          gsapWithCSS.to(toggler.children[2], { y: 0, rotation: 0, duration: 0.22, ease: "power2.inOut" });
-          gsapWithCSS.to(items, {
-            opacity: 0,
-            y: 10,
-            duration: 0.2,
-            ease: "power2.in",
-            stagger: 0.04,
-            onComplete: () => {
-              navList.style.visibility = "hidden";
-              navList.style.pointerEvents = "none";
-              if (mobileCtx) {
-                mobileCtx.revert();
-                mobileCtx = null;
-              }
-            }
-          });
-        }
-        function openMobileSubmenu(parentItem) {
-          const dropdown = parentItem.querySelector(".nav-dropdown--default");
-          if (!dropdown) return;
-          dropdown.classList.add("is-open");
-          parentItem.classList.add("is-open");
-          const subItems = dropdown.querySelectorAll(".nav-dropdown-item");
-          gsapWithCSS.fromTo(
-            subItems,
-            { opacity: 0, y: 8 },
-            { opacity: 1, y: 0, duration: 0.28, ease: "power2.out", stagger: 0.06, delay: 0.05 }
-          );
-        }
-        function closeMobileSubmenu(parentItem) {
-          const dropdown = parentItem.querySelector(".nav-dropdown--default");
-          if (!dropdown) return;
-          dropdown.classList.remove("is-open");
-          parentItem.classList.remove("is-open");
-          const subItems = dropdown.querySelectorAll(".nav-dropdown-item");
-          gsapWithCSS.to(subItems, { opacity: 0, y: 6, duration: 0.16, ease: "power2.in" });
-        }
-        toggler.addEventListener("click", () => {
-          mobileOpen ? closeMobileMenu() : openMobileMenu();
-        });
-        navList.querySelectorAll(".nav-item.has-dropdown > .nav-link").forEach((link) => {
-          link.addEventListener("click", (e) => {
-            if (window.innerWidth >= BREAKPOINT) return;
-            e.preventDefault();
-            const parentItem = link.closest(".nav-item");
-            parentItem.classList.contains("is-open") ? closeMobileSubmenu(parentItem) : openMobileSubmenu(parentItem);
-          });
-        });
-        function positionHoisted(parentItem, panel) {
-          const rect = parentItem.getBoundingClientRect();
-          panel.style.insetBlockStart = `${rect.bottom + 10}px`;
-          panel.style.insetInlineStart = `${rect.left}px`;
-        }
-        function openDesktopDropdown(parentItem) {
-          const id = parentItem.querySelector(".nav-link")?.dataset.dropdownTarget;
-          const panel = id ? document.getElementById(id) : null;
-          parentItem.classList.add("is-open");
-          openDropdowns.add(parentItem);
-          if (panel) {
-            positionHoisted(parentItem, panel);
-            panel.hidden = false;
-            const items = panel.querySelectorAll(".nav-dropdown-item");
-            gsapWithCSS.killTweensOf([panel, items]);
-            gsapWithCSS.fromTo(
-              panel,
-              { opacity: 0, y: 8 },
-              {
-                opacity: 1,
-                y: 0,
-                duration: 0.22,
-                ease: "power2.out",
-                onStart: () => {
-                  panel.style.pointerEvents = "auto";
-                }
-              }
-            );
-            gsapWithCSS.fromTo(
-              items,
-              { opacity: 0, y: 6 },
-              { opacity: 1, y: 0, duration: 0.25, ease: "power2.out", stagger: 0.055, delay: 0.04 }
-            );
-          }
-        }
-        function closeDesktopDropdown(parentItem) {
-          const id = parentItem.querySelector(".nav-link")?.dataset.dropdownTarget;
-          const panel = id ? document.getElementById(id) : null;
-          parentItem.classList.remove("is-open");
-          openDropdowns.delete(parentItem);
-          if (panel) {
-            gsapWithCSS.killTweensOf(panel);
-            gsapWithCSS.to(panel, {
-              opacity: 0,
-              y: 8,
-              duration: 0.18,
-              ease: "power2.in",
-              onComplete: () => {
-                panel.hidden = true;
-                panel.style.pointerEvents = "none";
-                gsapWithCSS.set(panel.querySelectorAll(".nav-dropdown-item"), { opacity: 0, y: 6 });
-              }
-            });
-          }
-        }
-        navList.querySelectorAll(".nav-item.has-dropdown").forEach((parentItem) => {
-          let leaveTimer = null;
-          const cancelLeave = () => {
-            if (leaveTimer) {
-              clearTimeout(leaveTimer);
-              leaveTimer = null;
-            }
-          };
-          const scheduleClose = () => {
-            cancelLeave();
-            leaveTimer = setTimeout(() => {
-              if (window.innerWidth < BREAKPOINT) return;
-              closeDesktopDropdown(parentItem);
-            }, 120);
-          };
-          parentItem.addEventListener("mouseenter", () => {
-            if (window.innerWidth < BREAKPOINT) return;
-            cancelLeave();
-            openDesktopDropdown(parentItem);
-          });
-          parentItem.addEventListener("mouseleave", scheduleClose);
-          const id = parentItem.querySelector(".nav-link")?.dataset.dropdownTarget;
-          const panel = id ? document.getElementById(id) : null;
-          if (panel) {
-            panel.addEventListener("mouseenter", cancelLeave);
-            panel.addEventListener("mouseleave", scheduleClose);
-          }
-        });
-        let resizeTimer = null;
-        window.addEventListener("resize", () => {
-          clearTimeout(resizeTimer);
-          resizeTimer = setTimeout(() => {
-            setNavBarHeight();
-            if (window.innerWidth >= BREAKPOINT) {
-              if (mobileOpen) {
-                mobileOpen = false;
-                toggler.setAttribute("aria-expanded", "false");
-                toggler.classList.remove("is-active");
-                gsapWithCSS.killTweensOf([...toggler.children]);
-                gsapWithCSS.set([...toggler.children], { clearProps: "all" });
-                navList.style.visibility = "";
-                navList.style.pointerEvents = "";
-                const items = navList.querySelectorAll(":scope > .nav-item");
-                gsapWithCSS.set(items, { clearProps: "all" });
-                navList.querySelectorAll(".nav-dropdown--default").forEach((d) => d.classList.remove("is-open"));
-                navList.querySelectorAll(".nav-item").forEach((i) => i.classList.remove("is-open"));
-                if (mobileCtx) {
-                  mobileCtx.revert();
-                  mobileCtx = null;
-                }
-              }
-            } else {
-              openDropdowns.forEach((p) => closeDesktopDropdown(p));
-            }
-          }, 80);
-        });
-        setNavBarHeight();
-        window.addEventListener("load", setNavBarHeight);
       }
       function init4() {
         pageEnter();

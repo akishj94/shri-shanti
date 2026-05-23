@@ -40,7 +40,8 @@
         text-align: center;
     }
     .shri-cta-btn{
-        @include fluid(margin-block-start, 32px, 57px);        
+        @include fluid(margin-block-start, 32px, 57px);
+        font-weight: bold;
     }
 
     @include bp('md'){

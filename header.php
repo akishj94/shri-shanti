@@ -10,16 +10,24 @@
 <body <?php body_class(); ?>>
 <?php wp_body_open(); ?>
 
-<header class="site-header" data-animate>
+<header class="site-header is-expanded" data-animate>
   <div class="navbar_background-mobile"></div>
   <div class="container">
     <div class="flex space-between align-center">
-      <!-- Site Logo -->
-      <div class="site_branding">
-        <a href="<?php echo esc_url( home_url('/') ); ?>">
-          <img src="<?php echo get_template_directory_uri().'/assets/images/shri_logo.svg'; ?>" alt="Shri Shanti Engineering Logo">
-        </a>
+      <div class="flex space-between align-center">
+        <!-- Site Logo -->
+        <div class="site_branding">
+          <a href="<?php echo esc_url( home_url('/') ); ?>">
+            <img src="<?php echo get_template_directory_uri().'/assets/images/shri_logo.svg'; ?>" alt="Shri Shanti Engineering Logo">
+          </a>
+        </div>
+        
+        <!-- Mobile hamburger -->
+        <button class="nav-toggler" id="nav-toggler" aria-label="Toggle menu" aria-expanded="false">
+            <span></span><span></span>
+        </button>
       </div>
+      
 
       <!-- Nav Menu -->
       <?php get_template_part('template-parts/nav-menu'); ?>

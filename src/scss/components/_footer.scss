@@ -43,6 +43,12 @@
                 margin-block-start: 8px;
                 padding-inline-start: 8px;
             }
+            a{
+                transition: 0.3s ease;
+                &:hover{
+                    opacity: 0.8;
+                }
+            }
         }
     }
     .footerContact{

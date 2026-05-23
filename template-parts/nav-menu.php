@@ -22,10 +22,7 @@
             'menu_class'      => 'nav-list',
         ]);
         ?>
-        
+    <button class="site_cta">Connect</button>
     </div>
+    
 </nav>
-<!-- Mobile hamburger -->
-<button class="nav-toggler" id="nav-toggler" aria-label="Toggle menu" aria-expanded="false">
-    <span></span><span></span><span></span>
-</button>

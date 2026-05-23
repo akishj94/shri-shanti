@@ -16,3 +16,13 @@
 @use 'solutions';
 @use 'manifesto';
 @use 'industries';
+
+#wpadminbar{
+    opacity: 0;
+    &:hover{
+        opacity: 1;
+    }
+}
+html{
+    margin: 0px !important;
+}

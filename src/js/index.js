@@ -284,13 +284,6 @@ function initNav() {
 
     if (!header || !toggler || !navList) return;
 
-    // ── Measure & stamp header bar height as CSS custom property ──────────
-    function setNavBarHeight() {
-        const h = header.getBoundingClientRect().height;
-        // Approximate bar height: header padding + logo row, not any open submenu
-        document.documentElement.style.setProperty('--nav-bar-height', `${h}px`);
-    }
-
     // ── State ──────────────────────────────────────────────────────────────
     let mobileOpen    = false;
     let mobileCtx     = null; // GSAP context for mobile animations
@@ -311,9 +304,8 @@ function initNav() {
 
         mobileCtx = gsap.context(() => {
             // Hamburger → X
-            gsap.to(toggler.children[0], { y: 7,  rotation: 45,  duration: 0.25, ease: 'power2.inOut' });
-            gsap.to(toggler.children[1], { scaleX: 0, opacity: 0,  duration: 0.2,  ease: 'power2.inOut' });
-            gsap.to(toggler.children[2], { y: -7, rotation: -45, duration: 0.25, ease: 'power2.inOut' });
+            gsap.to(toggler.children[0], { y: 4,  rotation: 45,  duration: 0.25, ease: 'power2.inOut' });
+            gsap.to(toggler.children[1], { y: -3, rotation: -45, duration: 0.25, ease: 'power2.inOut' });
 
             // Stagger nav items in
             gsap.fromTo(items,
@@ -330,216 +322,80 @@ function initNav() {
         });
     }
 
-    function closeMobileMenu() {
-        if (!mobileOpen) return;
-        mobileOpen = false;
+    // function closeMobileMenu() {
+    //     if (!mobileOpen) return;
+    //     mobileOpen = false;
 
-        toggler.setAttribute('aria-expanded', 'false');
-        toggler.classList.remove('is-active');
+    //     toggler.setAttribute('aria-expanded', 'false');
+    //     toggler.classList.remove('is-active');
 
-        const items = navList.querySelectorAll(':scope > .nav-item');
+    //     const items = navList.querySelectorAll(':scope > .nav-item');
 
-        // Also collapse any open mobile submenus
-        navList.querySelectorAll('.nav-dropdown--default.is-open')
-            .forEach(d => closeMobileSubmenu(d.closest('.nav-item')));
+    //     // Also collapse any open mobile submenus
+    //     navList.querySelectorAll('.nav-dropdown--default.is-open')
+    //         .forEach(d => closeMobileSubmenu(d.closest('.nav-item')));
 
-        gsap.to(toggler.children[0], { y: 0, rotation: 0, duration: 0.22, ease: 'power2.inOut' });
-        gsap.to(toggler.children[1], { scaleX: 1, opacity: 1, duration: 0.18, ease: 'power2.inOut' });
-        gsap.to(toggler.children[2], { y: 0, rotation: 0, duration: 0.22, ease: 'power2.inOut' });
+    //     gsap.to(toggler.children[0], { y: 0, rotation: 0, duration: 0.22, ease: 'power2.inOut' });
+    //     gsap.to(toggler.children[1], { y: 0, rotation: 0, duration: 0.22, ease: 'power2.inOut' });
 
-        gsap.to(items, {
-            opacity: 0,
-            y: 10,
-            duration: 0.2,
-            ease: 'power2.in',
-            stagger: 0.04,
-            onComplete: () => {
-                navList.style.visibility = 'hidden';
-                navList.style.pointerEvents = 'none';
-                if (mobileCtx) { mobileCtx.revert(); mobileCtx = null; }
-            }
-        });
-    }
+    //     gsap.to(items, {
+    //         opacity: 0,
+    //         y: 10,
+    //         duration: 0.2,
+    //         ease: 'power2.in',
+    //         stagger: 0.04,
+    //         onComplete: () => {
+    //             navList.style.visibility = 'hidden';
+    //             navList.style.pointerEvents = 'none';
+    //             if (mobileCtx) { mobileCtx.revert(); mobileCtx = null; }
+    //         }
+    //     });
+    // }
 
-    // Mobile submenu accordion
-    function openMobileSubmenu(parentItem) {
-        const dropdown = parentItem.querySelector('.nav-dropdown--default');
-        if (!dropdown) return;
+    // // Mobile submenu accordion
+    // function openMobileSubmenu(parentItem) {
+    //     const dropdown = parentItem.querySelector('.nav-dropdown--default');
+    //     if (!dropdown) return;
 
-        dropdown.classList.add('is-open');
-        parentItem.classList.add('is-open');
+    //     dropdown.classList.add('is-open');
+    //     parentItem.classList.add('is-open');
 
-        const subItems = dropdown.querySelectorAll('.nav-dropdown-item');
-        gsap.fromTo(subItems,
-            { opacity: 0, y: 8 },
-            { opacity: 1, y: 0, duration: 0.28, ease: 'power2.out', stagger: 0.06, delay: 0.05 }
-        );
-    }
+    //     const subItems = dropdown.querySelectorAll('.nav-dropdown-item');
+    //     gsap.fromTo(subItems,
+    //         { opacity: 0, y: 8 },
+    //         { opacity: 1, y: 0, duration: 0.28, ease: 'power2.out', stagger: 0.06, delay: 0.05 }
+    //     );
+    // }
 
-    function closeMobileSubmenu(parentItem) {
-        const dropdown = parentItem.querySelector('.nav-dropdown--default');
-        if (!dropdown) return;
+    // function closeMobileSubmenu(parentItem) {
+    //     const dropdown = parentItem.querySelector('.nav-dropdown--default');
+    //     if (!dropdown) return;
 
-        dropdown.classList.remove('is-open');
-        parentItem.classList.remove('is-open');
+    //     dropdown.classList.remove('is-open');
+    //     parentItem.classList.remove('is-open');
 
-        const subItems = dropdown.querySelectorAll('.nav-dropdown-item');
-        gsap.to(subItems, { opacity: 0, y: 6, duration: 0.16, ease: 'power2.in' });
-    }
+    //     const subItems = dropdown.querySelectorAll('.nav-dropdown-item');
+    //     gsap.to(subItems, { opacity: 0, y: 6, duration: 0.16, ease: 'power2.in' });
+    // }
 
-    // Toggler click
-    toggler.addEventListener('click', () => {
-        mobileOpen ? closeMobileMenu() : openMobileMenu();
-    });
+    // // Toggler click
+    // toggler.addEventListener('click', () => {
+    //     mobileOpen ? closeMobileMenu() : openMobileMenu();
+    // });
 
-    // Mobile parent item click → accordion
-    navList.querySelectorAll('.nav-item.has-dropdown > .nav-link').forEach(link => {
-        link.addEventListener('click', e => {
-            if (window.innerWidth >= BREAKPOINT) return;
-            e.preventDefault();
+    // // Mobile parent item click → accordion
+    // navList.querySelectorAll('.nav-item.has-dropdown > .nav-link').forEach(link => {
+    //     link.addEventListener('click', e => {
+    //         if (window.innerWidth >= BREAKPOINT) return;
+    //         e.preventDefault();
 
-            const parentItem = link.closest('.nav-item');
-            parentItem.classList.contains('is-open')
-                ? closeMobileSubmenu(parentItem)
-                : openMobileSubmenu(parentItem);
-        });
-    });
-
-    // ── DESKTOP ─────────────────────────────────────────────────────────────
-    // Position and show the hoisted dropdown panel
-    function positionHoisted(parentItem, panel) {
-        const rect = parentItem.getBoundingClientRect();
-        panel.style.insetBlockStart = `${rect.bottom + 10}px`;
-        panel.style.insetInlineStart = `${rect.left}px`;
-    }
-
-    function openDesktopDropdown(parentItem) {
-        const id    = parentItem.querySelector('.nav-link')?.dataset.dropdownTarget;
-        const panel = id ? document.getElementById(id) : null; // hoisted panel
-
-        parentItem.classList.add('is-open');
-        openDropdowns.add(parentItem);
-
-        if (panel) {
-            positionHoisted(parentItem, panel);
-            panel.hidden = false;
-
-            const items = panel.querySelectorAll('.nav-dropdown-item');
-            gsap.killTweensOf([panel, items]);
-
-            gsap.fromTo(panel,
-                { opacity: 0, y: 8 },
-                { opacity: 1, y: 0, duration: 0.22, ease: 'power2.out',
-                  onStart: () => { panel.style.pointerEvents = 'auto'; }
-                }
-            );
-            gsap.fromTo(items,
-                { opacity: 0, y: 6 },
-                { opacity: 1, y: 0, duration: 0.25, ease: 'power2.out', stagger: 0.055, delay: 0.04 }
-            );
-        }
-    }
-
-    function closeDesktopDropdown(parentItem) {
-        const id    = parentItem.querySelector('.nav-link')?.dataset.dropdownTarget;
-        const panel = id ? document.getElementById(id) : null;
-
-        parentItem.classList.remove('is-open');
-        openDropdowns.delete(parentItem);
-
-        if (panel) {
-            gsap.killTweensOf(panel);
-            gsap.to(panel, {
-                opacity: 0,
-                y: 8,
-                duration: 0.18,
-                ease: 'power2.in',
-                onComplete: () => {
-                    panel.hidden = true;
-                    panel.style.pointerEvents = 'none';
-                    // Reset item opacities for next open
-                    gsap.set(panel.querySelectorAll('.nav-dropdown-item'), { opacity: 0, y: 6 });
-                }
-            });
-        }
-    }
-
-    navList.querySelectorAll('.nav-item.has-dropdown').forEach(parentItem => {
-        // Use a small delay on leave so pointer can travel to the panel
-        let leaveTimer = null;
-
-        const cancelLeave = () => {
-            if (leaveTimer) { clearTimeout(leaveTimer); leaveTimer = null; }
-        };
-
-        const scheduleClose = () => {
-            cancelLeave();
-            leaveTimer = setTimeout(() => {
-                if (window.innerWidth < BREAKPOINT) return;
-                closeDesktopDropdown(parentItem);
-            }, 120);
-        };
-
-        parentItem.addEventListener('mouseenter', () => {
-            if (window.innerWidth < BREAKPOINT) return;
-            cancelLeave();
-            openDesktopDropdown(parentItem);
-        });
-
-        parentItem.addEventListener('mouseleave', scheduleClose);
-
-        // Keep open while pointer is inside the hoisted panel
-        const id    = parentItem.querySelector('.nav-link')?.dataset.dropdownTarget;
-        const panel = id ? document.getElementById(id) : null;
-
-        if (panel) {
-            panel.addEventListener('mouseenter', cancelLeave);
-            panel.addEventListener('mouseleave', scheduleClose);
-        }
-    });
-
-    // ── RESIZE — reset mobile state when crossing breakpoint ────────────────
-    let resizeTimer = null;
-    window.addEventListener('resize', () => {
-        clearTimeout(resizeTimer);
-        resizeTimer = setTimeout(() => {
-            setNavBarHeight();
-
-            if (window.innerWidth >= BREAKPOINT) {
-                // Entering desktop — hard-reset any open mobile state
-                if (mobileOpen) {
-                    mobileOpen = false;
-                    toggler.setAttribute('aria-expanded', 'false');
-                    toggler.classList.remove('is-active');
-
-                    // Kill any running tweens and reset positions immediately
-                    gsap.killTweensOf([...toggler.children]);
-                    gsap.set([...toggler.children], { clearProps: 'all' });
-
-                    navList.style.visibility = '';
-                    navList.style.pointerEvents = '';
-
-                    const items = navList.querySelectorAll(':scope > .nav-item');
-                    gsap.set(items, { clearProps: 'all' });
-
-                    navList.querySelectorAll('.nav-dropdown--default')
-                        .forEach(d => d.classList.remove('is-open'));
-                    navList.querySelectorAll('.nav-item')
-                        .forEach(i => i.classList.remove('is-open'));
-
-                    if (mobileCtx) { mobileCtx.revert(); mobileCtx = null; }
-                }
-            } else {
-                // Entering mobile — close any open desktop panels
-                openDropdowns.forEach(p => closeDesktopDropdown(p));
-            }
-        }, 80);
-    });
-
-    // ── Init ────────────────────────────────────────────────────────────────
-    setNavBarHeight();
-    // Measure again after fonts/images load
-    window.addEventListener('load', setNavBarHeight);
+    //         const parentItem = link.closest('.nav-item');
+    //         parentItem.classList.contains('is-open')
+    //             ? closeMobileSubmenu(parentItem)
+    //             : openMobileSubmenu(parentItem);
+    //     });
+    // });
+    
 }
 
 // ─── Init ─────────────────────────────────────────────────
