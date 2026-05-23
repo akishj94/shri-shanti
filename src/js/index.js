@@ -270,133 +270,202 @@ function initPatternBg() {
 }
 
 function initNav() {
-    // ── Guards ─────────────────────────────────────────────────────────────
-    if (typeof gsap === 'undefined') {
-        console.warn('initNav: GSAP not found.');
-        return;
-    }
+    if (typeof gsap === 'undefined') { console.warn('initNav: GSAP not found.'); return; }
 
-    const header      = document.querySelector('.site-header');
-    const toggler     = document.getElementById('nav-toggler');
-    const navList     = document.querySelector('.nav-list');
-    const mobileBg    = document.querySelector('.navbar_background-mobile');
-    const BREAKPOINT  = 768;
+    const header   = document.querySelector('.site-header');
+    const toggler  = document.getElementById('nav-toggler');
+    const navList  = document.querySelector('.nav-list');
+    const mobileBg = document.querySelector('.navbar_background-mobile');
+    const logo     = document.querySelector('.site_branding img');
+    const siteCta  = document.querySelector('.site_cta');
+    const BREAK    = 768;
 
     if (!header || !toggler || !navList) return;
 
-    // ── State ──────────────────────────────────────────────────────────────
-    let mobileOpen    = false;
-    let mobileCtx     = null; // GSAP context for mobile animations
-    const openDropdowns = new Set(); // tracks desktop open parents
+    let mobileOpen = false;
+    let wasMobile  = window.innerWidth < BREAK;
 
-    // ── MOBILE ─────────────────────────────────────────────────────────────
-    function openMobileMenu() {
-        if (mobileOpen) return;
-        mobileOpen = true;
+    // ── Helpers ───────────────────────────────────────────────────────────────
 
-        toggler.setAttribute('aria-expanded', 'true');
-        toggler.classList.add('is-active');
+    function isMobile() { return window.innerWidth < BREAK; }
 
-        navList.style.visibility = 'visible';
-        navList.style.pointerEvents = 'auto';
+    function getStaggerItems() {
+        return [...navList.querySelectorAll(':scope > .nav-item'), siteCta].filter(Boolean);
+    }
 
-        const items = navList.querySelectorAll(':scope > .nav-item');
+    function resetMobileState() {
+        mobileOpen = false;
+        toggler.setAttribute('aria-expanded', 'false');
+        header.setAttribute('data-expanded', 'false');
 
-        mobileCtx = gsap.context(() => {
-            // Hamburger → X
-            gsap.to(toggler.children[0], { y: 4,  rotation: 45,  duration: 0.25, ease: 'power2.inOut' });
-            gsap.to(toggler.children[1], { y: -3, rotation: -45, duration: 0.25, ease: 'power2.inOut' });
+        gsap.set([...toggler.children], { clearProps: 'all' });
+        gsap.set(header,   { clearProps: 'all' });
+        gsap.set(logo,     { clearProps: 'all' });
+        gsap.set(mobileBg, { clearProps: 'all', opacity: 0 });
 
-            // Stagger nav items in
-            gsap.fromTo(items,
-                { opacity: 0, y: 14 },
-                {
-                    opacity: 1,
-                    y: 0,
-                    duration: 0.38,
-                    ease: 'power3.out',
-                    stagger: 0.07,
-                    delay: 0.05,
-                }
-            );
+        navList.style.visibility    = 'hidden';
+        navList.style.pointerEvents = 'none';
+        gsap.set(getStaggerItems(), { clearProps: 'all', opacity: 0 });
+
+        navList.querySelectorAll('.nav-item.is-open').forEach(closeMobileSubmenu);
+    }
+
+    function resetDesktopState() {
+        navList.style.visibility    = '';
+        navList.style.pointerEvents = '';
+        gsap.set(navList, { clearProps: 'all' });
+        gsap.set(getStaggerItems(), { clearProps: 'all' });
+        navList.querySelectorAll('.nav-dropdown--default .nav-dropdown-item').forEach(item => {
+            gsap.set(item, { opacity: 0, y: 6 });
         });
     }
 
-    // function closeMobileMenu() {
-    //     if (!mobileOpen) return;
-    //     mobileOpen = false;
+    // ── Mobile ────────────────────────────────────────────────────────────────
 
-    //     toggler.setAttribute('aria-expanded', 'false');
-    //     toggler.classList.remove('is-active');
+    function openMobileMenu() {
+        mobileOpen = true;
+        toggler.setAttribute('aria-expanded', 'true');
+        header.setAttribute('data-expanded', 'true');
 
-    //     const items = navList.querySelectorAll(':scope > .nav-item');
+        const items = getStaggerItems();
+        gsap.set(items, { opacity: 0, y: 16 });
 
-    //     // Also collapse any open mobile submenus
-    //     navList.querySelectorAll('.nav-dropdown--default.is-open')
-    //         .forEach(d => closeMobileSubmenu(d.closest('.nav-item')));
+        navList.style.visibility    = 'visible';
+        navList.style.pointerEvents = 'auto';
 
-    //     gsap.to(toggler.children[0], { y: 0, rotation: 0, duration: 0.22, ease: 'power2.inOut' });
-    //     gsap.to(toggler.children[1], { y: 0, rotation: 0, duration: 0.22, ease: 'power2.inOut' });
+        gsap.to(toggler.children[0], { y: 4,  rotation:  45, duration: 0.25, ease: 'power2.inOut' });
+        gsap.to(toggler.children[1], { y: -3, rotation: -45, duration: 0.25, ease: 'power2.inOut' });
 
-    //     gsap.to(items, {
-    //         opacity: 0,
-    //         y: 10,
-    //         duration: 0.2,
-    //         ease: 'power2.in',
-    //         stagger: 0.04,
-    //         onComplete: () => {
-    //             navList.style.visibility = 'hidden';
-    //             navList.style.pointerEvents = 'none';
-    //             if (mobileCtx) { mobileCtx.revert(); mobileCtx = null; }
-    //         }
-    //     });
-    // }
+        gsap.to(header, { height: '100lvh', duration: 0.45, ease: 'expo.inOut' });
+        gsap.to(logo,   { filter: 'brightness(0) invert(1)', duration: 0.3 });
 
-    // // Mobile submenu accordion
-    // function openMobileSubmenu(parentItem) {
-    //     const dropdown = parentItem.querySelector('.nav-dropdown--default');
-    //     if (!dropdown) return;
+        gsap.fromTo(mobileBg,
+            { opacity: 0, scaleY: 0.92, transformOrigin: 'top center' },
+            {
+                opacity: 1, scaleY: 1,
+                duration: 0.5, ease: 'expo.out',
+                onComplete: () => {
+                    gsap.to(items, {
+                        opacity: 1, y: 0,
+                        duration: 0.4, ease: 'power3.out',
+                        stagger: 0.07
+                    });
+                }
+            }
+        );
+    }
 
-    //     dropdown.classList.add('is-open');
-    //     parentItem.classList.add('is-open');
+    function closeMobileMenu() {
+        mobileOpen = false;
+        toggler.setAttribute('aria-expanded', 'false');
+        header.setAttribute('data-expanded', 'false');
 
-    //     const subItems = dropdown.querySelectorAll('.nav-dropdown-item');
-    //     gsap.fromTo(subItems,
-    //         { opacity: 0, y: 8 },
-    //         { opacity: 1, y: 0, duration: 0.28, ease: 'power2.out', stagger: 0.06, delay: 0.05 }
-    //     );
-    // }
+        navList.querySelectorAll('.nav-item.is-open').forEach(closeMobileSubmenu);
 
-    // function closeMobileSubmenu(parentItem) {
-    //     const dropdown = parentItem.querySelector('.nav-dropdown--default');
-    //     if (!dropdown) return;
+        gsap.to(toggler.children[0], { y: 0, rotation: 0, duration: 0.22, ease: 'power2.inOut' });
+        gsap.to(toggler.children[1], { y: 0, rotation: 0, duration: 0.22, ease: 'power2.inOut' });
 
-    //     dropdown.classList.remove('is-open');
-    //     parentItem.classList.remove('is-open');
+        const tl = gsap.timeline();
 
-    //     const subItems = dropdown.querySelectorAll('.nav-dropdown-item');
-    //     gsap.to(subItems, { opacity: 0, y: 6, duration: 0.16, ease: 'power2.in' });
-    // }
+        tl.to(getStaggerItems(), {
+            opacity: 0, y: 10,
+            duration: 0.2, ease: 'power2.in', stagger: 0.04,
+        })
+        .to(mobileBg, { opacity: 0, duration: 0.3, ease: 'power2.in' }, '<')
+        .to(logo, { filter: 'brightness(1) invert(0)', duration: 0.4, ease: 'power1.inOut' }, '<0.1')
+        .to(header, {
+            height: '', duration: 0.4, ease: 'expo.inOut',
+            onComplete: () => {
+                navList.style.visibility    = 'hidden';
+                navList.style.pointerEvents = 'none';
+            }
+        });
+    }
 
-    // // Toggler click
-    // toggler.addEventListener('click', () => {
-    //     mobileOpen ? closeMobileMenu() : openMobileMenu();
-    // });
+    function openMobileSubmenu(parentItem) {
+        const dropdown = parentItem.querySelector('.nav-dropdown--default');
+        if (!dropdown) return;
+        parentItem.classList.add('is-open');
+        parentItem.querySelector('.nav-link')?.setAttribute('aria-expanded', 'true');
+        const subItems = dropdown.querySelectorAll('.nav-dropdown-item');
+        gsap.set(subItems, { opacity: 0, y: 8 });
+        gsap.to(subItems, { opacity: 1, y: 0, duration: 0.28, ease: 'power2.out', stagger: 0.06 });
+    }
 
-    // // Mobile parent item click → accordion
-    // navList.querySelectorAll('.nav-item.has-dropdown > .nav-link').forEach(link => {
-    //     link.addEventListener('click', e => {
-    //         if (window.innerWidth >= BREAKPOINT) return;
-    //         e.preventDefault();
+    function closeMobileSubmenu(parentItem) {
+        const dropdown = parentItem.querySelector('.nav-dropdown--default');
+        if (!dropdown) return;
+        parentItem.classList.remove('is-open');
+        parentItem.querySelector('.nav-link')?.setAttribute('aria-expanded', 'false');
+        gsap.to(dropdown.querySelectorAll('.nav-dropdown-item'), {
+            opacity: 0, y: 6, duration: 0.16, ease: 'power2.in'
+        });
+    }
 
-    //         const parentItem = link.closest('.nav-item');
-    //         parentItem.classList.contains('is-open')
-    //             ? closeMobileSubmenu(parentItem)
-    //             : openMobileSubmenu(parentItem);
-    //     });
-    // });
-    
+    toggler.addEventListener('click', () => mobileOpen ? closeMobileMenu() : openMobileMenu());
+
+    navList.querySelectorAll('.nav-item.has-dropdown').forEach(parentItem => {
+        parentItem.addEventListener('click', e => {
+            if (!isMobile()) return;
+            if (e.target.closest('.nav-dropdown--default')) return;
+            e.preventDefault();
+            parentItem.classList.contains('is-open')
+                ? closeMobileSubmenu(parentItem)
+                : openMobileSubmenu(parentItem);
+        });
+    });
+
+    // ── Desktop ───────────────────────────────────────────────────────────────
+
+    navList.querySelectorAll('.nav-item.has-dropdown').forEach(parentItem => {
+        const dropdown = parentItem.querySelector('.nav-dropdown--default');
+        if (!dropdown) return;
+
+        let leaveTimer = null;
+        const cancelLeave = () => { clearTimeout(leaveTimer); leaveTimer = null; };
+
+        parentItem.addEventListener('mouseenter', () => {
+            if (isMobile()) return;
+            cancelLeave();
+            const items = dropdown.querySelectorAll('.nav-dropdown-item');
+            gsap.killTweensOf(items);
+            gsap.fromTo(items,
+                { opacity: 0, y: 8 },
+                { opacity: 1, y: 0, duration: 0.25, ease: 'power2.out', stagger: 0.055 }
+            );
+        });
+
+        parentItem.addEventListener('mouseleave', () => {
+            if (isMobile()) return;
+            leaveTimer = setTimeout(() => {
+                const items = dropdown.querySelectorAll('.nav-dropdown-item');
+                gsap.to(items, {
+                    opacity: 0, y: 6, duration: 0.16, ease: 'power2.in',
+                    onComplete: () => gsap.set(items, { clearProps: 'all' })
+                });
+            }, 120);
+        });
+    });
+
+    // ── Resize ────────────────────────────────────────────────────────────────
+
+    let resizeTimer = null;
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+            const nowMobile = isMobile();
+            if (wasMobile === nowMobile) return;
+            wasMobile = nowMobile;
+            nowMobile ? resetMobileState() : resetDesktopState();
+        }, 80);
+    });
+
+    // ── Init ──────────────────────────────────────────────────────────────────
+
+    isMobile() ? resetMobileState() : resetDesktopState();
 }
+
+
 
 // ─── Init ─────────────────────────────────────────────────
 

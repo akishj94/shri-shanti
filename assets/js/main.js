@@ -6764,36 +6764,170 @@
         const toggler = document.getElementById("nav-toggler");
         const navList = document.querySelector(".nav-list");
         const mobileBg = document.querySelector(".navbar_background-mobile");
-        const BREAKPOINT = 768;
+        const logo = document.querySelector(".site_branding img");
+        const siteCta = document.querySelector(".site_cta");
+        const BREAK = 768;
         if (!header || !toggler || !navList) return;
         let mobileOpen = false;
-        let mobileCtx = null;
-        const openDropdowns = /* @__PURE__ */ new Set();
-        function openMobileMenu() {
-          if (mobileOpen) return;
-          mobileOpen = true;
-          toggler.setAttribute("aria-expanded", "true");
-          toggler.classList.add("is-active");
-          navList.style.visibility = "visible";
-          navList.style.pointerEvents = "auto";
-          const items = navList.querySelectorAll(":scope > .nav-item");
-          mobileCtx = gsapWithCSS.context(() => {
-            gsapWithCSS.to(toggler.children[0], { y: 4, rotation: 45, duration: 0.25, ease: "power2.inOut" });
-            gsapWithCSS.to(toggler.children[1], { y: -3, rotation: -45, duration: 0.25, ease: "power2.inOut" });
-            gsapWithCSS.fromTo(
-              items,
-              { opacity: 0, y: 14 },
-              {
-                opacity: 1,
-                y: 0,
-                duration: 0.38,
-                ease: "power3.out",
-                stagger: 0.07,
-                delay: 0.05
-              }
-            );
+        let wasMobile = window.innerWidth < BREAK;
+        function isMobile() {
+          return window.innerWidth < BREAK;
+        }
+        function getStaggerItems() {
+          return [...navList.querySelectorAll(":scope > .nav-item"), siteCta].filter(Boolean);
+        }
+        function resetMobileState() {
+          mobileOpen = false;
+          toggler.setAttribute("aria-expanded", "false");
+          header.setAttribute("data-expanded", "false");
+          gsapWithCSS.set([...toggler.children], { clearProps: "all" });
+          gsapWithCSS.set(header, { clearProps: "all" });
+          gsapWithCSS.set(logo, { clearProps: "all" });
+          gsapWithCSS.set(mobileBg, { clearProps: "all", opacity: 0 });
+          navList.style.visibility = "hidden";
+          navList.style.pointerEvents = "none";
+          gsapWithCSS.set(getStaggerItems(), { clearProps: "all", opacity: 0 });
+          navList.querySelectorAll(".nav-item.is-open").forEach(closeMobileSubmenu);
+        }
+        function resetDesktopState() {
+          navList.style.visibility = "";
+          navList.style.pointerEvents = "";
+          gsapWithCSS.set(navList, { clearProps: "all" });
+          gsapWithCSS.set(getStaggerItems(), { clearProps: "all" });
+          navList.querySelectorAll(".nav-dropdown--default .nav-dropdown-item").forEach((item) => {
+            gsapWithCSS.set(item, { opacity: 0, y: 6 });
           });
         }
+        function openMobileMenu() {
+          mobileOpen = true;
+          toggler.setAttribute("aria-expanded", "true");
+          header.setAttribute("data-expanded", "true");
+          const items = getStaggerItems();
+          gsapWithCSS.set(items, { opacity: 0, y: 16 });
+          navList.style.visibility = "visible";
+          navList.style.pointerEvents = "auto";
+          gsapWithCSS.to(toggler.children[0], { y: 4, rotation: 45, duration: 0.25, ease: "power2.inOut" });
+          gsapWithCSS.to(toggler.children[1], { y: -3, rotation: -45, duration: 0.25, ease: "power2.inOut" });
+          gsapWithCSS.to(header, { height: "100lvh", duration: 0.45, ease: "expo.inOut" });
+          gsapWithCSS.to(logo, { filter: "brightness(0) invert(1)", duration: 0.3 });
+          gsapWithCSS.fromTo(
+            mobileBg,
+            { opacity: 0, scaleY: 0.92, transformOrigin: "top center" },
+            {
+              opacity: 1,
+              scaleY: 1,
+              duration: 0.5,
+              ease: "expo.out",
+              onComplete: () => {
+                gsapWithCSS.to(items, {
+                  opacity: 1,
+                  y: 0,
+                  duration: 0.4,
+                  ease: "power3.out",
+                  stagger: 0.07
+                });
+              }
+            }
+          );
+        }
+        function closeMobileMenu() {
+          mobileOpen = false;
+          toggler.setAttribute("aria-expanded", "false");
+          header.setAttribute("data-expanded", "false");
+          navList.querySelectorAll(".nav-item.is-open").forEach(closeMobileSubmenu);
+          gsapWithCSS.to(toggler.children[0], { y: 0, rotation: 0, duration: 0.22, ease: "power2.inOut" });
+          gsapWithCSS.to(toggler.children[1], { y: 0, rotation: 0, duration: 0.22, ease: "power2.inOut" });
+          const tl = gsapWithCSS.timeline();
+          tl.to(getStaggerItems(), {
+            opacity: 0,
+            y: 10,
+            duration: 0.2,
+            ease: "power2.in",
+            stagger: 0.04
+          }).to(mobileBg, { opacity: 0, duration: 0.3, ease: "power2.in" }, "<").to(logo, { filter: "brightness(1) invert(0)", duration: 0.4, ease: "power1.inOut" }, "<0.1").to(header, {
+            height: "",
+            duration: 0.4,
+            ease: "expo.inOut",
+            onComplete: () => {
+              navList.style.visibility = "hidden";
+              navList.style.pointerEvents = "none";
+            }
+          });
+        }
+        function openMobileSubmenu(parentItem) {
+          const dropdown = parentItem.querySelector(".nav-dropdown--default");
+          if (!dropdown) return;
+          parentItem.classList.add("is-open");
+          parentItem.querySelector(".nav-link")?.setAttribute("aria-expanded", "true");
+          const subItems = dropdown.querySelectorAll(".nav-dropdown-item");
+          gsapWithCSS.set(subItems, { opacity: 0, y: 8 });
+          gsapWithCSS.to(subItems, { opacity: 1, y: 0, duration: 0.28, ease: "power2.out", stagger: 0.06 });
+        }
+        function closeMobileSubmenu(parentItem) {
+          const dropdown = parentItem.querySelector(".nav-dropdown--default");
+          if (!dropdown) return;
+          parentItem.classList.remove("is-open");
+          parentItem.querySelector(".nav-link")?.setAttribute("aria-expanded", "false");
+          gsapWithCSS.to(dropdown.querySelectorAll(".nav-dropdown-item"), {
+            opacity: 0,
+            y: 6,
+            duration: 0.16,
+            ease: "power2.in"
+          });
+        }
+        toggler.addEventListener("click", () => mobileOpen ? closeMobileMenu() : openMobileMenu());
+        navList.querySelectorAll(".nav-item.has-dropdown").forEach((parentItem) => {
+          parentItem.addEventListener("click", (e) => {
+            if (!isMobile()) return;
+            if (e.target.closest(".nav-dropdown--default")) return;
+            e.preventDefault();
+            parentItem.classList.contains("is-open") ? closeMobileSubmenu(parentItem) : openMobileSubmenu(parentItem);
+          });
+        });
+        navList.querySelectorAll(".nav-item.has-dropdown").forEach((parentItem) => {
+          const dropdown = parentItem.querySelector(".nav-dropdown--default");
+          if (!dropdown) return;
+          let leaveTimer = null;
+          const cancelLeave = () => {
+            clearTimeout(leaveTimer);
+            leaveTimer = null;
+          };
+          parentItem.addEventListener("mouseenter", () => {
+            if (isMobile()) return;
+            cancelLeave();
+            const items = dropdown.querySelectorAll(".nav-dropdown-item");
+            gsapWithCSS.killTweensOf(items);
+            gsapWithCSS.fromTo(
+              items,
+              { opacity: 0, y: 8 },
+              { opacity: 1, y: 0, duration: 0.25, ease: "power2.out", stagger: 0.055 }
+            );
+          });
+          parentItem.addEventListener("mouseleave", () => {
+            if (isMobile()) return;
+            leaveTimer = setTimeout(() => {
+              const items = dropdown.querySelectorAll(".nav-dropdown-item");
+              gsapWithCSS.to(items, {
+                opacity: 0,
+                y: 6,
+                duration: 0.16,
+                ease: "power2.in",
+                onComplete: () => gsapWithCSS.set(items, { clearProps: "all" })
+              });
+            }, 120);
+          });
+        });
+        let resizeTimer = null;
+        window.addEventListener("resize", () => {
+          clearTimeout(resizeTimer);
+          resizeTimer = setTimeout(() => {
+            const nowMobile = isMobile();
+            if (wasMobile === nowMobile) return;
+            wasMobile = nowMobile;
+            nowMobile ? resetMobileState() : resetDesktopState();
+          }, 80);
+        });
+        isMobile() ? resetMobileState() : resetDesktopState();
       }
       function init4() {
         pageEnter();

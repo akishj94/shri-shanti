@@ -20,7 +20,8 @@ $nav-transition: 0.22s cubic-bezier(0.4, 0, 0.2, 1);
         background: linear-gradient(60.2deg, #340F07 34.24%, #FF3B00 180.07%);
         z-index: -1;
         pointer-events: none;
-        height: 100lvh;    
+        height: 100lvh;
+        opacity: 0;
         @include bp('md') {
             display: none;
         }   
@@ -57,54 +58,64 @@ $nav-transition: 0.22s cubic-bezier(0.4, 0, 0.2, 1);
 
         .nav-inner {
             flex: 1;
-            display: flex;
             flex-direction: column;
             padding-block: 20px;
             padding-inline: 0;
             min-height: 0;
         }
 
-        .nav-list, .nav-dropdown--default {
+        .nav-list {
             flex: 1;
             display: flex;
             flex-direction: column;
             margin: 0;
             padding: 0;
             min-height: 0;
-            margin-block-start: 50%;
+            margin-block-start: 30ch;
+            visibility: hidden;
+            pointer-events: none;
         }
-        .nav-dropdown--default{
-            margin: 0px;
-            gap: 12px;
-            li{
-                a{
-                    padding: 16px 20px;
-                    background: rgba(255, 255, 255, 0.2);
+        .nav-dropdown{
+            &.nav-dropdown--default{
+                margin: 0px;
+                gap: 12px;
+                max-width: calc(100% - 20px);
+                margin-inline: auto;
+                overflow: hidden;
+                max-height: 0;
+                li{
+                    a{
+                        padding: 16px 20px;
+                        background: rgba(255, 255, 255, 0.2);
+                        &:hover {
+                            background: rgba($color-accent, 0.15);
+                        }
+                    }
+                }
+                
+                .nav-dropdown-link{
+                    img{
+                        display: none;
+                    }
                 }
             }
-            max-width: calc(100% - 20px);
-            margin-inline: auto;
         }
         .nav-item {
             width: 100%;
             a {
-                justify-content: left;
+                justify-content: space-between;
                 padding: 20px;
-
                 background: rgba(255, 255, 255, 0.1);
                 border-radius: 8px;
+                &:hover {
+                    background: rgba($color-accent, 0.15);
+                }
             }
             &.has-dropdown{
-                a{
-                    justify-content: space-between;                    
-                }
                 &>a{
-                     @include fluid(margin-block-end, 16px, 22px);
+                    @include fluid(margin-block-end, 16px, 22px);
                 }
             }
-        }
-        &.is-expanded {
-            height: 100vh;
         }
         .site_cta{
             width: 100%;
@@ -113,6 +124,11 @@ $nav-transition: 0.22s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 // ── Inner row ─────────────────────────────────────────────────────────────────
+@mixin nav-bg($bg: rgba($color-gray, 0.45), $blur: 45px) {
+    backdrop-filter: blur($blur);
+    -webkit-backdrop-filter: blur($blur);
+    background-color: $bg;
+}
 .nav-inner {
     padding-block: 4px;
     @include fluid(padding-inline-start, 16px, 24px);
@@ -124,21 +140,61 @@ $nav-transition: 0.22s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
 
     @include bp('md') {
-        backdrop-filter: blur(45px);
-        -webkit-backdrop-filter: blur(45px);
-        background-color: rgba($color-gray, 0.45);
+        @include nav-bg;
+        .nav-dropdown {
+            .nav-dropdown-link{
+                @include nav-bg;
+            }
+        }
     }
 }
 // ── Dropwdown Default ──────────────────────────────────────────────────────────────────────
 .nav-dropdown{
     list-style: none;
     &.nav-dropdown--default{
+        display: flex;
+        flex-direction: column;
+        margin: 0;
+        padding: 0;
+        gap: 6px;
+        margin-block-start: 6px;
         @include bp('md'){
-            display: none;
+            position: absolute;
+            left: 0px;
+            top: 100%;
+            width: 100%;
+            .nav-dropdown-item{
+                opacity: 0;
+                transform: translateY(6px);
+            }
         }
     }
-    &.nav-dropdown--hoisted {
-        display: none;
+    // ── Dropdown links  ───────────────────────────────────────────────
+    .nav-dropdown-link {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 14px 16px;
+        padding-inline-end: rem(20px);
+        color: white;
+        text-decoration: none;
+        transition: background $nav-transition;
+        border-radius: rem(8px);        
+        &.has-thumbnail{
+            padding-block: rem(6px);
+            padding-inline-start: rem(6px);
+        }
+        img {
+            object-fit: cover;
+            border-radius: 8px;
+            flex-shrink: 0;
+        }
+
+        .item-arrow {
+            margin-inline-start: auto;
+            width: 8px;
+            height: 8px;
+        }
     }
 }
 // ── List ──────────────────────────────────────────────────────────────────────
@@ -153,7 +209,7 @@ $nav-transition: 0.22s cubic-bezier(0.4, 0, 0.2, 1);
     flex: 1;
     li{
         width: auto;
-        position: relative;
+        position: static;
     }
 }
 .nav-list {
@@ -169,125 +225,16 @@ $nav-transition: 0.22s cubic-bezier(0.4, 0, 0.2, 1);
         text-decoration: none;
         padding: 2px;
         white-space: nowrap;
-        transition: color $nav-transition;
+        transition: color $nav-transition, background $nav-transition;
 
         svg:last-child {
             width: 8px;
             height: 5px;
             transition: transform $nav-transition;
             flex-shrink: 0;
-        }
-        &:hover {
-            background: rgba($color-accent, 0.15);
-        }
-    }
-
-
-    // ── Dropdown links  ───────────────────────────────────────────────
-    .nav-dropdown-link {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        padding: 14px 16px;
-        color: white;
-        text-decoration: none;
-        transition: background $nav-transition;
-
-        &:hover {
-            background: rgba($color-accent, 0.15);
-        }
-
-        img {
-            width: 52px;
-            height: 40px;
-            object-fit: cover;
-            border-radius: 8px;
-            flex-shrink: 0;
-        }
-
-        .item-arrow {
-            margin-inline-start: auto;
-            width: 8px;
-            height: 8px;
-        }
-    }
+        }        
+    }    
 }
-
-// ── Hoisted dropdown panels (desktop, outside main UL) ───────────────────────
-// .nav-dropdown--hoisted {
-//     display: none; // hidden on mobile — default submenu handles it
-
-//     @media (min-width: 768px) {
-//         display: block;
-//         position: fixed; // or absolute relative to a positioned ancestor
-//         list-style: none;
-//         margin: 0;
-//         padding: 6px;
-//         min-width: 260px;
-//         border-radius: $border-radius;
-//         overflow: hidden;
-
-//         // Hidden state — GSAP drives visibility
-//         opacity: 0;
-//         pointer-events: none;
-//         transform: translateY(8px);
-//         transition: opacity $nav-transition, transform $nav-transition;
-
-//         &.is-open {
-//             opacity: 1;
-//             pointer-events: auto;
-//             transform: translateY(0);
-//         }
-
-//         .nav-dropdown-item {
-//             opacity: 0;
-//             transform: translateY(6px);
-//             border-radius: 10px;
-//             overflow: hidden;
-//             transition: opacity 0.2s ease, transform 0.2s ease, background 0.15s ease;
-//             transition-delay: 0s;
-//         }
-
-//         &.is-open .nav-dropdown-item {
-//             @for $i from 1 through 10 {
-//                 &:nth-child(#{$i}) {
-//                     transition-delay: #{($i - 1) * 0.055}s;
-//                     opacity: 1;
-//                     transform: translateY(0);
-//                 }
-//             }
-//         }
-
-//         .nav-dropdown-link {
-//             display: flex;
-//             align-items: center;
-//             gap: 12px;
-//             padding: 14px 16px;
-//             color: white;
-//             text-decoration: none;
-//             font-size: rem(12px);
-//             letter-spacing: 0.08em;
-//             transition: background $nav-transition;
-
-//             &:hover {
-//                 background: rgba($color-accent, 0.15);
-//             }
-
-//             img {
-//                 width: 52px;
-//                 height: 40px;
-//                 object-fit: cover;
-//                 border-radius: 8px;
-//                 flex-shrink: 0;
-//             }
-
-//             .item-arrow {
-//                 margin-inline-start: auto;
-//                 opacity: 0.4;
-//             }
-//         }
-//     }
-// }
 
 // ── Hamburger ─────────────────────────────────────────────────────────────────
 .nav-toggler {
