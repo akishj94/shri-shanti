@@ -11,18 +11,15 @@
 ?>
 
 <nav class="site-nav" id="site-nav" role="navigation" aria-label="Primary Navigation">
-    <div class="nav-inner">
-        <!-- WordPress menu output -->
-        <?php
-        
-        Nav_Walker::render([
-            'theme_location'  => 'primary',
-            'container'       => 'nav',
-            'container_class' => 'site-nav',
-            'menu_class'      => 'nav-list',
-        ]);
-        ?>
-    <button class="site_cta">Connect</button>
-    </div>
+    <!-- WordPress menu output -->
+    <?php
     
+    Nav_Walker::render([
+        'theme_location'  => 'primary',
+        'container'       => false,
+        'container_class' => 'site-nav',
+        'menu_class'      => 'nav-list',
+    ]);
+    ?>
+    <button class="site_cta">Connect</button>
 </nav>

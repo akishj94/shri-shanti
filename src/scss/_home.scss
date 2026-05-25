@@ -267,10 +267,13 @@
     }
     .trusted_leader{
         @include fluid(padding-block-start, 50px, 63px);
-        // height: 100lvh;
-        padding-block-end: rem(56px);
+        padding-block-end: rem(calc(56px * 1));
+        min-height: 100lvh;
+        
         &>div{
             @extend .container;
+            display: grid;
+            height: 100%;
         }
         .wp-block-columns{
             display: grid;

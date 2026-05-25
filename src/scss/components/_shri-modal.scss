@@ -1,0 +1,119 @@
+@use '../abstracts' as *;
+@use 'button' as *;
+
+.shri--site-modal{
+    position: fixed;
+    inset: 0px;
+    width: 100%;
+    height: 100lvh;
+    z-index: 99;
+    display: flex;
+    align-items: center;
+    .modal__overlay{
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        left: 0;
+        top: 0;
+        z-index: -1;
+        background: rgba(0, 0, 0, .5);
+        backdrop-filter: blur(45px);
+    }
+    .modalContainer{
+        color: white;
+        @include fluid(padding-inline, 16px, 24px);
+        @include fluid(padding-block, 12px, 16px);
+        border-radius: $border-radius;
+        @extend %site_gradient_bg;
+        overflow: hidden;
+        height: calc(100vh - rem(32px));
+        width: 100%;
+        @include bp('md'){
+            min-width: 38.3601756954612%;
+            margin-left: auto;
+            width: 60vw;            
+        }
+        @include bp('lg'){
+            max-width: rem(524px);
+        }
+        
+        & > .grid{
+            align-items: start;   
+            position: relative;      
+            z-index: 1;
+            height: 100%;
+            align-content: space-between;
+            overflow-y: scroll;
+            &::-webkit-scrollbar{
+                width: 0px;
+            }
+            .modalContent{
+                grid-row: 1;
+                grid-column: 1 / -1;                
+                h2{
+                    @include fluid(margin-block-end, 32px, 52.6px);
+                }
+                .contactUs__details{
+                    @extend %shri_text_sm;
+                    align-content: start;
+                    align-items: start;
+                    & > .grid{
+                        gap: 20px;
+                        padding-block-start: rem(11.5px);
+                        border-top: 1px solid white;
+                        &:not(:last-child){
+                            padding-block-end: rem(32px);
+                        }
+                        .content{
+                            text-transform: none;
+                            address{
+                                font-style: normal;
+                            }
+                        }
+                        @include bp('sm'){
+                            grid-template-columns: 1fr 1fr;
+                            address{
+                                max-width: rem(250px);
+                            }
+                        }
+                    }
+                }
+                .modal_social_menu{
+                    text-transform: capitalize;
+                    display: inline-flex;
+                    gap: rem(20px) rem(31px);
+                }
+            }
+            .modalFooter{
+                @include fluid(margin-block-start, 32px, 70px);
+                text-decoration: underline;
+                .grid{
+                    gap: 10px 15px;
+                    grid-template-columns: auto;
+                    justify-content: space-between;
+                }
+                @include bp('xs'){
+                    .grid{
+                        grid-template-columns: auto auto;
+                    }
+                }
+            }
+        }
+    }
+    button{
+        @include hamburger_button;
+        justify-self: end;
+        grid-row: 1;
+        grid-column: 1;
+        position: sticky;
+        top: 0px;
+        z-index: 1;
+    }
+    .modal_btn{
+        display: inline-flex;
+        margin-block-start: rem(21px);
+    }
+    .modal_btn, .modal_social_menu a{
+        text-decoration: underline;
+    }
+}

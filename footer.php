@@ -34,32 +34,41 @@
             <li class="contact-item">
               <span class="shri_text_sm">Address</span>
               <address class="contact-content">
-                B/63, Parvati Co-Operative Industrial Estate,<br>
-                Yadrav (Ichalkaranji) 416146,<br>
-                Maharashtra, India
+               <?php echo contact_address(); ?>
               </address>
             </li>
             <li class="contact-item">
               <span class="shri_text_sm">Mobile</span>
               <div class="contact-content">
-                <a href="tel:+919623318999" aria-label="Call +91 9623318999">
-                  +91 9623318999
-                </a>
-                <br>
-                <a href="tel:+919623318999" aria-label="Call alternate number +91 9623318999">
-                  +91 9623318999
-                </a>
-              </div>
+                <?php foreach ( contact_phones() as $index => $phone ) : ?>
+
+                    <a href="tel:<?php echo esc_attr( preg_replace( '/\s+/', '', $phone ) ); ?>"
+                      aria-label="<?php echo $index === 0
+                          ? esc_attr( 'Call ' . $phone )
+                          : esc_attr( 'Call alternate number ' . $phone ); ?>"
+                    >
+                        <?php echo esc_html( $phone ); ?>
+                    </a>
+
+                    <?php if ( ! $loop_last = ( $index === count( contact_phones() ) - 1 ) ) : ?>
+                        <br>
+                    <?php endif; ?>
+
+                <?php endforeach; ?>
+            </div>
             </li>
             <li class="contact-item">
               <span class="shri_text_sm">Email</span>
               <div class="contact-content">
-                <a
-                  href="mailto:info@shrishantiengineering.com"
-                  aria-label="Send email to info@shrishantiengineering.com"
-                >
-                  info@shrishantiengineering.com
-                </a>
+                  <?php foreach ( contact_emails() as $email ) : ?>
+
+                      <a href="mailto:<?php echo esc_attr( $email ); ?>"
+                        aria-label="<?php echo esc_attr( 'Send email to ' . $email ); ?>"
+                      >
+                          <?php echo esc_html( $email ); ?>
+                      </a>
+
+                  <?php endforeach; ?>
               </div>
             </li>
           </ul>
@@ -67,10 +76,10 @@
       <div class="contactLinks">
           <ul class="unstyledList flex" role="list">
             <li>
-                <a href="" class="site_btn_link">Send WhatsApp</a>
+                <a href="<?php echo contact_whatsapp_url(); ?>" target="_blank" class="site_btn_link">Send WhatsApp</a>
             </li>
             <li>
-                <a href="" class="site_btn_link">Get Directions</a>
+                <a href="<?php echo contact_maps_url(); ?>" target="_blank" class="site_btn_link">Get Directions</a>
             </li>
           </ul>
       </div>
@@ -125,6 +134,7 @@
     </div>
   </div>
 </footer>
+<!-- <@?php require_once get_template_directory() . '/inc/shri-modal.php'; ?> -->
 
 <?php wp_footer(); ?>
 </body>
