@@ -7578,35 +7578,46 @@
     const sections = document.querySelectorAll(".shri-catalog-section");
     if (!sections.length) return;
     const isDesktop = () => window.innerWidth > 768;
+    const header = document.querySelector(".site-header");
     sections.forEach((section) => {
       const stickyOuter = section.querySelector(".shri-catalog-sticky-outer");
       const stickyInner = section.querySelector(".shri-catalog-sticky-inner");
       const track = section.querySelector(".shri-catalog-track");
       if (!stickyOuter || !stickyInner || !track) return;
-      const trackScroll = track.scrollWidth - stickyInner.clientWidth;
-      if (trackScroll <= 0) return;
-      const tween = gsapWithCSS.to(track, {
-        x: -trackScroll,
-        ease: "none"
-      });
+      const hasTheme = section.hasAttribute("data-header-theme");
+      const theme = section.getAttribute("data-header-theme");
       ScrollTrigger2.create({
-        animation: tween,
         trigger: section,
         start: "bottom bottom",
-        end: () => `+=${trackScroll}`,
-        pin: true,
+        end: () => isDesktop() ? `+=${track.scrollWidth - stickyInner.clientWidth}` : "bottom bottom",
+        pin: isDesktop(),
         scrub: true,
         invalidateOnRefresh: true,
-        markers: true,
-        onRefresh: (self) => {
+        onUpdate: (self) => {
           if (!isDesktop()) {
             gsapWithCSS.set(track, { clearProps: "x" });
-            self.disable();
-          } else {
-            self.enable();
+            return;
           }
+          const trackScroll = track.scrollWidth - stickyInner.clientWidth;
+          gsapWithCSS.set(track, { x: -trackScroll * self.progress });
+        },
+        onRefresh: () => {
+          if (!isDesktop()) gsapWithCSS.set(track, { clearProps: "x" });
         }
       });
+      if (header && hasTheme) {
+        const headerHeight = header.offsetHeight + 2 + "px";
+        ScrollTrigger2.create({
+          trigger: section,
+          start: `top ${headerHeight}`,
+          end: () => `+=${track.scrollWidth - stickyInner.clientWidth + section.offsetHeight + window.innerHeight}`,
+          invalidateOnRefresh: true,
+          onEnter: () => header.setAttribute("data-theme", theme),
+          onEnterBack: () => header.setAttribute("data-theme", theme),
+          onLeave: () => header.removeAttribute("data-theme"),
+          onLeaveBack: () => header.removeAttribute("data-theme")
+        });
+      }
     });
   }
   var init_shri_catalog = __esm({
@@ -7626,7 +7637,10 @@
       gsapWithCSS.registerPlugin(ScrollTrigger2);
       var lenis = new Lenis({
         duration: 1.2,
-        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t))
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        prevent: (node) => {
+          return node.closest(".modalContainer");
+        }
       });
       gsapWithCSS.ticker.add((time) => lenis.raf(time * 1e3));
       gsapWithCSS.ticker.lagSmoothing(0);
@@ -7652,7 +7666,6 @@
         const tl = gsapWithCSS.timeline({ paused: true });
         const segDuration = 1 / (panels.length - 1 || 1);
         const totalScroll = window.innerHeight * 0.5 * (panels.length - 1) + window.innerHeight * 0.3;
-        tl.to(separator, { width: "100%", ease: "none", duration: 1 }, 0);
         panels.forEach((panel, i) => {
           const content = getContent(panel);
           if (!content) return;
@@ -7673,10 +7686,15 @@
           end: `+=${totalScroll * 1.3}`,
           pin: true,
           scrub: 1,
-          markers: true,
           invalidateOnRefresh: true,
-          onUpdate: (self) => tl.progress(self.progress),
-          onRefresh: (self) => tl.progress(self.progress)
+          onUpdate: (self) => {
+            tl.progress(self.progress);
+            gsapWithCSS.set(separator, { width: `${self.progress * 100}%` });
+          },
+          onRefresh: (self) => {
+            tl.progress(self.progress);
+            gsapWithCSS.set(separator, { width: `${self.progress * 100}%` });
+          }
         });
       }
       function initPatternBg() {
@@ -7712,14 +7730,216 @@
           window.removeEventListener("scroll", handleScroll);
         };
       }
+      var ScrollLock = /* @__PURE__ */ (function() {
+        let scrollY = 0;
+        let lockCount = 0;
+        let lenisInstance = null;
+        function registerLenis(lenis2) {
+          lenisInstance = lenis2;
+        }
+        function lock() {
+          lockCount++;
+          if (lockCount > 1) return;
+          if (lenisInstance) {
+            lenisInstance.stop();
+          } else {
+            scrollY = window.scrollY;
+            document.body.style.overflow = "hidden";
+            document.body.style.position = "fixed";
+            document.body.style.top = `-${scrollY}px`;
+            document.body.style.width = "100%";
+          }
+        }
+        function unlock() {
+          if (lockCount <= 0) return;
+          lockCount--;
+          if (lockCount > 0) return;
+          if (lenisInstance) {
+            lenisInstance.start();
+          } else {
+            document.body.style.overflow = "";
+            document.body.style.position = "";
+            document.body.style.top = "";
+            document.body.style.width = "";
+            window.scrollTo(0, scrollY);
+          }
+        }
+        return { registerLenis, lock, unlock };
+      })();
+      (function() {
+        const modal = document.getElementById("site-modal");
+        const overlay = modal.querySelector(".modal__overlay");
+        const closeBtn = modal.querySelector(".close_modal");
+        const container = modal.querySelector(".modalContainer");
+        const modalViews = {
+          contact: document.getElementById("modalContactInfo"),
+          form: document.getElementById("modalContactForm")
+        };
+        let isOpen = false;
+        let lastFocused = null;
+        modal.setAttribute("role", "dialog");
+        modal.setAttribute("aria-modal", "true");
+        modal.setAttribute("aria-hidden", "true");
+        modal.setAttribute("aria-label", "Site modal");
+        closeBtn.setAttribute("aria-label", "Close modal");
+        closeBtn.setAttribute("type", "button");
+        Object.values(modalViews).forEach((el) => {
+          el.style.display = "none";
+        });
+        function getFocusableElements() {
+          return Array.from(
+            modal.querySelectorAll(
+              'a[href], button:not([disabled]), input:not([disabled]), textarea:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])'
+            )
+          ).filter((el) => el.offsetParent !== null);
+        }
+        function trapFocus(e) {
+          if (e.key !== "Tab") return;
+          const focusable = getFocusableElements();
+          if (!focusable.length) return;
+          const first = focusable[0];
+          const last = focusable[focusable.length - 1];
+          if (e.shiftKey) {
+            if (document.activeElement === first) {
+              e.preventDefault();
+              last.focus();
+            }
+          } else {
+            if (document.activeElement === last) {
+              e.preventDefault();
+              first.focus();
+            }
+          }
+        }
+        function buildOpenTL() {
+          return gsapWithCSS.timeline({ paused: true }).set(modal, {
+            pointerEvents: "auto"
+          }).to(modal, {
+            opacity: 1,
+            duration: 0.01
+          }).to(overlay, {
+            opacity: 1,
+            duration: 1,
+            ease: "power1.inOut"
+          }, "<").to(container, {
+            x: "0%",
+            opacity: 1,
+            duration: 0.6,
+            ease: "back.out(1)"
+          }, "-=0.6");
+        }
+        function buildCloseTL() {
+          return gsapWithCSS.timeline({ paused: true }).to(container, {
+            x: "100%",
+            opacity: 0,
+            duration: 0.35,
+            ease: "power3.in"
+          }).to(overlay, {
+            opacity: 0,
+            duration: 0.4,
+            ease: "power1.inOut"
+          }, "-=0.2").to(modal, {
+            opacity: 0,
+            duration: 0.01
+          }).set(modal, {
+            pointerEvents: "none"
+          });
+        }
+        function showView(view) {
+          Object.values(modalViews).forEach((el) => {
+            el.style.display = "none";
+          });
+          if (view) {
+            view.style.display = "";
+          }
+        }
+        function openModal(view, trigger) {
+          if (isOpen) return;
+          isOpen = true;
+          lastFocused = trigger || document.activeElement;
+          showView(view);
+          modal.setAttribute("aria-hidden", "false");
+          modal.setAttribute(
+            "aria-label",
+            view === modalViews.contact ? "Contact information" : "Contact form"
+          );
+          ScrollLock.lock();
+          buildOpenTL().play();
+          document.addEventListener("keydown", trapFocus);
+          closeBtn.focus();
+        }
+        function closeModal() {
+          if (!isOpen) return;
+          document.removeEventListener("keydown", trapFocus);
+          buildCloseTL().play().eventCallback("onComplete", () => {
+            isOpen = false;
+            showView(null);
+            modal.setAttribute("aria-hidden", "true");
+            ScrollLock.unlock();
+            if (lastFocused) {
+              lastFocused.focus();
+            }
+            lastFocused = null;
+          });
+        }
+        function resolveView(el) {
+          const link = (el.dataset.link || el.getAttribute("href") || "").replace("#", "");
+          if (link === "quote-form") {
+            return modalViews.form;
+          }
+          if (link === "contact-form") {
+            return modalViews.contact;
+          }
+          return null;
+        }
+        document.addEventListener("click", function(e) {
+          const triggerBtn = e.target.closest(".site-btn, .shri-cta-btn");
+          if (triggerBtn && triggerBtn.dataset.link) {
+            e.preventDefault();
+            const view = resolveView(triggerBtn);
+            if (view) {
+              openModal(view, triggerBtn);
+            }
+            return;
+          }
+          const footerLink = e.target.closest(".footer-nav-list li a");
+          if (footerLink) {
+            const href = footerLink.getAttribute("href") || "";
+            if (href === "#contact-form" || href === "#quote-form") {
+              e.preventDefault();
+              const view = resolveView(footerLink);
+              if (view) {
+                openModal(view, footerLink);
+              }
+              return;
+            }
+          }
+          if (isOpen && !e.target.closest(".modalContainer")) {
+            closeModal();
+          }
+        });
+        container.addEventListener("click", function(e) {
+          e.stopPropagation();
+        });
+        closeBtn.addEventListener("click", closeModal);
+        document.addEventListener("keydown", function(e) {
+          if (e.key === "Escape" && isOpen) {
+            closeModal();
+          }
+        });
+      })();
       function initNav() {
+        if (typeof gsapWithCSS === "undefined") {
+          console.warn("initNav: GSAP not found.");
+          return;
+        }
         const header = document.querySelector(".site-header");
         const toggler = document.getElementById("nav-toggler");
         const siteNav = document.getElementById("site-nav");
         const navList = document.querySelector(".nav-list");
         const mobileBg = document.querySelector(".navbar_background-mobile");
         const logo = document.querySelector(".site_branding img");
-        const siteCta = document.querySelector(".site_cta");
+        const siteCta = document.querySelector(".site-btn");
         if (!header || !toggler || !siteNav || !navList) return;
         const BREAK = 768;
         const isMobile = () => window.innerWidth < BREAK;
@@ -7727,10 +7947,6 @@
         let isAnimating = false;
         let wasMobile = isMobile();
         const getStaggerItems = () => [...navList.querySelectorAll(":scope > .nav-item"), siteCta].filter(Boolean);
-        function setInitialStates() {
-          gsapWithCSS.set(getStaggerItems(), { opacity: 0, y: 12 });
-          navList.querySelectorAll(".nav-dropdown--default .nav-dropdown-item").forEach((item) => gsapWithCSS.set(item, { opacity: 0, y: 6 }));
-        }
         function resetCommon() {
           gsapWithCSS.killTweensOf([header, logo, mobileBg, siteNav, navList, ...toggler.children, ...getStaggerItems()]);
           mobileOpen = false;
@@ -7742,16 +7958,15 @@
           resetCommon();
           gsapWithCSS.set([header, logo, mobileBg, ...toggler.children], { clearProps: "all" });
           gsapWithCSS.set(getStaggerItems(), { opacity: 0, y: 12 });
-          siteNav.style.visibility = "hidden";
-          siteNav.style.pointerEvents = "none";
-          navList.querySelectorAll(".nav-item.is-open").forEach((item) => closeMobileSubmenu(item));
+          siteNav.classList.remove("is-visible");
+          navList.querySelectorAll(".nav-item.is-open").forEach(closeMobileSubmenu);
         }
         function resetDesktopState() {
           resetCommon();
           gsapWithCSS.set([header, logo, mobileBg, siteNav, navList, ...getStaggerItems(), ...toggler.children], { clearProps: "all" });
-          siteNav.style.visibility = "";
-          siteNav.style.pointerEvents = "";
+          siteNav.classList.remove("is-visible");
           navList.querySelectorAll(".nav-item.is-open").forEach((item) => item.classList.remove("is-open"));
+          navList.querySelectorAll(".nav-dropdown--default .nav-dropdown-item").forEach((item) => gsapWithCSS.set(item, { opacity: 0, y: 6 }));
         }
         function openMobileMenu() {
           if (isAnimating) return;
@@ -7759,30 +7974,30 @@
           mobileOpen = true;
           toggler.setAttribute("aria-expanded", "true");
           header.setAttribute("data-expanded", "true");
-          siteNav.style.visibility = "visible";
-          siteNav.style.pointerEvents = "auto";
           gsapWithCSS.to(toggler.children[0], { y: 4, rotation: 45, duration: 0.25, ease: "power2.inOut" });
           gsapWithCSS.to(toggler.children[1], { y: -3, rotation: -45, duration: 0.25, ease: "power2.inOut" });
-          gsapWithCSS.to(header, { height: "100lvh", duration: 0.45, ease: "expo.inOut" });
-          gsapWithCSS.to(logo, { filter: "brightness(0) invert(1)", duration: 0.3 });
-          gsapWithCSS.fromTo(
-            mobileBg,
-            { opacity: 0, scaleY: 0.94, transformOrigin: "top center" },
-            {
-              opacity: 1,
-              scaleY: 1,
-              duration: 0.4,
-              ease: "expo.out",
-              onComplete: () => {
-                isAnimating = false;
-              }
+          gsapWithCSS.timeline().add(() => {
+            if (!header.hasAttribute("data-theme")) {
+              gsapWithCSS.to(logo, { filter: "brightness(0) invert(1)", duration: 0 });
             }
-          );
-          gsapWithCSS.fromTo(
-            getStaggerItems(),
-            { opacity: 0, y: 14 },
-            { opacity: 1, y: 0, duration: 0.5, ease: "back.out(1.4)", stagger: 0.06, delay: 0.15 }
-          );
+            gsapWithCSS.set(getStaggerItems(), { opacity: 0, y: 14 });
+            siteNav.classList.add("is-visible");
+          }).to(mobileBg, {
+            opacity: 1,
+            scaleY: 1,
+            duration: 0.4,
+            ease: "expo.out",
+            onStart: () => gsapWithCSS.set(mobileBg, { scaleY: 0.94, transformOrigin: "top center" })
+          }).to(header, { height: "100lvh", duration: 0.45, ease: "expo.inOut" }, "<").to(getStaggerItems(), {
+            opacity: 1,
+            y: 0,
+            duration: 0.4,
+            ease: "back.out(1.4)",
+            stagger: 0.06,
+            onComplete: () => {
+              isAnimating = false;
+            }
+          });
         }
         function closeMobileMenu() {
           if (isAnimating) return;
@@ -7790,16 +8005,18 @@
           mobileOpen = false;
           toggler.setAttribute("aria-expanded", "false");
           header.setAttribute("data-expanded", "false");
-          navList.querySelectorAll(".nav-item.is-open").forEach((item) => closeMobileSubmenu(item));
+          navList.querySelectorAll(".nav-item.is-open").forEach(closeMobileSubmenu);
           gsapWithCSS.to(toggler.children[0], { y: 0, rotation: 0, duration: 0.22, ease: "power2.inOut" });
           gsapWithCSS.to(toggler.children[1], { y: 0, rotation: 0, duration: 0.22, ease: "power2.inOut" });
-          gsapWithCSS.timeline().to(getStaggerItems(), { opacity: 0, y: 10, duration: 0.2, ease: "power2.in", stagger: 0.03 }).to(mobileBg, { opacity: 0, duration: 0.25, ease: "power2.in" }, "<").to(logo, { filter: "brightness(1) invert(0)", duration: 0.3, ease: "power1.inOut" }, "<").to(header, {
+          gsapWithCSS.timeline().to(getStaggerItems(), { opacity: 0, y: 10, duration: 0.2, ease: "power2.in", stagger: 0.03 }).add(() => siteNav.classList.remove("is-visible")).add(() => {
+            if (!header.hasAttribute("data-theme")) {
+              gsapWithCSS.set(logo, { clearProps: "filter" });
+            }
+          }, "<").to(mobileBg, { opacity: 0, duration: 0.25, ease: "power2.in" }, "<").to(header, {
             height: "",
             duration: 0.35,
             ease: "expo.inOut",
             onComplete: () => {
-              siteNav.style.visibility = "hidden";
-              siteNav.style.pointerEvents = "none";
               gsapWithCSS.set(getStaggerItems(), { opacity: 0, y: 12 });
               isAnimating = false;
             }
@@ -7829,14 +8046,13 @@
         navList.querySelectorAll(".nav-item.has-dropdown").forEach((parentItem) => {
           const dropdown = parentItem.querySelector(".nav-dropdown--default");
           if (!dropdown) return;
-          const trigger = parentItem.querySelector(":scope > .nav-link");
-          let closeTimer;
-          trigger?.addEventListener("click", (e) => {
+          parentItem.querySelector(":scope > .nav-link")?.addEventListener("click", (e) => {
             if (!isMobile()) return;
             e.preventDefault();
             parentItem.classList.contains("is-open") ? closeMobileSubmenu(parentItem) : openMobileSubmenu(parentItem);
           });
-          const openDropdown = () => {
+          let closeTimer;
+          parentItem.addEventListener("mouseenter", () => {
             if (isMobile()) return;
             clearTimeout(closeTimer);
             if (parentItem.classList.contains("is-hovered")) return;
@@ -7845,24 +8061,29 @@
             gsapWithCSS.killTweensOf(items);
             gsapWithCSS.fromTo(
               items,
-              { opacity: 0, y: 8 },
-              { opacity: 1, y: 0, duration: 0.25, stagger: 0.05, ease: "back.out(1.4)" }
+              { opacity: 0, y: -20 },
+              { opacity: 1, y: 0, duration: 0.5, stagger: 0.08, ease: "back.out(1.4)" }
             );
-          };
-          const closeDropdown = (e) => {
+          });
+          parentItem.addEventListener("mouseleave", (e) => {
             if (isMobile()) return;
             if (parentItem.contains(e.relatedTarget)) return;
             closeTimer = setTimeout(() => {
               parentItem.classList.remove("is-hovered");
               const items = dropdown.querySelectorAll(".nav-dropdown-item");
               gsapWithCSS.killTweensOf(items);
-              gsapWithCSS.set(items, { opacity: 0, y: 6 });
+              gsapWithCSS.to(items, {
+                opacity: 0,
+                y: -10,
+                duration: 0.25,
+                stagger: 0.05,
+                ease: "power2.in",
+                onComplete: () => {
+                  parentItem.classList.remove("is-hovered");
+                }
+              });
             }, 80);
-          };
-          parentItem.addEventListener("mouseenter", openDropdown);
-          parentItem.addEventListener("mouseleave", closeDropdown);
-          parentItem.addEventListener("mouseenter", openDropdown);
-          parentItem.addEventListener("mouseleave", closeDropdown);
+          });
         });
         toggler.addEventListener("click", () => {
           if (isAnimating) return;
@@ -7878,14 +8099,32 @@
             nowMobile ? resetMobileState() : resetDesktopState();
           }, 80);
         });
-        setInitialStates();
         isMobile() ? resetMobileState() : resetDesktopState();
+      }
+      function initHeaderTheme() {
+        const header = document.querySelector(".site-header");
+        if (!header) return;
+        const sections = document.querySelectorAll(".header--theme-light");
+        if (!sections.length) return;
+        const headerHeight = header.offsetHeight + 2 + "px";
+        sections.forEach((section) => {
+          ScrollTrigger2.create({
+            trigger: section,
+            start: `top ${headerHeight}`,
+            end: `bottom ${headerHeight}`,
+            onEnter: () => header.setAttribute("data-theme", "light"),
+            onEnterBack: () => header.setAttribute("data-theme", "light"),
+            onLeave: () => header.removeAttribute("data-theme"),
+            onLeaveBack: () => header.removeAttribute("data-theme")
+          });
+        });
       }
       function init4() {
         pageEnter();
         initPatternBg();
         initShriCatalogScroll();
         stickyPanels();
+        initHeaderTheme();
         initNav();
       }
       document.addEventListener("DOMContentLoaded", init4);

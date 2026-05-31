@@ -21,5 +21,5 @@
         'menu_class'      => 'nav-list',
     ]);
     ?>
-    <button class="site_cta">Connect</button>
+    <button class="site-btn" data-link="quote-form">Connect</button>
 </nav>

@@ -6,7 +6,7 @@
     position: relative;
     display: grid;
     align-items: end;
-    background-color: #E5E5E5;
+    background-color: #E1E1E1;
     overflow: hidden;
     @include fluid(padding-block-start, 80px, 139px);
     @include fluid(padding-block-end, 42px, 66px);
@@ -40,13 +40,14 @@
         &>.wp-block-group__inner-container{
            .container{
                 &>.wp-block-group__inner-container{
-                    grid-template-columns: clamp(320px, 27.65625vw, 531px) clamp(300px, 23.697916666666668vw, 455px);
+                    grid-template-columns: clamp(320px, 36vw, 541px) clamp(330px, 30vw, 455px);
                     @include fluid(column-gap, 100px, 275px);
                     @include fluid(row-gap, 30px, 73px);
                 }
            }
         }
         figure{
+            transform: none;
             img{
                 max-height: none;
             }
@@ -91,60 +92,155 @@
         figure{
             @include fluid(margin-inline, 36px, 50px);
         }
+        
+    }
+    @include bp('sm'){
+        &>.wp-block-group__inner-container{
+            display: grid;
+            align-items: center;
+            figure, h2{
+                grid-row: 1;
+                grid-column: 1 / -1;
+            }
+            h2{
+                grid-column: 1;
+                color: white;
+                margin-block: 0px;
+                padding-inline: 20px;
+
+            }
+        }
+    }
+    
+    h2{
+        margin-block: 20px 0px;
+        margin-inline: auto;
+        text-align: center;
+        @include fluid-type(20px, 39px);
     }
 }
-.solutions_grid{
+
+.solutions_grid {
     @include fluid(padding-block-start, 31px, 51px);
     @include fluid(padding-block-end, 72px, 133.44px);
-    p{
+
+    p {
         margin: 0px;
         @extend %shri_text_sm;
         text-transform: none;
     }
-    &>.wp-block-group__inner-container{
-        display: grid;
-        @include fluid(row-gap, 32px, 66px);
-        &>.wp-block-group{
-            &>.wp-block-group__inner-container{
-                display: grid;
-                gap: 20px;
-                align-items: start;
-                h5{
-                    @include fluid(margin-block, 12px, 20px);
-                }
-            }
-        }
-    }
-    figure{
+
+    figure {
         border-radius: $border-radius;
         overflow: hidden;
-        img{
+        aspect-ratio: 413/271;
+        margin: 0;
+
+        img {
             object-fit: cover;
             width: 100%;
             height: 100%;
         }
     }
-    @include bp('sm'){
-         &>.wp-block-group__inner-container{
-            &>.wp-block-group{
-                &>.wp-block-group__inner-container{
+
+    h5 {
+        @include fluid(margin-block, 12px, 20px);
+    }
+
+    /* ------------------------------------------------------------------ */
+    /* SHORTCODE GRID LAYOUT                                                */
+    /* ------------------------------------------------------------------ */
+
+    .shri-catalog-grid {
+        display: grid;
+        @include fluid(row-gap, 32px, 66px);
+    }
+
+    .shri-catalog-row {
+        display: grid;
+        gap: 20px;
+        align-items: start;
+
+        // Mobile: single column
+        grid-template-columns: 1fr;
+
+        @include bp('sm') {
+            &--2col {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            &--3col {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+
+                // Last item in a 3-col row spans full width on sm
+                .shri-catalog-grid__item:last-child {
+                    grid-column: 1 / -1;
+                }
+            }
+        }
+
+        @include bp('md') {
+            &--2col {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            &--3col {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+
+                .shri-catalog-grid__item:last-child {
+                    grid-column: unset;
+                }
+            }
+        }
+    }
+
+    .shri-catalog-grid__item {
+        display: grid;
+        align-items: start;
+        align-content: start;
+    }
+
+    /* ------------------------------------------------------------------ */
+    /* GUTENBERG BLOCK (untouched)                                          */
+    /* ------------------------------------------------------------------ */
+
+    & > .wp-block-group__inner-container {
+        display: grid;
+        @include fluid(row-gap, 32px, 66px);
+
+        & > .wp-block-group {
+            & > .wp-block-group__inner-container {
+                display: grid;
+                gap: 20px;
+                align-items: start;
+            }
+        }
+    }
+
+    @include bp('sm') {
+        & > .wp-block-group__inner-container {
+            & > .wp-block-group {
+                & > .wp-block-group__inner-container {
                     grid-template-columns: repeat(2, minmax(0, 1fr));
-                    .wp-block-group{
-                        &:nth-child(3){
-                            grid-column: 1/-1;
+
+                    .wp-block-group {
+                        &:nth-child(3) {
+                            grid-column: 1 / -1;
                         }
                     }
                 }
             }
         }
     }
-    @include bp('md'){
-         &>.wp-block-group__inner-container{
-            &>.wp-block-group{
-                &>.wp-block-group__inner-container{
+
+    @include bp('md') {
+        & > .wp-block-group__inner-container {
+            & > .wp-block-group {
+                & > .wp-block-group__inner-container {
                     grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
-                    .wp-block-group{
-                        &:nth-child(3){
+
+                    .wp-block-group {
+                        &:nth-child(3) {
                             grid-column: unset;
                         }
                     }
@@ -152,6 +248,15 @@
             }
         }
     }
+
+    /* ------------------------------------------------------------------ */
+    /* SHARED HEADER                                                        */
+    /* ------------------------------------------------------------------ */
+
+    .shri-catalog-header {
+        @include fluid(margin-block-end, 32px, 66px);
+    }
+
 }
 .solutions_grid_footer{
     @include fluid(padding-block-end, 45px, 72px);

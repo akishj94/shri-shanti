@@ -8,11 +8,17 @@
         color: white;
         min-height: 100vh;
         display: grid;
+        background-image: url('../../assets/images/bg_main.webp');
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center;
         div[class^="wp-block-group"]{
             height: 100%;
             display: flex;
-            flex-direction: column;
+            flex-direction: column-reverse;
             justify-content: space-between;
+            z-index: 1;
+            position: relative;
         }
         .wp-block-video, .wp-block-image{
             position: absolute;
@@ -25,13 +31,27 @@
                 object-fit: cover;
                 width: 100%;
                 height: 100%;
+                object-position: right;
             }
         }
         @include fluid(padding-block-start, 240px, 352px);
         padding-block-end: rem(27px);
-        h1, h2{
-            @include fluid(margin-block-start, 120px, 231px);
-            margin-block-end: 0px;
+        p{
+            max-width: clamp(340px, 30vw, 372px);
+        }
+        @include bp('md'){
+            
+            div[class^="wp-block-group"]{
+                flex-direction: column;
+            }
+            h1, h2{
+                @include fluid(margin-block-start, 120px, 231px);
+                margin-block-end: 0px;
+            }
+            p{
+                text-align: right;                
+                margin-left: auto;
+            }
         }
     }
     .featureGrid_home{
@@ -94,7 +114,7 @@
         .learn-solutions-pattern{
             position: absolute;
             inset: -20%;
-            opacity: 0.5;
+            opacity: 0.7;
             will-change: transform;
             pointer-events: none;
             background-image: url('../../assets/images/brand_bg.svg');
@@ -127,7 +147,7 @@
                 row-gap: 30px;
             }
         }
-        @include bp('sm') {
+        @include bp('md') {
             text-align: left;
             span{
                 width: max-content;
@@ -340,13 +360,18 @@
                 @include fluid(max-width, 236px, 374px);
             }
             .wp-block-columns{
-                grid-template-columns: 1fr clamp(320px, 37vw, 560px);
+                grid-template-columns: auto auto;
                 gap: 2rem;
             }
             .accordion_panel{
                 .wp-block-group{
                     max-width: rem(400px);
                 }
+            }
+        }
+        @include bp('lg'){
+            .wp-block-columns{
+                grid-template-columns: 1fr clamp(320px, 37vw, 560px);
             }
         }
     }

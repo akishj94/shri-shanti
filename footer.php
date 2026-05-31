@@ -134,8 +134,7 @@
     </div>
   </div>
 </footer>
-<!-- <@?php require_once get_template_directory() . '/inc/shri-modal.php'; ?> -->
-
+<?php require_once get_template_directory() . '/inc/shri-modal.php'; ?>
 <?php wp_footer(); ?>
 </body>
 </html>

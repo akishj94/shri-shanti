@@ -33,8 +33,8 @@ function shri_cta_shortcode( $atts ) {
         array(
             'label'     => '',            // Eyebrow label; set "false" to hide
             'heading'   => '',            // Required — main CTA heading
-            'link'      => '#',           // Button/CTA URL
-            'link_text' => 'Get Started', // Button label
+            'link'      => 'quote-form',           // Button/CTA URL
+            'button_text' => 'Get Started', // Button label
             'align'     => 'left',        // "left" or "center"
             'button'    => 'arrow',       // "arrow" or "filled"
         ),
@@ -50,8 +50,8 @@ function shri_cta_shortcode( $atts ) {
     /* ---- Sanitise ---- */
     $label     = sanitize_text_field( $atts['label'] );
     $heading   = wp_kses_post( $atts['heading'] );
-    $link      = esc_url( $atts['link'] );
-    $link_text = sanitize_text_field( $atts['link_text'] );
+    $link      = sanitize_text_field( $atts['link'] );
+    $button_text = sanitize_text_field( $atts['button_text'] );
     $align     = in_array( $atts['align'], array( 'left', 'center' ), true ) ? $atts['align'] : 'left';
     $button = in_array( $atts['button'], array( 'arrow', 'filled' ), true )
     ? ( 'arrow' === $atts['button'] ? 'site_btn_link' : 'cta_xl' )
@@ -81,12 +81,11 @@ function shri_cta_shortcode( $atts ) {
 
                 <h2 class="shri-cta-heading"><?php echo $heading; ?></h2>
 
-                <a
-                    href="<?php echo $link; ?>"
-                    class="shri-cta-btn <?php echo esc_attr( $button ); ?>"
+                <button
+                    class="shri-cta-btn <?php echo esc_attr( $button ); ?>"  data-link="#<?php echo esc_html( $link ); ?>"
                 >
-                    <?php echo esc_html( $link_text ); ?>
-                </a>
+                    <?php echo esc_html( $button_text ); ?>
+                </button>
 
             </div><!-- /.shri-cta-inner -->
         </div><!-- /.container -->

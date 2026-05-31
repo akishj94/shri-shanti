@@ -39,7 +39,7 @@ function theme_enqueue_assets(): void {
     // Google Fonts
     wp_enqueue_style(
         'google-fonts',
-        'https://fonts.googleapis.com/css2?family=Onest:wght@100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet',
+        'https://fonts.googleapis.com/css2?family=Onest:wght@100..900&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet',
         [],
         null
     );
@@ -86,29 +86,6 @@ if (defined('JETPACK__VERSION')) {
 
 require_once THEME_DIR . '/inc/class-nav-walker.php';
 
-// ─── Cleanup ───────────────────────────────────────────────
-
-// Remove block styles
-add_action('wp_enqueue_scripts', function () {
-    wp_dequeue_style('wp-block-library');
-    wp_dequeue_style('wp-block-library-theme');
-    wp_dequeue_style('wc-blocks-style');
-    wp_dequeue_style('classic-theme-styles');
-    wp_dequeue_style('global-styles');
-    wp_dequeue_style('wp-emoji-styles');
-}, 100);
-
-// Disable theme.json styles
-add_filter('wp_theme_json_get_style_nodes', '__return_empty_array');
-
-// Remove global styles
-remove_action('wp_enqueue_scripts', 'wp_enqueue_global_styles');
-remove_action('wp_footer', 'wp_enqueue_global_styles', 1);
-add_filter('should_load_separate_core_block_assets', '__return_false');
-
-// Remove emojis
-remove_action('wp_head', 'print_emoji_detection_script', 7);
-remove_action('wp_print_styles', 'print_emoji_styles');
 
 // Allow SVG upload (admin only)
 add_filter('upload_mimes', function ($mimes) {
@@ -149,3 +126,114 @@ add_filter('render_block', function ($block_content, $block) {
     return $block_content;
 
 }, 10, 2);
+
+add_filter( 'wpcf7_autop_or_not', '__return_false' );
+
+
+
+/**
+ * Load Gutenberg / WP styles ONLY on blog-related pages.
+ * Everywhere else -> remove WP block/theme global CSS.
+ */
+
+function shri_is_blog_related() {
+
+    // Blog archives
+    if (
+        is_archive() ||
+        is_category() ||
+        is_tag() ||
+        is_author() ||
+        is_date()
+    ) {
+        return true;
+    }
+
+    // Singles (posts + CPT)
+    if ( is_singular('post') || is_post_type_archive() ) {
+        return true;
+    }
+
+    return false;
+}
+
+
+/**
+ * REMOVE WP styles on NON-blog pages only
+ */
+add_action('wp_enqueue_scripts', function () {
+
+    // Keep WP styles on blog-related pages
+    if ( shri_is_blog_related() ) {
+        return;
+    }
+
+    // Remove block styles
+    wp_dequeue_style('wp-block-library');
+    wp_dequeue_style('wp-block-library-theme');
+    wp_dequeue_style('wc-blocks-style');
+    wp_dequeue_style('classic-theme-styles');
+    wp_dequeue_style('global-styles');
+    wp_dequeue_style('wp-emoji-styles');
+
+}, 100);
+
+
+/**
+ * Disable theme.json styles on NON-blog pages
+ */
+add_filter('wp_theme_json_get_style_nodes', function ($nodes) {
+
+    if ( ! shri_is_blog_related() ) {
+        return [];
+    }
+
+    return $nodes;
+});
+
+
+/**
+ * Remove global styles on NON-blog pages
+ */
+add_action('wp', function () {
+
+    // Keep WP styles on blog pages
+    if ( shri_is_blog_related() ) {
+        return;
+    }
+
+    remove_action('wp_enqueue_scripts', 'wp_enqueue_global_styles');
+    remove_action('wp_footer', 'wp_enqueue_global_styles', 1);
+
+    // Remove emojis
+    remove_action('wp_head', 'print_emoji_detection_script', 7);
+    remove_action('wp_print_styles', 'print_emoji_styles');
+
+});
+
+
+/**
+ * Disable separate block assets on NON-blog pages
+ */
+add_filter('should_load_separate_core_block_assets', function ($load) {
+
+    if ( ! shri_is_blog_related() ) {
+        return false;
+    }
+
+    return $load;
+});
+
+function disable_wordpress_search($query, $error = true) {
+    if (is_search()) {
+        $query->is_search = false;
+        $query->query_vars['s'] = false;
+        $query->query['s'] = false;
+
+        if ($error == true)
+            $query->is_404 = true;
+    }
+}
+
+add_action('parse_query', 'disable_wordpress_search');
+add_filter('get_search_form', '__return_empty_string');

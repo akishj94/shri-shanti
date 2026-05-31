@@ -1,0 +1,185 @@
+@use '../abstracts' as *;
+@use '../global' as *;
+@use 'button';
+.wpcf7-form{
+    font-family: inherit;
+    font-size: inherit;
+    text-transform: inherit;
+    .wpcf7-response-output{        
+        text-align: center;
+    }
+    &.sent{
+        .wpcf7-response-output{
+            border: none;
+            @include fluid-type(24px, 32px, 768px, 1368px);
+            text-transform: none;
+        }
+    }
+}
+.cf7-grid{
+    display: grid;
+    gap: 20px;
+    input{
+        &[type="submit"]{
+            @extend %cta_xl; 
+        }
+    }
+    .wpcf7-form-control-wrap{
+        display: block;
+    }
+    .cf7-full, .wpcf7-response-output, .spacer{
+        grid-column: 1/-1;
+    }
+    .spacer{
+        @include fluid(height, 28px, 43px);
+    }
+    .cf7-field{
+        padding: 1px;
+        label{
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+    }
+    @include bp('md'){
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        @include fluid(gap, 24px, 36px);
+    }
+    .wpcf7-acceptance {
+        text-transform: none;
+        @include fluid(margin-block, 20px, 31px);
+        display: block;
+        input[type="checkbox"] {
+            &:not(:checked) + .wpcf7-list-item-label {
+                color: #A5A5A5;
+            }
+        }
+    }
+    .wpcf7-list-item{
+        margin-inline: 0px;
+    }
+    input:not([type="radio"]):not([type="checkbox"]):not([type="submit"]),
+    textarea,
+    select {
+        width: 100%;
+        background: none;
+        border: none;
+        border-bottom: 1px solid rgba(255,255,255,0.45);
+        padding-block: rem(11px);
+        color: white;
+        &:focus-visible, &:focus{
+            outline: none;
+        }
+        font-family: inherit;
+        font-size: inherit;
+        text-transform: inherit;
+    }
+    input:not([type="radio"]):not([type="checkbox"]):not([type="submit"]),
+    textarea{
+        &::placeholder{
+            color: white;
+            font-family: inherit;
+            font-size: inherit;
+            text-transform: inherit;
+            opacity: 1;
+        }
+    }
+    .wpcf7-acceptance {
+
+        .wpcf7-list-item {
+            margin: 0;
+        }
+
+        input[type="checkbox"] {
+            display: none;
+            width: 100%;
+            margin: 0;
+            cursor: pointer;
+            &:checked{
+                &+.wpcf7-list-item-label{
+                    &:after{
+                        opacity: 1;
+                    }
+                }
+            }
+        }
+
+        .wpcf7-list-item-label {
+            color: rgba(255,255,255,0.65);
+            line-height: 1.5;
+            transition: color 0.3s ease;
+            display: grid;
+            align-items: center;
+            gap: rem(15px);
+            cursor: pointer;
+            grid-template-columns: auto auto;
+            &:before, &:after{
+                grid-row: 1;
+                grid-column: 1;
+                border-radius: rem(3px);
+            }
+            &:before {
+                content: "";
+                width: rem(25px);
+                height: rem(25px);
+                background-color: white;
+            }
+            &:after{
+                width: rem(18px);
+                height: rem(18px);
+                background-color: $color-primary;
+                margin-inline-start: rem(3.5px);
+                opacity: 0;
+                transition: 0.3s ease;
+            }
+        }
+
+        input[type="checkbox"]:checked + .wpcf7-list-item-label {
+            color: #fff;
+        }
+    }
+    
+    .cf7-submit-wrap{
+        text-align: center;
+        display: grid;
+        justify-content: center;
+        .wpcf7-submit{
+            grid-row: 1;
+            grid-column: 1;
+        }
+        .wpcf7-spinner{
+            grid-row: 1;
+            grid-column: 1;
+            align-self: center;
+            margin-left: auto;
+        }
+    }
+
+    // Error States
+    .wpcf7-not-valid-tip{
+        color: #ffe0a5;
+        margin-block: 10px 0px;
+        font-size: 90%;
+        opacity: 0.8;
+    }
+    .cf7-select {
+        position: relative;
+        select {
+            // appearance: none;
+            // -webkit-appearance: none;
+            // -moz-appearance: none;
+            cursor: pointer;
+            option {
+                background: #340F07;
+            }
+        }
+        
+    }
+    
+}

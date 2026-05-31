@@ -12,7 +12,12 @@ $nav-transition: 0.22s cubic-bezier(0.4, 0, 0.2, 1);
     left: 0;
     top: 0;
     z-index: 9;
-
+    .site_branding{
+        width: rem(165px);
+        img{
+            transition: 0.3s ease filter;
+        }
+    }
     .navbar_background-mobile {
         position: absolute;
         inset-block-start: 0;
@@ -46,6 +51,13 @@ $nav-transition: 0.22s cubic-bezier(0.4, 0, 0.2, 1);
             height: 100%;
         }
     }
+    &[data-theme="light"]{
+        .site_branding{
+            img{
+                filter: brightness(0) invert(1);
+            }
+        }
+    }
 }
 
 // ── Mobile Navigation ─────────────────────────────────────────────────────────
@@ -72,28 +84,24 @@ $nav-transition: 0.22s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .site_branding {
-            flex-shrink: 0;
+            flex-shrink: 0;            
         }
 
         .site-nav {
-            width: 100%;
-
             flex: 1;
             display: flex;
-            flex-direction: column;
-
-            min-height: 0;
-        }
-
-        .site-nav {
-            flex: 1;
-            
             flex-direction: column;
 
             padding-block: 20px;
             padding-inline: 0;
 
             min-height: 0;
+            width: 100%;
+            display: none; 
+
+            &.is-visible {
+                display: flex;
+            }
         }
 
         .nav-list {
@@ -188,7 +196,7 @@ $nav-transition: 0.22s cubic-bezier(0.4, 0, 0.2, 1);
             }
         }
 
-        .site_cta {
+        .site-btn {
             width: 100%;
         }
     }
@@ -320,6 +328,12 @@ $nav-transition: 0.22s cubic-bezier(0.4, 0, 0.2, 1);
         }
         &:hover{
             background-color: $color-accent;
+        }
+        @include bp('md'){
+            img{
+                width: rem(85px);
+                height: rem(70px);
+            }
         }
     }
 }

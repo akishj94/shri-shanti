@@ -2,18 +2,13 @@
 
 ?>
 
-<template id="modalContactInfo">
-
-</template>
-
 <div class="shri--site-modal" id="site-modal">
     <div class="modal__overlay"></div>
     <div class="container">
         <div class="modalContainer">
-            <div class="modalBackground__container"></div>
             <div class="grid">
                 <button class="close_modal"><span></span><span></span></button>
-                <div class="modalContent">
+                <div class="modalContent" id="modalContactInfo">
                     <h2 class="m0">Contact us</h2>
                     <div class="contactUs__details grid">
                         <div class="grid">
@@ -70,10 +65,14 @@
                         </div>
                     </div>
                 </div>
+                <div class="modalContent" id="modalContactForm">
+                    <h2 class="m0">Request a Quote</h2>
+                    <?php echo do_shortcode('[contact-form-7 id="aa9fce2" title="Contact Form"]'); ?>
+                </div>
                 <div class="modalFooter">
                     <div class="grid">
-                        <div class="shri_text_sm">&copy; Shri Shanti Engineering</div>
-                        <div class="shri_text_sm"><a href="">Privacy Policy</a></div>
+                        <div class="">&copy; Shri Shanti Engineering</div>
+                        <div class=""><a href="">Privacy Policy</a></div>
                     </div>
                 </div>
             </div>

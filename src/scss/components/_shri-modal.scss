@@ -2,6 +2,7 @@
 @use 'button' as *;
 
 .shri--site-modal{
+    @extend %shri_text_sm;
     position: fixed;
     inset: 0px;
     width: 100%;
@@ -9,6 +10,20 @@
     z-index: 99;
     display: flex;
     align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    backdrop-filter: blur(45px);
+    .close_modal{
+        span{
+            &:first-child{
+                transform: translate(0px, 4px) rotate(45deg);
+            }
+            &:last-child{
+                transform: translate(0px, -3px) rotate(-45deg);
+            }
+            
+        }   
+    }
     .modal__overlay{
         position: absolute;
         width: 100%;
@@ -17,7 +32,8 @@
         top: 0;
         z-index: -1;
         background: rgba(0, 0, 0, .5);
-        backdrop-filter: blur(45px);
+        opacity: 0;
+        pointer-events: none;
     }
     .modalContainer{
         color: white;
@@ -28,10 +44,13 @@
         overflow: hidden;
         height: calc(100vh - rem(32px));
         width: 100%;
+        opacity: 0;
+        transform: translateX(100%);
         @include bp('md'){
             min-width: 38.3601756954612%;
             margin-left: auto;
-            width: 60vw;            
+            width: 60vw;
+            
         }
         @include bp('lg'){
             max-width: rem(524px);
@@ -44,6 +63,8 @@
             height: 100%;
             align-content: space-between;
             overflow-y: scroll;
+            overscroll-behavior: contain;
+            -webkit-overflow-scrolling: touch; 
             &::-webkit-scrollbar{
                 width: 0px;
             }
@@ -54,7 +75,6 @@
                     @include fluid(margin-block-end, 32px, 52.6px);
                 }
                 .contactUs__details{
-                    @extend %shri_text_sm;
                     align-content: start;
                     align-items: start;
                     & > .grid{
@@ -116,4 +136,5 @@
     .modal_btn, .modal_social_menu a{
         text-decoration: underline;
     }
+    
 }

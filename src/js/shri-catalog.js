@@ -9,6 +9,7 @@ export function initShriCatalogScroll() {
   if (!sections.length) return;
 
   const isDesktop = () => window.innerWidth > 768;
+  const header    = document.querySelector('.site-header');
 
   sections.forEach((section) => {
     const stickyOuter = section.querySelector(".shri-catalog-sticky-outer");
@@ -17,31 +18,43 @@ export function initShriCatalogScroll() {
 
     if (!stickyOuter || !stickyInner || !track) return;
 
-    const trackScroll = track.scrollWidth - stickyInner.clientWidth;
-    if (trackScroll <= 0) return;
+    const hasTheme = section.hasAttribute('data-header-theme');
+    const theme    = section.getAttribute('data-header-theme');
 
-    const tween = gsap.to(track, {
-      x:    -trackScroll,
-      ease: "none",
-    });
-
+    // ── Horizontal scroll ─────────────────────────────────
     ScrollTrigger.create({
-      animation: tween,
       trigger:   section,
       start:     "bottom bottom",
-      end:       () => `+=${trackScroll}`,
-      pin:       true,
+      end:       () => isDesktop() ? `+=${track.scrollWidth - stickyInner.clientWidth}` : "bottom bottom",
+      pin:       isDesktop(),
       scrub:     true,
       invalidateOnRefresh: true,
-      markers:   true,
-      onRefresh: (self) => {
+      onUpdate: (self) => {
         if (!isDesktop()) {
           gsap.set(track, { clearProps: "x" });
-          self.disable();
-        } else {
-          self.enable();
+          return;
         }
+        const trackScroll = track.scrollWidth - stickyInner.clientWidth;
+        gsap.set(track, { x: -trackScroll * self.progress });
+      },
+      onRefresh: () => {
+        if (!isDesktop()) gsap.set(track, { clearProps: "x" });
       },
     });
+
+    if (header && hasTheme) {
+      const headerHeight = header.offsetHeight + 2 + 'px';
+
+      ScrollTrigger.create({
+        trigger:          section,
+        start:            `top ${headerHeight}`,
+        end:              () => `+=${track.scrollWidth - stickyInner.clientWidth + section.offsetHeight + window.innerHeight}`,
+        invalidateOnRefresh: true,
+        onEnter:          () => header.setAttribute('data-theme', theme),
+        onEnterBack:      () => header.setAttribute('data-theme', theme),
+        onLeave:          () => header.removeAttribute('data-theme'),
+        onLeaveBack:      () => header.removeAttribute('data-theme'),
+      });
+    }
   });
 }

@@ -41,7 +41,9 @@
     }
     .shri-cta-btn{
         @include fluid(margin-block-start, 32px, 57px);
-        font-weight: bold;
+        &.site_btn_link{
+            font-weight: bold;
+        }
     }
 
     @include bp('md'){

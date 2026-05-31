@@ -5,12 +5,11 @@
 .manifesto_landing{
     position: relative;
     display: grid;
-    align-items: end;
     overflow: hidden;
     @include fluid(padding-block-start, 170px, 255px);
     @include fluid(padding-block-end, 42px, 60px);
     min-height: 100lvh;
-    background: url('../../assets/images/bg_boxed_lg.webp')  no-repeat center center / cover;
+    background: url('../../assets/images/bg_boxed_lg.webp')  no-repeat left top / cover;
     color: white;
     &>.wp-block-group__inner-container{
         display: grid;
@@ -38,7 +37,11 @@
     .content-block{
         max-width: rem(362px);
         margin-left: auto;
-    }    
+        align-self: end;
+    }
+    @include bp('md'){
+        align-items: end;
+    }
 }
 .manifesto_solutions{
     text-align: center;
@@ -52,7 +55,7 @@
             color: $color-accent;
         }
     }
-    a{
+    .site_btn_link{
         display: inline-flex;
         @include fluid(margin-block-start, 80px, 118px);
     }

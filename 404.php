@@ -13,23 +13,27 @@ get_header();
 	<main id="primary" class="site-main">
 
 		<section class="error-404 not-found">
-			<header class="page-header">
-				<h1 class="page-title"><?php esc_html_e( 'Oops! That page can&rsquo;t be found.', 'shri-shanti' ); ?></h1>
-			</header><!-- .page-header -->
+			<div class="container">
+				<header class="page-header">
+					<h1 class="page-title"><?php esc_html_e( 'Oops! That page can&rsquo;t be found.', 'shri-shanti' ); ?></h1>
+				</header><!-- .page-header -->
 
 			<div class="page-content">
-				<p><?php esc_html_e( 'It looks like nothing was found at this location. Maybe try one of the links below or a search?', 'shri-shanti' ); ?></p>
+				<div>
+					<?php esc_html_e( 'It looks like nothing was found at this location. Maybe try one of the links below.', 'shri-shanti' ); ?>
+				</div>
 
-					<?php
-					get_search_form();
+					<div style="display: none;">
+						<!-- <@?php
+						get_search_form();
 
-					the_widget( 'WP_Widget_Recent_Posts' );
+						the_widget( 'WP_Widget_Recent_Posts' );
 					?>
 
 					<div class="widget widget_categories">
-						<h2 class="widget-title"><?php esc_html_e( 'Most Used Categories', 'shri-shanti' ); ?></h2>
+						<h1 class="widget-title"><?php esc_html_e( 'Most Used Categories', 'shri-shanti' ); ?></h1>
 						<ul>
-							<?php
+							<@?php
 							wp_list_categories(
 								array(
 									'orderby'    => 'count',
@@ -41,17 +45,19 @@ get_header();
 							);
 							?>
 						</ul>
-					</div><!-- .widget -->
+					</div>
 
-					<?php
+					<@?php
 					/* translators: %1$s: smiley */
 					$shri_shanti_archive_content = '<p>' . sprintf( esc_html__( 'Try looking in the monthly archives. %1$s', 'shri-shanti' ), convert_smilies( ':)' ) ) . '</p>';
 					the_widget( 'WP_Widget_Archives', 'dropdown=1', "after_title=</h2>$shri_shanti_archive_content" );
 
 					the_widget( 'WP_Widget_Tag_Cloud' );
-					?>
+					?> -->
+					</div>
 
 			</div><!-- .page-content -->
+			</div>
 		</section><!-- .error-404 -->
 
 	</main><!-- #main -->

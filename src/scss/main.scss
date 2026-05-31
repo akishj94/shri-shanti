@@ -12,11 +12,14 @@
 @use 'components/shri-marquee-grid';
 @use 'components/social-menu';
 @use 'components/shri-modal';
+@use 'components/site-form';
 
 @use 'home';
 @use 'solutions';
 @use 'manifesto';
 @use 'industries';
+@use 'blog';
+@use 'not_found';
 
 #wpadminbar{
     opacity: 0;

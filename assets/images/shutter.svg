@@ -1,0 +1,93 @@
+<svg width="1600" height="700" viewBox="0 0 1600 700" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .panel {
+      stroke: #111;
+      stroke-width: 2.2;
+      fill: none;
+      stroke-linejoin: round;
+      stroke-linecap: round;
+    }
+
+    .detail {
+      stroke: #111;
+      stroke-width: 1.2;
+      fill: none;
+    }
+  </style>
+
+  <!-- Panel 1 -->
+  <g transform="translate(40,120)">
+    <path class="panel" d="M0 240 L160 80 L250 110 L90 270 Z"/>
+    <path class="panel" d="M90 270 L250 110 L250 145 L90 305 Z"/>
+    <path class="panel" d="M0 240 L0 275 L90 305 L90 270 Z"/>
+  </g>
+
+  <!-- Panel 2 -->
+  <g transform="translate(250,140)">
+    <path class="panel" d="M0 240 L160 80 L250 110 L90 270 Z"/>
+    <path class="panel" d="M90 270 L250 110 L250 145 L90 305 Z"/>
+    <path class="panel" d="M0 240 L0 275 L90 305 L90 270 Z"/>
+    <line class="detail" x1="45" y1="225" x2="205" y2="65"/>
+  </g>
+
+  <!-- Panel 3 -->
+  <g transform="translate(460,160)">
+    <path class="panel" d="M0 240 L160 80 L250 110 L90 270 Z"/>
+    <path class="panel" d="M90 270 L250 110 L250 145 L90 305 Z"/>
+    <path class="panel" d="M0 240 L0 275 L90 305 L90 270 Z"/>
+    <line class="detail" x1="65" y1="245" x2="225" y2="85"/>
+  </g>
+
+  <!-- Panel 4 Ribbed -->
+  <g transform="translate(670,180)">
+    <path class="panel" d="M0 240 L160 80 L250 110 L90 270 Z"/>
+    <path class="panel" d="M90 270 L250 110 L250 145 L90 305 Z"/>
+    <path class="panel" d="M0 240 L0 275 L90 305 L90 270 Z"/>
+
+    <line class="detail" x1="55" y1="245" x2="215" y2="85"/>
+    <line class="detail" x1="85" y1="255" x2="245" y2="95"/>
+  </g>
+
+  <!-- Panel 5 -->
+  <g transform="translate(880,200)">
+    <path class="panel" d="M0 240 L160 80 L250 110 L90 270 Z"/>
+    <path class="panel" d="M90 270 L250 110 L250 145 L90 305 Z"/>
+    <path class="panel" d="M0 240 L0 275 L90 305 L90 270 Z"/>
+  </g>
+
+  <!-- Panel 6 Perforated -->
+  <g transform="translate(1090,220)">
+    <path class="panel" d="M0 240 L160 80 L250 110 L90 270 Z"/>
+    <path class="panel" d="M90 270 L250 110 L250 145 L90 305 Z"/>
+    <path class="panel" d="M0 240 L0 275 L90 305 L90 270 Z"/>
+
+    <!-- perforations -->
+    <g>
+      <circle class="detail" cx="70" cy="230" r="2"/>
+      <circle class="detail" cx="90" cy="210" r="2"/>
+      <circle class="detail" cx="110" cy="190" r="2"/>
+      <circle class="detail" cx="130" cy="170" r="2"/>
+      <circle class="detail" cx="150" cy="150" r="2"/>
+      <circle class="detail" cx="170" cy="130" r="2"/>
+
+      <circle class="detail" cx="90" cy="240" r="2"/>
+      <circle class="detail" cx="110" cy="220" r="2"/>
+      <circle class="detail" cx="130" cy="200" r="2"/>
+      <circle class="detail" cx="150" cy="180" r="2"/>
+      <circle class="detail" cx="170" cy="160" r="2"/>
+      <circle class="detail" cx="190" cy="140" r="2"/>
+    </g>
+  </g>
+
+  <!-- Panel 7 Slotted -->
+  <g transform="translate(1300,240)">
+    <path class="panel" d="M0 240 L160 80 L250 110 L90 270 Z"/>
+    <path class="panel" d="M90 270 L250 110 L250 145 L90 305 Z"/>
+    <path class="panel" d="M0 240 L0 275 L90 305 L90 270 Z"/>
+
+    <line class="detail" x1="70" y1="240" x2="160" y2="150"/>
+    <line class="detail" x1="85" y1="248" x2="175" y2="158"/>
+    <line class="detail" x1="100" y1="256" x2="190" y2="166"/>
+    <line class="detail" x1="115" y1="264" x2="205" y2="174"/>
+  </g>
+</svg>
