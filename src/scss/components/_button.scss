@@ -41,6 +41,11 @@
   &:disabled{
     opacity: 0.7;
   }
+  transition: 0.1s ease-in color, 0.2s ease-in background-color;
+  &:hover{
+      background-color: $color-bg;
+      color: white;
+  }
 }
 .cta_xl{
   @extend %cta_xl;
@@ -154,5 +159,23 @@
         width: 100%;
         border: $span-border;
         transform-origin: center;
+    }
+}
+
+.site-btn, .cta_xl, .nav-link, .nav-dropdown-link{
+  .hover-text {
+      overflow: hidden;
+
+      &__inner {
+          display: block;
+          text-shadow: 0 1.8em currentColor;
+          transition: transform 0.35s cubic-bezier(0.76, 0, 0.24, 1);
+      }     
+  }
+  &:hover,
+    &:focus-visible {
+        .hover-text__inner {
+            transform: translateY(-1.8em);
+        }
     }
 }

@@ -84,7 +84,15 @@ function shri_cta_shortcode( $atts ) {
                 <button
                     class="shri-cta-btn <?php echo esc_attr( $button ); ?>"  data-link="#<?php echo esc_html( $link ); ?>"
                 >
-                    <?php echo esc_html( $button_text ); ?>
+                    <?php if ( $button === 'cta_xl' ) : ?>
+                        <span class="hover-text">
+                            <span class="hover-text__inner">
+                                <?php echo esc_html( $button_text ); ?>
+                            </span>
+                        </span>
+                    <?php else : ?>
+                        <?php echo esc_html( $button_text ); ?>
+                    <?php endif; ?>
                 </button>
 
             </div><!-- /.shri-cta-inner -->

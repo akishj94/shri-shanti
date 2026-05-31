@@ -2,7 +2,8 @@
 /**
  * Nav_Walker
  *
- * - Top-level items: standard link with SVG arrow if children exist.
+ * - Top-level items: standard link with hover text animation.
+ *                    SVG arrow sits outside the hover text span.
  * - Sub-menu items:  nested inside the main <ul>, with featured image if set.
  * - Only one level of sub-menus is supported. Any deeper nesting is ignored.
  * - Use Nav_Walker::render( $args ) instead of wp_nav_menu().
@@ -16,6 +17,7 @@ class Nav_Walker extends Walker_Nav_Menu {
 
         if ( $depth === 0 ) {
             $has_children = in_array( 'menu-item-has-children', (array) $item->classes );
+            $title        = esc_html( $item->title );
 
             $output .= '<li class="nav-item' . ( $has_children ? ' has-dropdown' : '' ) . '">';
 
@@ -30,7 +32,9 @@ class Nav_Walker extends Walker_Nav_Menu {
                 $output .= '<a href="' . esc_url( $item->url ) . '" class="nav-link">';
             }
 
-            $output .= esc_html( $item->title );
+            $output .= '<span class="hover-text">'
+                     . '<span class="hover-text__inner">' . $title . '</span>'
+                     . '</span>';
 
             if ( $has_children ) {
                 $output .= '<svg xmlns="http://www.w3.org/2000/svg" width="8" height="5" fill="none">'
@@ -42,20 +46,24 @@ class Nav_Walker extends Walker_Nav_Menu {
 
         } elseif ( $depth === 1 ) {
             $thumb_url = $this->get_item_thumbnail( $item );
+            $title     = esc_html( $item->title );
 
-            $output .= '<li class="nav-dropdown-item">';
+            $output .= '<li class="nav-dropdown-item' . ( $thumb_url ? ' has-thumbnail' : '' ) . '">';
             $output .= '<a href="' . esc_url( $item->url ) . '" class="nav-dropdown-link' . ( $thumb_url ? ' has-thumbnail' : '' ) . '">';
 
             if ( $thumb_url ) {
                 $output .= '<img src="' . esc_url( $thumb_url ) . '"'
-                         . ' alt="' . esc_attr( $item->title ) . '"'
-                         . ' width="52" height="40" loading="lazy" />';
+                        . ' alt="' . $title . '"'
+                        . ' width="52" height="40" loading="lazy" />';
             }
 
-            $output .= '<span class="nav-dropdown-label">' . esc_html( $item->title ) . '</span>';
+            $output .= '<span class="hover-text">'
+                    . '<span class="hover-text__inner">' . $title . '</span>'
+                    . '</span>';
+
             $output .= '<svg class="item-arrow" viewBox="0 0 8 14" fill="none" xmlns="http://www.w3.org/2000/svg">'
-                     . '<path d="M1 1L7 7L1 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>'
-                     . '</svg>';
+                    . '<path d="M1 1L7 7L1 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>'
+                    . '</svg>';
             $output .= '</a>';
         }
 

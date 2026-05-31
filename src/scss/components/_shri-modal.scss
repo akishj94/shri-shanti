@@ -120,7 +120,7 @@
             }
         }
     }
-    button{
+    button.close_modal{
         @include hamburger_button;
         justify-self: end;
         grid-row: 1;

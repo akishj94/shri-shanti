@@ -21,5 +21,7 @@
         'menu_class'      => 'nav-list',
     ]);
     ?>
-    <button class="site-btn" data-link="quote-form">Connect</button>
+    <button class="site-btn" data-link="quote-form">
+        <span class="hover-text"><span class="hover-text__inner">Connect</span></span>
+    </button>
 </nav>
