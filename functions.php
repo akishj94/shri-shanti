@@ -25,6 +25,7 @@ function theme_enqueue_assets(): void {
 
     $css_path = THEME_DIR . '/assets/css/main.css';
     $js_path  = THEME_DIR . '/assets/js/main.js';
+    $blog_css_path = THEME_DIR . '/assets/css/blog.css';
 
     // CSS
     if (file_exists($css_path)) {
@@ -35,7 +36,15 @@ function theme_enqueue_assets(): void {
             filemtime($css_path)
         );
     }
-
+    // Blog post single page only
+    if (is_singular('post') && file_exists($blog_css_path)) {
+        wp_enqueue_style(
+            'theme-blog',
+            THEME_URI . '/assets/css/blog.css',
+            ['theme-style'],
+            filemtime($blog_css_path)
+        );
+    }
     // Google Fonts
     wp_enqueue_style(
         'google-fonts',

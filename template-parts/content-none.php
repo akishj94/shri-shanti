@@ -10,6 +10,7 @@
 ?>
 
 <section class="no-results not-found">
+	<div class="container_medium">
 	<header class="page-header">
 		<h1 class="page-title"><?php esc_html_e( 'Nothing Found', 'shri-shanti' ); ?></h1>
 	</header><!-- .page-header -->
@@ -39,13 +40,14 @@
 			get_search_form();
 
 		else :
-			?>
-
-			<p><?php esc_html_e( 'It seems we can&rsquo;t find what you&rsquo;re looking for. Perhaps searching can help.', 'shri-shanti' ); ?></p>
+			?>			
+			<p><?php esc_html_e( 'It looks like no blog posts have been published yet. Stay tuned—new stories, tips, and updates will appear here soon.', 'shri-shanti' ); ?></p>
+			
 			<?php
-			get_search_form();
+			// get_search_form();
 
 		endif;
 		?>
 	</div><!-- .page-content -->
+	</div>
 </section><!-- .no-results -->

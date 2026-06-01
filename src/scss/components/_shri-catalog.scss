@@ -77,6 +77,17 @@ $catalog-card-mobile-vw: 75vw;
 }
 
 .shri-catalog-sticky-inner {
+  overflow-x: scroll;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+   -webkit-overflow-scrolling: touch;
+      display: flex;
+    align-items: center;
+   &::-webkit-scrollbar { display: none; }
+   @include bp('md') {
+    overflow-x: visible;
+    scroll-snap-type: none;
+  }
   @include bp('lg') {
     overflow: hidden;
     display: flex;
@@ -88,53 +99,38 @@ $catalog-card-mobile-vw: 75vw;
 // ─── Track ────────────────────────────────────────────────
 
 .shri-catalog-track {
+  flex-shrink: 0;
   display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
   gap: rem(11px);
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-
-  &::-webkit-scrollbar { display: none; }
-
-  @include bp('md') {
-    overflow-x: visible;
-    scroll-snap-type: none;
-  }
 }
 
 // ─── Card ─────────────────────────────────────────────────
 
 .shri-catalog-item {
-  scroll-snap-align: center;
   list-style: none;
-  flex: 0 0 75%;
-  &:first-of-type{
-    margin-inline-start: 11px;
-  }
-  &:last-of-type{
-    margin-inline-end: 11px;
-  }
-  @media (min-width: 600px) {
-    flex: 0 0 40%;
-  }  
-  @include bp('md') {
-    scroll-snap-align: unset;
+  scroll-snap-align: start;
+  scroll-margin-left: 30px;
+  &>div{
+    width: 300px;
+    // @media (min-width: 600px) {
+    //   flex: 0 0 40%;
+    // }  
+    @include bp('md') {
+      scroll-snap-align: unset;
 
-     &:first-of-type{
-      margin-inline-start: 10vw;
+      &:first-of-type{
+        margin-inline-start: 10vw;
+      }
+      &:last-of-type{
+        margin-inline-end: 0;
+      }
     }
-    &:last-of-type{
-      margin-inline-end: 0;
-    }
-  }
-  @include bp('lg') {
-    flex: 0 0 30%;
-  }
-  @include bp('xl') {
-    // flex: 0 0 auto;
+    // @include bp('lg') {
+    //   flex: 0 0 30%;
+    // }
+    // @include bp('xl') {
+    //   // flex: 0 0 auto;
+    // }
   }
 }
 

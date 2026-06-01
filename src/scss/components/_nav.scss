@@ -14,8 +14,13 @@ $nav-transition: 0.22s cubic-bezier(0.4, 0, 0.2, 1);
     z-index: 9;
     .site_branding{
         width: rem(165px);
+        display: block;
+        overflow: hidden;
         img{
             transition: 0.3s ease filter;
+        }
+        a{
+            display: block;
         }
     }
     .navbar_background-mobile {
@@ -49,6 +54,22 @@ $nav-transition: 0.22s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .nav-link{
             height: 100%;
+        }
+        .nav-list {
+            a{
+                transition: 0.35s ease-in opacity;
+            }
+            &:has(a:hover) {
+                a {
+                    opacity: 0.5;
+                }
+
+                a:hover,
+                li:has(a:hover) > a,
+                li:has(> a:hover) ul a {
+                    opacity: 1;
+                }
+            }
         }
     }
     &[data-theme="light"]{

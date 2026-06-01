@@ -18,17 +18,17 @@ gsap.ticker.add((time) => lenis.raf(time * 1000));
 gsap.ticker.lagSmoothing(0);
 
 function pageEnter() {
-  gsap.from('[data-animate]', {
-    opacity: 0,
-    y: 24,
-    duration: 0.7,
-    ease: 'power3.out',
-    stagger: 0.08,
-    clearProps: 'all',
-  });
-  document.querySelectorAll('video').forEach((video) => {
-    video.removeAttribute('controls');
-  });
+//   gsap.from('[data-animate]', {
+//     opacity: 0,
+//     y: 24,
+//     duration: 0.7,
+//     ease: 'power3.out',
+//     stagger: 0.08,
+//     clearProps: 'all',
+//   });
+//   document.querySelectorAll('video').forEach((video) => {
+//     video.removeAttribute('controls');
+//   });
 }
 
 function stickyPanels() {
@@ -128,7 +128,7 @@ function initPatternBg() {
 }
 
 const ScrollLock = ( function () {
-
+    console.log("ScrollLock");
     let scrollY      = 0;
     let lockCount    = 0; // reference count — safe for nested lock calls
     let lenisInstance = null;
@@ -525,7 +525,7 @@ function initNav() {
         gsap.set([header, logo, mobileBg, ...toggler.children], { clearProps: 'all' });
         gsap.set(getStaggerItems(), { opacity: 0, y: 12 });
         siteNav.classList.remove('is-visible');
-        navList.querySelectorAll('.nav-item.is-open').forEach(closeMobileSubmenu);
+        navList.querySelectorAll('.nav-item.is-open').forEach(closeMobileSubmenu);        
     }
 
     function resetDesktopState() {
@@ -535,6 +535,7 @@ function initNav() {
         navList.querySelectorAll('.nav-item.is-open').forEach(item => item.classList.remove('is-open'));
         navList.querySelectorAll('.nav-dropdown--default .nav-dropdown-item')
             .forEach(item => gsap.set(item, { opacity: 0, y: 6 }));
+        ScrollLock.unlock();
     }
 
     // ── Mobile menu ───────────────────────────────────────────────────────────
@@ -545,6 +546,8 @@ function initNav() {
         mobileOpen  = true;
         toggler.setAttribute('aria-expanded', 'true');
         header.setAttribute('data-expanded',  'true');
+
+        ScrollLock.lock();
 
         gsap.to(toggler.children[0], { y:  4, rotation:  45, duration: 0.25, ease: 'power2.inOut' });
         gsap.to(toggler.children[1], { y: -3, rotation: -45, duration: 0.25, ease: 'power2.inOut' });
@@ -576,7 +579,7 @@ function initNav() {
         mobileOpen  = false;
         toggler.setAttribute('aria-expanded', 'false');
         header.setAttribute('data-expanded',  'false');
-
+        ScrollLock.unlock();
         navList.querySelectorAll('.nav-item.is-open').forEach(closeMobileSubmenu);
 
         gsap.to(toggler.children[0], { y: 0, rotation: 0, duration: 0.22, ease: 'power2.inOut' });
@@ -722,8 +725,65 @@ function initHeaderTheme() {
     });
   });
 }
+
+function initLoadAnimations() {
+
+    // Prevent animation after internal page transitions
+    if (sessionStorage.getItem('headerAnimated')) return;
+
+    const header = document.querySelector('.site-header');
+    if (!header) return;
+
+    const logo = header.querySelector('.site_branding a');
+    const navText = header.querySelectorAll('.nav-link .hover-text__inner');
+
+    const button = header.querySelector('.site-btn');
+    const buttonText = header.querySelector('.site-btn .hover-text__inner');
+
+    gsap.set([logo, navText, buttonText], {
+        yPercent: 100
+    });
+
+    gsap.set(button, {
+        scaleX: 0,
+        transformOrigin: 'right center'
+    });
+
+    const tl = gsap.timeline();
+
+    tl
+
+    // Logo + Button
+    .to(logo, {
+        yPercent: 0,
+        duration: 0.9,
+        ease: 'expo.out'
+    }, 0)
+
+    .to(button, {
+        scaleX: 1,
+        duration: 0.9,
+        ease: 'expo.out'
+    }, 0)
+
+    // Menu items
+    .to(navText, {
+        yPercent: 0,
+        duration: 0.65,
+        stagger: 0.04,
+        ease: 'expo.out'
+    }, 0.25)
+
+    // CTA text
+    .to(buttonText, {
+        yPercent: 0,
+        duration: 0.55,
+        ease: 'expo.out'
+    }, 0.55);
+
+    return tl;
+}
 function init() {
-  pageEnter();
   initPatternBg();
   initShriCatalogScroll();
   stickyPanels();
@@ -732,6 +792,29 @@ function init() {
 }
 
 document.addEventListener('DOMContentLoaded', init);
+
+function animEventHandler() {
+
+    // Browser supports pagereveal
+    if ('onpagereveal' in window) {
+
+        window.addEventListener('pagereveal', (event) => {
+
+            // Internal View Transition navigation
+            if (event.viewTransition) return;
+
+            initLoadAnimations();
+
+        });
+
+        return;
+    }
+
+    // Fallback
+    window.addEventListener('load', initLoadAnimations);
+}
+
+// animEventHandler();
 
 ScrollTrigger.refresh();
 let resizeTimer;

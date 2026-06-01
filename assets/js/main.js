@@ -7644,19 +7644,6 @@
       });
       gsapWithCSS.ticker.add((time) => lenis.raf(time * 1e3));
       gsapWithCSS.ticker.lagSmoothing(0);
-      function pageEnter() {
-        gsapWithCSS.from("[data-animate]", {
-          opacity: 0,
-          y: 24,
-          duration: 0.7,
-          ease: "power3.out",
-          stagger: 0.08,
-          clearProps: "all"
-        });
-        document.querySelectorAll("video").forEach((video) => {
-          video.removeAttribute("controls");
-        });
-      }
       function stickyPanels() {
         const section = document.querySelector(".trusted_leader");
         const separator = section?.querySelector(".bordered_separator span");
@@ -7730,7 +7717,8 @@
           window.removeEventListener("scroll", handleScroll);
         };
       }
-      var ScrollLock = /* @__PURE__ */ (function() {
+      var ScrollLock = (function() {
+        console.log("ScrollLock");
         let scrollY = 0;
         let lockCount = 0;
         let lenisInstance = null;
@@ -7967,6 +7955,7 @@
           siteNav.classList.remove("is-visible");
           navList.querySelectorAll(".nav-item.is-open").forEach((item) => item.classList.remove("is-open"));
           navList.querySelectorAll(".nav-dropdown--default .nav-dropdown-item").forEach((item) => gsapWithCSS.set(item, { opacity: 0, y: 6 }));
+          ScrollLock.unlock();
         }
         function openMobileMenu() {
           if (isAnimating) return;
@@ -7974,6 +7963,7 @@
           mobileOpen = true;
           toggler.setAttribute("aria-expanded", "true");
           header.setAttribute("data-expanded", "true");
+          ScrollLock.lock();
           gsapWithCSS.to(toggler.children[0], { y: 4, rotation: 45, duration: 0.25, ease: "power2.inOut" });
           gsapWithCSS.to(toggler.children[1], { y: -3, rotation: -45, duration: 0.25, ease: "power2.inOut" });
           gsapWithCSS.timeline().add(() => {
@@ -8005,6 +7995,7 @@
           mobileOpen = false;
           toggler.setAttribute("aria-expanded", "false");
           header.setAttribute("data-expanded", "false");
+          ScrollLock.unlock();
           navList.querySelectorAll(".nav-item.is-open").forEach(closeMobileSubmenu);
           gsapWithCSS.to(toggler.children[0], { y: 0, rotation: 0, duration: 0.22, ease: "power2.inOut" });
           gsapWithCSS.to(toggler.children[1], { y: 0, rotation: 0, duration: 0.22, ease: "power2.inOut" });
@@ -8120,7 +8111,6 @@
         });
       }
       function init4() {
-        pageEnter();
         initPatternBg();
         initShriCatalogScroll();
         stickyPanels();

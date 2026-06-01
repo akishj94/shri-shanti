@@ -164,7 +164,8 @@
 
 .site-btn, .cta_xl, .nav-link, .nav-dropdown-link{
   .hover-text {
-      overflow: hidden;
+      overflow: clip;
+      display: flex;
 
       &__inner {
           display: block;

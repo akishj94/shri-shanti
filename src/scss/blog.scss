@@ -1,0 +1,345 @@
+// ============================================================
+// blog.scss
+// Scoped styles for blog pages only (archive + single post).
+// Loaded exclusively on is_singular('post'), is_archive(), etc.
+// Heading sizes, body font/color, and link colors are intentionally
+// omitted — handled by your custom SCSS.
+// ============================================================
+
+
+// ============================================================
+// Prose / entry content — block-level elements
+// ============================================================
+
+.entry-content,
+.entry-summary,
+.page-content {
+    margin: 1.5em 0 0;
+
+    p {
+        margin-bottom: 1.5em;
+    }
+
+    // Lists
+    ul,
+    ol {
+        margin: 0 0 1.5em 3em;
+    }
+
+    ul {
+        list-style: disc;
+    }
+
+    ol {
+        list-style: decimal;
+    }
+
+    li > ul,
+    li > ol {
+        margin-bottom: 0;
+        margin-left: 1.5em;
+    }
+
+    dt {
+        font-weight: 700;
+    }
+
+    dd {
+        margin: 0 1.5em 1.5em;
+    }
+
+    // Inline semantics
+    dfn,
+    cite,
+    em,
+    i {
+        font-style: italic;
+    }
+
+    abbr,
+    acronym {
+        border-bottom: 1px dotted #666;
+        cursor: help;
+    }
+
+    mark,
+    ins {
+        background: #fff9c0;
+        text-decoration: none;
+    }
+
+    big {
+        font-size: 125%;
+    }
+
+    // Blockquote
+    blockquote {
+        margin: 0 1.5em;
+    }
+
+    address {
+        margin: 0 0 1.5em;
+    }
+
+    // Code blocks
+    pre {
+        background: #eee;
+        font-family: "Courier 10 Pitch", courier, monospace;
+        line-height: 1.6;
+        margin-bottom: 1.6em;
+        max-width: 100%;
+        overflow: auto;
+        padding: 1.6em;
+    }
+
+    code,
+    kbd,
+    tt,
+    var {
+        font-family: monaco, consolas, "Andale Mono", "DejaVu Sans Mono", monospace;
+        font-size: 0.9375em;
+    }
+
+    // Horizontal rule
+    hr {
+        background-color: #ccc;
+        border: 0;
+        height: 1px;
+        margin-bottom: 1.5em;
+    }
+
+    // Table
+    table {
+        margin: 0 0 1.5em;
+        width: 100%;
+    }
+
+    // Embeds / media
+    embed,
+    iframe,
+    object {
+        max-width: 100%;
+    }
+
+    img {
+        height: auto;
+        max-width: 100%;
+    }
+
+    figure {
+        margin: 1em 0;
+    }
+
+    // Smileys (WP inserts these)
+    .wp-smiley {
+        border: none;
+        margin-bottom: 0;
+        margin-top: 0;
+        padding: 0;
+    }
+}
+
+// Paginated post links
+.page-links {
+    clear: both;
+    margin: 0 0 1.5em;
+}
+
+
+// ============================================================
+// Post / page wrapper
+// ============================================================
+
+.post,
+.page {
+    margin: 0 0 1.5em;
+}
+
+.updated:not(.published) {
+    display: none;
+}
+
+.sticky {
+    display: block;
+}
+
+
+// ============================================================
+// Post thumbnail / featured image
+// ============================================================
+
+.post-thumbnail {
+    img {
+        display: block;
+        height: auto;
+        max-width: 100%;
+        width: 100%;
+    }
+}
+
+
+// ============================================================
+// Media — captions
+// ============================================================
+
+.wp-caption {
+    margin-bottom: 1.5em;
+    max-width: 100%;
+
+    img[class*="wp-image-"] {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .wp-caption-text {
+        margin: 0.8075em 0;
+    }
+}
+
+.wp-caption-text {
+    text-align: center;
+}
+
+
+// ============================================================
+// Galleries (Gutenberg / classic gallery block)
+// ============================================================
+
+.gallery {
+    display: grid;
+    gap: 1.5em;
+    margin-bottom: 1.5em;
+
+    &-item {
+        display: inline-block;
+        text-align: center;
+        width: 100%;
+    }
+
+    &-caption {
+        display: block;
+    }
+
+    &-columns-2 { grid-template-columns: repeat(2, 1fr); }
+    &-columns-3 { grid-template-columns: repeat(3, 1fr); }
+    &-columns-4 { grid-template-columns: repeat(4, 1fr); }
+    &-columns-5 { grid-template-columns: repeat(5, 1fr); }
+    &-columns-6 { grid-template-columns: repeat(6, 1fr); }
+    &-columns-7 { grid-template-columns: repeat(7, 1fr); }
+    &-columns-8 { grid-template-columns: repeat(8, 1fr); }
+    &-columns-9 { grid-template-columns: repeat(9, 1fr); }
+}
+
+
+// ============================================================
+// Post / comment navigation
+// ============================================================
+
+.site-main {
+    .comment-navigation,
+    .posts-navigation,
+    .post-navigation {
+        margin: 0 0 1.5em;
+    }
+}
+
+.comment-navigation,
+.posts-navigation,
+.post-navigation {
+    .nav-links {
+        display: flex;
+    }
+
+    .nav-previous {
+        flex: 1 0 50%;
+    }
+
+    .nav-next {
+        flex: 1 0 50%;
+        text-align: end;
+    }
+}
+
+
+// ============================================================
+// Comments
+// ============================================================
+
+.comment-content {
+    a {
+        word-wrap: break-word;
+    }
+}
+
+.bypostauthor {
+    display: block;
+}
+
+
+// ============================================================
+// Gutenberg block alignments
+// ============================================================
+
+.alignleft {
+    float: left;
+    margin-right: 1.5em;
+    margin-bottom: 1.5em;
+}
+
+.alignright {
+    float: right;
+    margin-left: 1.5em;
+    margin-bottom: 1.5em;
+}
+
+.aligncenter {
+    clear: both;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 1.5em;
+}
+
+
+// ============================================================
+// Accessibility — screen reader text
+// (kept because Gutenberg blocks emit .screen-reader-text)
+// ============================================================
+
+.screen-reader-text {
+    border: 0;
+    clip: rect(1px, 1px, 1px, 1px);
+    clip-path: inset(50%);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute !important;
+    width: 1px;
+    word-wrap: normal !important;
+
+    &:focus {
+        background-color: #f1f1f1;
+        border-radius: 3px;
+        box-shadow: 0 0 2px 2px rgba(0, 0, 0, 0.6);
+        clip: auto !important;
+        clip-path: none;
+        color: #21759b;
+        display: block;
+        font-size: 0.875rem;
+        font-weight: 700;
+        height: auto;
+        left: 5px;
+        line-height: normal;
+        padding: 15px 23px 14px;
+        text-decoration: none;
+        top: 5px;
+        width: auto;
+        z-index: 100000;
+    }
+}
+
+#primary[tabindex="-1"]:focus {
+    outline: 0;
+}

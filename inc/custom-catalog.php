@@ -157,18 +157,20 @@ function shri_catalog_shortcode( $atts ) {
                     ?>
 
                     <article class="shri-catalog-item" role="listitem">
-                        <div class="shri-catalog-image-wrap">
-                            <?php if ( $thumb ) : ?>
-                                <img
-                                    src="<?php echo esc_url( $thumb ); ?>"
-                                    alt="<?php echo esc_attr( $title ); ?>"
-                                    loading="lazy"
-                                />
-                            <?php else : ?>
-                                <div class="shri-catalog-placeholder" aria-hidden="true"></div>
-                            <?php endif; ?>
+                        <div class="sc-item-wrap">
+                            <div class="shri-catalog-image-wrap">
+                                <?php if ( $thumb ) : ?>
+                                    <img
+                                        src="<?php echo esc_url( $thumb ); ?>"
+                                        alt="<?php echo esc_attr( $title ); ?>"
+                                        loading="lazy"
+                                    />
+                                <?php else : ?>
+                                    <div class="shri-catalog-placeholder" aria-hidden="true"></div>
+                                <?php endif; ?>
+                            </div>
+                            <h5 class="shri-catalog-item-name"><?php echo esc_html( $title ); ?></h5>
                         </div>
-                        <h5 class="shri-catalog-item-name"><?php echo esc_html( $title ); ?></h5>
                     </article>
 
                     <?php endwhile; ?>
