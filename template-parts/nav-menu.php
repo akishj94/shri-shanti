@@ -11,6 +11,7 @@
 ?>
 
 <nav class="site-nav" id="site-nav" role="navigation" aria-label="Primary Navigation">
+    <div class="navBlurBg"></div>
     <!-- WordPress menu output -->
     <?php
     

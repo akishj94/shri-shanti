@@ -19,8 +19,8 @@ get_header();
         <div class="newsroom_header">
             <div class="container">
                 <div class="container_medium">
-                    <div class="shri_text_sm p0">/ Newsroom</div>
-                    <h1 class="page-title">Latest news, announcements and insights.</h1>
+                    <div class="shri_text_sm p0 mask-up">/ Newsroom</div>
+                    <h1 class="page-title mask-up">Latest news, announcements and insights.</h1>
                 </div>
                 <div class="bordered_separator"></div>
             </div>

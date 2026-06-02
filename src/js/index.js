@@ -3,6 +3,7 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Lenis from 'lenis';
 import { initShriCatalogScroll } from './shri-catalog';
+import { setInitialStates, initScrollAnimations } from './animations';
 gsap.registerPlugin(ScrollTrigger);
 // ─── Smooth scroll (Lenis) ─────────────────────────────────
 
@@ -14,7 +15,11 @@ const lenis = new Lenis({
 }
 });
 
-gsap.ticker.add((time) => lenis.raf(time * 1000));
+lenis.on('scroll', ScrollTrigger.update);
+
+gsap.ticker.add((time) => {
+  lenis.raf(time * 1000);
+});
 gsap.ticker.lagSmoothing(0);
 
 function pageEnter() {
@@ -60,8 +65,8 @@ function stickyPanels() {
 
     const segStart = (i - 1) * segDuration;
 
-    tl.to(getContent(panels[i - 1]), { opacity: 0, y: -10, height: 0,                ease: 'power2.inOut', duration: segDuration }, segStart);
-    tl.to(content,                   { opacity: 1, y:   0, height: content.scrollHeight, ease: 'power2.inOut', duration: segDuration }, segStart);
+    tl.to(getContent(panels[i - 1]), { opacity: 0, y: -10, height: 0,                    ease: 'power2.inOut', duration: segDuration }, segStart);
+    tl.to(content,                   { opacity: 1, y:   0, height: content.scrollHeight,  ease: 'power2.inOut', duration: segDuration }, segStart);
   });
 
   ScrollTrigger.create({
@@ -70,14 +75,15 @@ function stickyPanels() {
     end:     `+=${totalScroll * 1.3}`,
     pin:     true,
     scrub:   1,
-    invalidateOnRefresh: true,
+    invalidateOnRefresh: true, // ← already present, good
+    markers: false,            // ← remove markers
     onUpdate: self => {
-        tl.progress(self.progress);
-        gsap.set(separator, { width: `${self.progress * 100}%` });
+      tl.progress(self.progress);
+      gsap.set(separator, { width: `${self.progress * 100}%` });
     },
     onRefresh: self => {
-        tl.progress(self.progress);
-        gsap.set(separator, { width: `${self.progress * 100}%` });
+      tl.progress(self.progress);
+      gsap.set(separator, { width: `${self.progress * 100}%` });
     },
   });
 }
@@ -128,7 +134,6 @@ function initPatternBg() {
 }
 
 const ScrollLock = ( function () {
-    console.log("ScrollLock");
     let scrollY      = 0;
     let lockCount    = 0; // reference count — safe for nested lock calls
     let lenisInstance = null;
@@ -190,12 +195,12 @@ const ScrollLock = ( function () {
 } )();
 
 (function () {
-
+    
     const modal = document.getElementById('site-modal');
     const overlay = modal.querySelector('.modal__overlay');
     const closeBtn = modal.querySelector('.close_modal');
     const container = modal.querySelector('.modalContainer');
-
+    if (!modal) return;
     const modalViews = {
         contact: document.getElementById('modalContactInfo'),
         form: document.getElementById('modalContactForm'),
@@ -728,99 +733,124 @@ function initHeaderTheme() {
 
 function initLoadAnimations() {
 
-    // Prevent animation after internal page transitions
-    if (sessionStorage.getItem('headerAnimated')) return;
+     const isHardRefresh = !sessionStorage.getItem('headerAnimated') 
+    || performance.getEntriesByType('navigation')[0]?.type === 'reload';
 
+  if (!isHardRefresh) return;
+  sessionStorage.setItem('headerAnimated', '1');
+  
     const header = document.querySelector('.site-header');
     if (!header) return;
 
     const logo = header.querySelector('.site_branding a');
-    const navText = header.querySelectorAll('.nav-link .hover-text__inner');
+    const navItems = header.querySelectorAll('.nav-list > .nav-item');
 
+    const blurBg = header.querySelector('.navBlurBg');
     const button = header.querySelector('.site-btn');
     const buttonText = header.querySelector('.site-btn .hover-text__inner');
 
-    gsap.set([logo, navText, buttonText], {
-        yPercent: 100
+    gsap.set(blurBg, {
+        scaleX: 0,
+        transformOrigin: "right center",
+        autoAlpha: 1
     });
 
     gsap.set(button, {
         scaleX: 0,
-        transformOrigin: 'right center'
+        transformOrigin: "right center"
     });
 
-    const tl = gsap.timeline();
+    gsap.set(buttonText, {
+        yPercent: 120
+    });
 
-    tl
+    gsap.set([logo], {
+        yPercent: 120
+    });
 
-    // Logo + Button
-    .to(logo, {
-        yPercent: 0,
-        duration: 0.9,
-        ease: 'expo.out'
-    }, 0)
+    gsap.set(navItems, {
+        autoAlpha: 0,
+    });
+
+    const tl = gsap.timeline({
+        defaults: {
+            ease: "power2.out"
+        }
+    });
+
+    tl.addLabel("intro")
+
+    .to(blurBg, {
+        scaleX: 1,
+        duration: 0.8
+    }, "intro")
 
     .to(button, {
         scaleX: 1,
-        duration: 0.9,
-        ease: 'expo.out'
-    }, 0)
-
-    // Menu items
-    .to(navText, {
+        duration: 0.6
+    }, "intro")
+    .to(logo, {
         yPercent: 0,
-        duration: 0.65,
-        stagger: 0.04,
-        ease: 'expo.out'
-    }, 0.25)
+        duration: 0.8
+    }, "+=0.05")
 
-    // CTA text
     .to(buttonText, {
         yPercent: 0,
-        duration: 0.55,
-        ease: 'expo.out'
-    }, 0.55);
+        duration: 0.04
+    }, "<")
 
+    .to(navItems, {
+        autoAlpha: 1,
+        duration: 0.6,
+        stagger: 0.05
+    }, "<")   
+    
     return tl;
 }
 function init() {
+  setInitialStates();
   initPatternBg();
   initShriCatalogScroll();
-  stickyPanels();
   initHeaderTheme();
-  initNav(); 
+  initNav();
+  stickyPanels();
+  initLoadAnimations();
 }
 
-document.addEventListener('DOMContentLoaded', init);
+function waitForImages() {
+  const imgs = [...document.querySelectorAll('img:not([loading="lazy"])')];
+  if (!imgs.length) return Promise.resolve();
 
-function animEventHandler() {
-
-    // Browser supports pagereveal
-    if ('onpagereveal' in window) {
-
-        window.addEventListener('pagereveal', (event) => {
-
-            // Internal View Transition navigation
-            if (event.viewTransition) return;
-
-            initLoadAnimations();
-
-        });
-
-        return;
-    }
-
-    // Fallback
-    window.addEventListener('load', initLoadAnimations);
+  return Promise.all(
+    imgs.map(img =>
+      img.complete
+        ? Promise.resolve()
+        : new Promise(resolve => {
+            img.addEventListener('load',  resolve, { once: true });
+            img.addEventListener('error', resolve, { once: true });
+          })
+    )
+  );
 }
 
-// animEventHandler();
+document.addEventListener('DOMContentLoaded', async () => {
+  await Promise.all([
+    document.fonts.ready,
+    waitForImages(),
+  ]);
 
-ScrollTrigger.refresh();
+  requestAnimationFrame(() => {
+    init();
+    initScrollAnimations();
+    ScrollTrigger.refresh(true);
+  });
+});
+
+
 let resizeTimer;
 window.addEventListener('resize', () => {
   clearTimeout(resizeTimer);
   resizeTimer = setTimeout(() => {
     ScrollTrigger.refresh();
-  }, 150);
+  }, 250);
 });

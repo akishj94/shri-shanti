@@ -157,7 +157,6 @@ function shri_catalog_shortcode( $atts ) {
                     ?>
 
                     <article class="shri-catalog-item" role="listitem">
-                        <div class="sc-item-wrap">
                             <div class="shri-catalog-image-wrap">
                                 <?php if ( $thumb ) : ?>
                                     <img
@@ -170,7 +169,7 @@ function shri_catalog_shortcode( $atts ) {
                                 <?php endif; ?>
                             </div>
                             <h5 class="shri-catalog-item-name"><?php echo esc_html( $title ); ?></h5>
-                        </div>
+                        
                     </article>
 
                     <?php endwhile; ?>
@@ -181,7 +180,6 @@ function shri_catalog_shortcode( $atts ) {
         </div><!-- /.shri-catalog-sticky-outer -->
 
     </section>
-
     <?php
     endif;
 

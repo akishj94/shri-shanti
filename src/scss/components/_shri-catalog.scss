@@ -59,8 +59,7 @@ $catalog-card-mobile-vw: 75vw;
     .bordered_separator{
       top: 25%;
     }
-  }
-  
+  }  
 }
 
 .shri-catalog-title {
@@ -69,6 +68,11 @@ $catalog-card-mobile-vw: 75vw;
 
 // ─── Sticky wrappers (desktop pin — driven by GSAP) ───────
 
+.shri-catalog-sticky-outer,
+.shri-catalog-sticky-inner {
+  width: 100%;
+  min-width: 0;
+}
 .shri-catalog-sticky-outer {
   @include fluid(margin-block-start, 62px, 93px);
   @include bp('lg') {
@@ -76,18 +80,7 @@ $catalog-card-mobile-vw: 75vw;
   }
 }
 
-.shri-catalog-sticky-inner {
-  overflow-x: scroll;
-  scroll-snap-type: x mandatory;
-  scrollbar-width: none;
-   -webkit-overflow-scrolling: touch;
-      display: flex;
-    align-items: center;
-   &::-webkit-scrollbar { display: none; }
-   @include bp('md') {
-    overflow-x: visible;
-    scroll-snap-type: none;
-  }
+.shri-catalog-sticky-inner { 
   @include bp('lg') {
     overflow: hidden;
     display: flex;
@@ -99,38 +92,50 @@ $catalog-card-mobile-vw: 75vw;
 // ─── Track ────────────────────────────────────────────────
 
 .shri-catalog-track {
-  flex-shrink: 0;
   display: flex;
   gap: rem(11px);
+
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  scroll-padding-inline: 16px;
+
+  padding-inline: 16px;
+   &::-webkit-scrollbar{ 
+    display: none; 
+  }
+   @include bp('md') {
+    overflow-x: visible;
+    scroll-snap-type: none;
+    scroll-padding-inline: 0px;
+    padding-inline: 0px;
+  }
 }
 
 // ─── Card ─────────────────────────────────────────────────
 
 .shri-catalog-item {
   list-style: none;
-  scroll-snap-align: start;
-  scroll-margin-left: 30px;
-  &>div{
-    width: 300px;
-    // @media (min-width: 600px) {
-    //   flex: 0 0 40%;
-    // }  
-    @include bp('md') {
-      scroll-snap-align: unset;
+  flex: 0 0 75%;
+  scroll-snap-align: center;
+  @media (min-width: 600px) {
+    flex: 0 0 40%;
+  }  
+  @include bp('md') {
+    scroll-snap-align: unset;
 
-      &:first-of-type{
-        margin-inline-start: 10vw;
-      }
-      &:last-of-type{
-        margin-inline-end: 0;
-      }
+     &:first-of-type{
+      margin-inline-start: 10vw;
     }
-    // @include bp('lg') {
-    //   flex: 0 0 30%;
-    // }
-    // @include bp('xl') {
-    //   // flex: 0 0 auto;
-    // }
+    &:last-of-type{
+      margin-inline-end: 0;
+    }
+  }
+  @include bp('lg') {
+    flex: 0 0 30%;
+  }
+  @include bp('xl') {
+    // flex: 0 0 auto;
   }
 }
 
@@ -172,4 +177,29 @@ $catalog-card-mobile-vw: 75vw;
 .shri-catalog-empty {
   color: rgba($color-link, 0.5);
   font-size: rem(13px);
+}
+
+.horizontal-scroll {
+  display: flex;
+  gap: 5px;
+  height: 320px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  
+  &__item {
+    align-items: center;
+    background-color: red;
+    color: white;
+    border: 1px solid black;
+    display: flex;
+    flex: 0 0 25%;
+    font-size: 40px;
+    justify-content: center;
+    scroll-snap-align: start;
+  }
 }

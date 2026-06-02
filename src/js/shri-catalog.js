@@ -1,6 +1,3 @@
-// shri-catalog.js
-// Call catalogScroll(lenis) inside your init() and pass your lenis instance.
-// lenis param is optional — falls back to native scroll if omitted.
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
@@ -22,39 +19,66 @@ export function initShriCatalogScroll() {
     const theme    = section.getAttribute('data-header-theme');
 
     // ── Horizontal scroll ─────────────────────────────────
-    ScrollTrigger.create({
-      trigger:   section,
-      start:     "bottom bottom",
-      end:       () => isDesktop() ? `+=${track.scrollWidth - stickyInner.clientWidth}` : "bottom bottom",
-      pin:       isDesktop(),
-      scrub:     true,
-      invalidateOnRefresh: true,
-      onUpdate: (self) => {
-        if (!isDesktop()) {
-          gsap.set(track, { clearProps: "x" });
-          return;
-        }
-        const trackScroll = track.scrollWidth - stickyInner.clientWidth;
-        gsap.set(track, { x: -trackScroll * self.progress });
-      },
-      onRefresh: () => {
-        if (!isDesktop()) gsap.set(track, { clearProps: "x" });
-      },
-    });
+    let scrollTriggerInstance = null;
 
+    function buildScrollTrigger() {
+      if (scrollTriggerInstance) {
+        scrollTriggerInstance.kill(true);
+        gsap.set([stickyOuter, stickyInner, track], { clearProps: "all" });
+      }
+
+      ScrollTrigger.refresh();
+
+      scrollTriggerInstance = ScrollTrigger.create({
+        trigger:             section,
+        start:               "bottom bottom",
+        end:                 () => isDesktop() ? `+=${track.scrollWidth - stickyInner.clientWidth}` : "bottom bottom",
+        pin:                 isDesktop(),
+        scrub:               true,
+        invalidateOnRefresh: true,
+        onUpdate: (self) => {
+          if (!isDesktop()) {
+            gsap.set(track, { clearProps: "x" });
+            return;
+          }
+          gsap.set(track, { x: -(track.scrollWidth - stickyInner.clientWidth) * self.progress });
+        },
+        onRefresh: () => {
+          if (!isDesktop()) gsap.set(track, { clearProps: "x" });
+        },
+      });
+    }
+
+    buildScrollTrigger();
+
+    // ── Header theme ──────────────────────────────────────
     if (header && hasTheme) {
       const headerHeight = header.offsetHeight + 2 + 'px';
 
       ScrollTrigger.create({
-        trigger:          section,
-        start:            `top ${headerHeight}`,
-        end:              () => `+=${track.scrollWidth - stickyInner.clientWidth + section.offsetHeight + window.innerHeight}`,
+        trigger:             section,
+        start:               `top ${headerHeight}`,
+        end:                 () => `+=${track.scrollWidth - stickyInner.clientWidth + section.offsetHeight + window.innerHeight}`,
         invalidateOnRefresh: true,
-        onEnter:          () => header.setAttribute('data-theme', theme),
-        onEnterBack:      () => header.setAttribute('data-theme', theme),
-        onLeave:          () => header.removeAttribute('data-theme'),
-        onLeaveBack:      () => header.removeAttribute('data-theme'),
+        onEnter:             () => header.setAttribute('data-theme', theme),
+        onEnterBack:         () => header.setAttribute('data-theme', theme),
+        onLeave:             () => header.removeAttribute('data-theme'),
+        onLeaveBack:         () => header.removeAttribute('data-theme'),
       });
     }
+
+    // ── Recreate on breakpoint cross ──────────────────────
+    let lastDesktop = isDesktop();
+    let resizeTimer = null;
+
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        const nowDesktop = isDesktop();
+        if (nowDesktop === lastDesktop) return;
+        lastDesktop = nowDesktop;
+        buildScrollTrigger();
+      }, 150);
+    });
   });
 }
