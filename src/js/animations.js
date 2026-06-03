@@ -32,18 +32,42 @@ export function setInitialStates() {
   });
 
   // Mask up — clip words from below
-  document.querySelectorAll('.mask-up').forEach((el) => {
-    const split = new SplitText(el, { type: 'lines,words', linesClass: 'mask-line' });
-    el._split = split;
-    gsap.set(split.words, { yPercent: 110 });
-  });
+  // document.querySelectorAll('.mask-up').forEach((el) => {
+  //   const split = new SplitText(el, { type: 'lines,words', linesClass: 'mask-line',autoSplit:true,  });
+  //   el._split = split;
+  //   gsap.set(split.words, { yPercent: 110 });
+  // });
+   gsap.utils.toArray('.mask-up').forEach((el) => {
+    SplitText.create(el, {
+      type: 'lines,words',
+      mask: 'lines',
+      autoSplit: true,
+      onSplit: (self) => {
+        gsap.set(self.words, { yPercent: 110 });
 
+        return gsap.to(self.words, {
+          yPercent: 0,
+          duration: 0.8,
+          ease: 'power3.out',
+          stagger: 0.04,
+          scrollTrigger: {
+            trigger: el,
+            start: 'top 99%',
+            once: true,
+          },
+        });
+      },
+    });
+  });
   // Char opacity — chars start at 0.2
   document.querySelectorAll('.fade-text').forEach((el) => {
-    const split = new SplitText(el, { type: 'chars' });
+    const split = new SplitText(el, { type: 'chars', autoSplit: true, });
     el._split = split;
     gsap.set(split.chars, { opacity: 0.2 }); // ← was split.words
   });
+
+  // Scale Down
+  gsap.set('.scale-down', { transformOrigin: 'top center' });
 }
 
 // ─────────────────────────────────────────────────────────────
@@ -114,21 +138,21 @@ export function initScrollAnimations() {
   });
 
   // ── Mask up ────────────────────────────────────────────
-  document.querySelectorAll('.mask-up').forEach((el) => {
-    if (!el._split) return;
+  // document.querySelectorAll('.mask-up').forEach((el) => {
+  //   if (!el._split) return;
 
-    ScrollTrigger.create({
-      trigger: el,
-      start: 'top 99%',
-      once: true,
-      onEnter: () => gsap.to(el._split.words, {
-        yPercent: 0,
-        duration: 0.8,
-        ease: 'power3.out',
-        stagger: 0.04,
-      }),
-    });
-  });
+  //   ScrollTrigger.create({
+  //     trigger: el,
+  //     start: 'top 99%',
+  //     once: true,
+  //     onEnter: () => gsap.to(el._split.words, {
+  //       yPercent: 0,
+  //       duration: 0.8,
+  //       ease: 'power3.out',
+  //       stagger: 0.04,
+  //     }),
+  //   });
+  // });
 
   // ── Char opacity ───────────────────────────────────────
   document.querySelectorAll('.fade-text').forEach((el) => {
@@ -144,6 +168,26 @@ export function initScrollAnimations() {
         ease: 'none',
         stagger: 0.02,
       }),
+    });
+  });
+  // ── Scale away (mobile only) ───────────────────────────
+  document.querySelectorAll('.scale-down').forEach((el) => {
+    const target = el.firstElementChild;
+
+    ScrollTrigger.matchMedia({
+      '(min-width: 768px)': () => {
+        gsap.to(target, {
+          scale: 0.85,
+          ease: 'none',
+          y: '60%',
+          scrollTrigger: {
+            trigger: el,
+            start: 'top top',
+            end: 'bottom+=50% top',
+            scrub: true,
+          },
+        });
+      },
     });
   });
 }

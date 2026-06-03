@@ -4,11 +4,10 @@
 
 .manifesto_landing{
     position: relative;
-    display: grid;
+    
     overflow: hidden;
-    @include fluid(padding-block-start, 170px, 255px);
-    @include fluid(padding-block-end, 42px, 60px);
-    min-height: 100lvh;
+    
+    
     background: url('../../assets/images/bg_boxed_lg.webp')  no-repeat left top / cover;
     color: white;
     &>.wp-block-group__inner-container{
@@ -17,6 +16,12 @@
     }
     h1, h2, p{
         margin: 0px;
+    }
+    .scale-down{
+        display: grid;
+        min-height: 100lvh;
+        @include fluid(padding-block-start, 170px, 255px);
+        @include fluid(padding-block-end, 42px, 60px);
     }
     h1{
         @include fluid-type(80px, 163px);
@@ -40,7 +45,9 @@
         align-self: end;
     }
     @include bp('md'){
-        align-items: end;
+        .scale-down{
+            align-items: end;
+        }
     }
 }
 .manifesto_solutions{
@@ -61,7 +68,7 @@
     }
     @include bp('md') {
         p{
-            max-width: rem(540px);
+            max-width: rem(560px);
             margin-inline: auto;
         }
     }

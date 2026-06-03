@@ -807,8 +807,9 @@ function initLoadAnimations() {
     
     return tl;
 }
+setInitialStates();
 function init() {
-  setInitialStates();
+  
   initPatternBg();
   initShriCatalogScroll();
   initHeaderTheme();

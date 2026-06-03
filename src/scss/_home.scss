@@ -8,7 +8,7 @@
         color: white;
         min-height: 100vh;
         display: grid;
-        background-image: url('../../assets/images/bg_main.webp');
+        background-image: url('../../assets/images/hero-img.webp');
         background-size: cover;
         background-repeat: no-repeat;
         background-position: center;
@@ -34,8 +34,10 @@
                 object-position: right;
             }
         }
-        @include fluid(padding-block-start, 240px, 352px);
-        padding-block-end: rem(27px);
+        .scale-down{
+            @include fluid(padding-block-start, 240px, 352px);
+            padding-block-end: rem(27px);
+        }
         p{
             max-width: clamp(340px, 30vw, 372px);
         }
@@ -183,12 +185,16 @@
         }
     }
     .demanding_applications{
-        background-image: url('../../assets/images/bg_boxed.jpg');
+        background-image: url('../../assets/images/background-blur.webp');
         background-size: cover;
         background-position: center top;
         position: relative;
         color: white;
         padding-block: rem(30px);
+        min-height: 120lvh;
+        display: grid;
+        align-items: center;
+        overflow: hidden;
         &:after{
             content:'';
             position: absolute;
@@ -211,6 +217,14 @@
             z-index: 1;
             row-gap: 40px;
             align-items: start;
+        }
+        .brand_icon__anim{
+            position: absolute;
+            top: -1%;
+            right: 0px;
+            height: 185%;
+            min-height: auto;
+            max-width: none;
         }
         .unstyledList{
             @include fluid(margin-block-start, 120px, 202px, 768px, 1368px);
@@ -257,6 +271,7 @@
        
         @include bp('md'){
             padding-block: 0px;
+            min-height: 55rem;
              &.wp-block-group {
                 &>.wp-block-group__inner-container{
                     padding-inline-end: 11px;
