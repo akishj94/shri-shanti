@@ -7574,75 +7574,8 @@
   });
 
   // src/js/shri-catalog.js
-  function initShriCatalogScroll() {
-    const sections = document.querySelectorAll(".shri-catalog-section");
-    if (!sections.length) return;
-    const isDesktop = () => window.innerWidth > 768;
-    const header = document.querySelector(".site-header");
-    sections.forEach((section) => {
-      const stickyOuter = section.querySelector(".shri-catalog-sticky-outer");
-      const stickyInner = section.querySelector(".shri-catalog-sticky-inner");
-      const track = section.querySelector(".shri-catalog-track");
-      if (!stickyOuter || !stickyInner || !track) return;
-      const hasTheme = section.hasAttribute("data-header-theme");
-      const theme = section.getAttribute("data-header-theme");
-      let scrollTriggerInstance = null;
-      function buildScrollTrigger() {
-        if (scrollTriggerInstance) {
-          scrollTriggerInstance.kill(true);
-          gsapWithCSS.set([stickyOuter, stickyInner, track], { clearProps: "all" });
-        }
-        ScrollTrigger2.refresh();
-        scrollTriggerInstance = ScrollTrigger2.create({
-          trigger: section,
-          start: "bottom bottom",
-          end: () => isDesktop() ? `+=${track.scrollWidth - stickyInner.clientWidth}` : "bottom bottom",
-          pin: isDesktop(),
-          scrub: true,
-          invalidateOnRefresh: true,
-          onUpdate: (self) => {
-            if (!isDesktop()) {
-              gsapWithCSS.set(track, { clearProps: "x" });
-              return;
-            }
-            gsapWithCSS.set(track, { x: -(track.scrollWidth - stickyInner.clientWidth) * self.progress });
-          },
-          onRefresh: () => {
-            if (!isDesktop()) gsapWithCSS.set(track, { clearProps: "x" });
-          }
-        });
-      }
-      buildScrollTrigger();
-      if (header && hasTheme) {
-        const headerHeight = header.offsetHeight + 2 + "px";
-        ScrollTrigger2.create({
-          trigger: section,
-          start: `top ${headerHeight}`,
-          end: () => `+=${track.scrollWidth - stickyInner.clientWidth + section.offsetHeight + window.innerHeight}`,
-          invalidateOnRefresh: true,
-          onEnter: () => header.setAttribute("data-theme", theme),
-          onEnterBack: () => header.setAttribute("data-theme", theme),
-          onLeave: () => header.removeAttribute("data-theme"),
-          onLeaveBack: () => header.removeAttribute("data-theme")
-        });
-      }
-      let lastDesktop = isDesktop();
-      let resizeTimer = null;
-      window.addEventListener("resize", () => {
-        clearTimeout(resizeTimer);
-        resizeTimer = setTimeout(() => {
-          const nowDesktop = isDesktop();
-          if (nowDesktop === lastDesktop) return;
-          lastDesktop = nowDesktop;
-          buildScrollTrigger();
-        }, 150);
-      });
-    });
-  }
   var init_shri_catalog = __esm({
     "src/js/shri-catalog.js"() {
-      init_gsap();
-      init_ScrollTrigger();
     }
   });
 
@@ -8027,10 +7960,24 @@
         }
       });
     });
-    document.querySelectorAll(".fade-text").forEach((el) => {
-      const split = new SplitText(el, { type: "chars", autoSplit: true });
-      el._split = split;
-      gsapWithCSS.set(split.chars, { opacity: 0.2 });
+    gsapWithCSS.utils.toArray(".fade-text").forEach((el) => {
+      SplitText.create(el, {
+        type: "chars",
+        autoSplit: true,
+        onSplit: (self) => {
+          gsapWithCSS.set(self.chars, { opacity: 0.2 });
+          return gsapWithCSS.to(self.chars, {
+            opacity: 1,
+            stagger: 0.02,
+            ease: "none",
+            duration: "none",
+            scrollTrigger: {
+              trigger: el,
+              start: "top 99%"
+            }
+          });
+        }
+      });
     });
     gsapWithCSS.set(".scale-down", { transformOrigin: "top center" });
   }
@@ -8082,20 +8029,6 @@
           duration: 0.8,
           ease: "power2.out",
           stagger: 0.12
-        })
-      });
-    });
-    document.querySelectorAll(".fade-text").forEach((el) => {
-      if (!el._split) return;
-      ScrollTrigger2.create({
-        trigger: el,
-        start: "top 99%",
-        once: true,
-        onEnter: () => gsapWithCSS.to(el._split.chars, {
-          opacity: 1,
-          duration: 0,
-          ease: "none",
-          stagger: 0.02
         })
       });
     });
@@ -8670,10 +8603,24 @@
         }, "<");
         return tl;
       }
+      function initBrandIconAnim() {
+        const el = document.querySelector(".brand_icon__anim");
+        if (!el) return;
+        gsapWithCSS.to(el, {
+          xPercent: 40,
+          ease: "none",
+          scrollTrigger: {
+            trigger: document.body,
+            start: "top top",
+            end: "bottom bottom",
+            scrub: 1
+          }
+        });
+      }
       setInitialStates();
       function init4() {
         initPatternBg();
-        initShriCatalogScroll();
+        initBrandIconAnim();
         initHeaderTheme();
         initNav();
         stickyPanels();

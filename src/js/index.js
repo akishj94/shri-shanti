@@ -807,11 +807,27 @@ function initLoadAnimations() {
     
     return tl;
 }
+function initBrandIconAnim() {
+  const el = document.querySelector('.brand_icon__anim');
+  if (!el) return;
+
+  gsap.to(el, {
+    xPercent: 40,
+    ease: 'none',
+    scrollTrigger: {
+      trigger: document.body,
+      start: 'top top',
+      end: 'bottom bottom',
+      scrub: 1,
+    },
+  });
+}
 setInitialStates();
 function init() {
   
   initPatternBg();
-  initShriCatalogScroll();
+  initBrandIconAnim();
+//   initShriCatalogScroll();
   initHeaderTheme();
   initNav();
   stickyPanels();
