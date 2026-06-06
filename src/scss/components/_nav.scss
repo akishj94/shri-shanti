@@ -4,6 +4,11 @@
 $nav-transition: 0.22s cubic-bezier(0.4, 0, 0.2, 1);
 
 // ── Base ──────────────────────────────────────────────────────────────────────
+.is-first-load{
+    .site-header{
+        opacity: 0;
+    }
+}
 .site-header {
     @include fluid(padding-block-start, 14px, 18px);
 
@@ -187,7 +192,7 @@ $nav-transition: 0.22s cubic-bezier(0.4, 0, 0.2, 1);
 
             width: 100%;
 
-            a {
+            .nav-link {
 
                 justify-content: space-between;
 
@@ -204,7 +209,7 @@ $nav-transition: 0.22s cubic-bezier(0.4, 0, 0.2, 1);
 
             &.has-dropdown {
 
-                & > a {
+                & > .nav-link {
                     @include fluid(margin-block-end, 16px, 22px);
                 }
 
@@ -409,7 +414,7 @@ $nav-transition: 0.22s cubic-bezier(0.4, 0, 0.2, 1);
 
         display: flex;
         align-items: center;
-
+        cursor: pointer;
         gap: 8px;
 
         color: white;

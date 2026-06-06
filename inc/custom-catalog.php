@@ -84,7 +84,7 @@ function shri_catalog_shortcode( $atts ) {
 
     <section class="solutions_grid" id="<?php echo esc_attr( $uid ); ?>" aria-label="<?php echo esc_attr( $atts['title'] ); ?>">
 
-        <div class="shri-catalog-grid">
+        <div class="shri-catalog-grid fade-up-group">
 
             <?php while ( $index < $total ) :
                 $cols      = $row_pattern[ $row_num % count( $row_pattern ) ];
@@ -95,7 +95,7 @@ function shri_catalog_shortcode( $atts ) {
             <div class="shri-catalog-row shri-catalog-row--<?php echo esc_attr( $count ); ?>col">
 
                 <?php foreach ( $row_items as $item ) : ?>
-                <div class="shri-catalog-grid__item">
+                <div class="shri-catalog-grid__item fade-up-item">
                     <figure>
                         <?php if ( $item['thumb'] ) : ?>
                             <img

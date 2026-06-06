@@ -22,8 +22,7 @@ class Nav_Walker extends Walker_Nav_Menu {
             $output .= '<li class="nav-item' . ( $has_children ? ' has-dropdown' : '' ) . '">';
 
             if ( $has_children ) {
-                $output .= '<a'
-                    . ' href="' . esc_url( $item->url ) . '"'
+                $output .= '<span'
                     . ' class="nav-link"'
                     . ' aria-haspopup="true"'
                     . ' aria-expanded="false"'
@@ -33,16 +32,16 @@ class Nav_Walker extends Walker_Nav_Menu {
             }
 
             $output .= '<span class="hover-text">'
-                     . '<span class="hover-text__inner">' . $title . '</span>'
-                     . '</span>';
+                    . '<span class="hover-text__inner">' . $title . '</span>'
+                    . '</span>';
 
             if ( $has_children ) {
                 $output .= '<svg xmlns="http://www.w3.org/2000/svg" width="8" height="5" fill="none">'
-                         . '<path fill="#fff" stroke="#fff" d="M6.548.579 3.75 3.305.95.577A.268.268 0 0 0 .52.66a.255.255 0 0 0 .056.281l2.977 2.9a.28.28 0 0 0 .391 0l2.977-2.9a.255.255 0 0 0 0-.365.27.27 0 0 0-.374 0z"/>'
-                         . '</svg>';
+                        . '<path fill="#fff" stroke="#fff" d="M6.548.579 3.75 3.305.95.577A.268.268 0 0 0 .52.66a.255.255 0 0 0 .056.281l2.977 2.9a.28.28 0 0 0 .391 0l2.977-2.9a.255.255 0 0 0 0-.365.27.27 0 0 0-.374 0z"/>'
+                        . '</svg>';
             }
 
-            $output .= '</a>';
+            $output .= $has_children ? '</span>' : '</a>';
 
         } elseif ( $depth === 1 ) {
             $thumb_url = $this->get_item_thumbnail( $item );

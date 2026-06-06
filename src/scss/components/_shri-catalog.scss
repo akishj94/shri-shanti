@@ -160,6 +160,9 @@ $catalog-card-mobile-vw: 75vw;
     display: block;
     transition: transform 0.5s $ease-out-expo;
   }
+  @media(orientation: landscape) and (max-height: 500px){
+    aspect-ratio: 1.5;
+  }
 }
 
 .shri-catalog-placeholder {

@@ -7,20 +7,22 @@ import { setInitialStates, initScrollAnimations } from './animations';
 gsap.registerPlugin(ScrollTrigger);
 // ─── Smooth scroll (Lenis) ─────────────────────────────────
 
-const lenis = new Lenis({
-  duration: 1.2,
-  easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-  prevent: (node) => {
-    return node.closest('.modalContainer');
+function initLenis(){
+    const lenis = new Lenis({
+    duration: 1.2,
+    easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+    prevent: (node) => {
+        return node.closest('.modalContainer');
+    }
+    });
+
+    lenis.on('scroll', ScrollTrigger.update);
+
+    gsap.ticker.add((time) => {
+    lenis.raf(time * 1000);
+    });
+    gsap.ticker.lagSmoothing(0);
 }
-});
-
-lenis.on('scroll', ScrollTrigger.update);
-
-gsap.ticker.add((time) => {
-  lenis.raf(time * 1000);
-});
-gsap.ticker.lagSmoothing(0);
 
 function pageEnter() {
 //   gsap.from('[data-animate]', {
@@ -36,57 +38,109 @@ function pageEnter() {
 //   });
 }
 
+// function stickyPanels() {
+//   const section   = document.querySelector('.trusted_leader');
+//   const separator = section?.querySelector('.bordered_separator span');
+  
+//   const panels    = Array.from(section?.querySelectorAll('.accordion_panel') ?? []);
+
+//   if (!section || !panels.length) return;
+
+//   const panelCol = section?.querySelector('.accordion_col');
+//   if (panelCol) {
+//         const clone = panelCol.cloneNode(true);
+//         clone.setAttribute('aria-hidden', 'true');
+//         panelCol.insertAdjacentElement('afterend', clone);
+//     }
+
+//   const getContent = (panel) => panel.querySelector('.wp-block-group__inner-container > .wp-block-group');
+
+//   const tl = gsap.timeline({ paused: true });
+
+//   const segDuration = 1 / (panels.length - 1 || 1);
+//   const totalScroll = window.innerHeight * 0.5 * (panels.length - 1) + window.innerHeight * 0.3;
+
+//   panels.forEach((panel, i) => {
+//     const content = getContent(panel);
+//     if (!content) return;
+
+//     gsap.set(content, {
+//       opacity:  i === 0 ? 1 : 0,
+//       y:        i === 0 ? 0 : 14,
+//       height:   i === 0 ? content.scrollHeight : 0,
+//       overflow: 'hidden',
+//     });
+
+//     if (i === 0) return;
+
+//     const segStart = (i - 1) * segDuration;
+
+//     tl.to(getContent(panels[i - 1]), { opacity: 0, y: -10, height: 0, ease: 'power2.inOut', duration: segDuration }, segStart);
+//     tl.to(content, { opacity: 1, y:   0, height: content.scrollHeight,  ease: 'power2.inOut', duration: segDuration }, segStart);
+//   });
+
+//   ScrollTrigger.create({
+//     trigger: section,
+//     start:   'top top',
+//     end:     `+=${totalScroll * 1.3}`,
+//     pin:     true,
+//     scrub:   1,
+//     invalidateOnRefresh: true, // ← already present, good
+//     markers: false,
+//     onUpdate: self => {
+//       tl.progress(self.progress);
+//       gsap.set(separator, { width: `${self.progress * 100}%` });
+//     },
+//     onRefresh: self => {
+//       tl.progress(self.progress);
+//       gsap.set(separator, { width: `${self.progress * 100}%` });
+//     },
+//   });
+// }
 function stickyPanels() {
-  const section   = document.querySelector('.trusted_leader');
-  const separator = section?.querySelector('.bordered_separator span');
-  const panels    = Array.from(section?.querySelectorAll('.accordion_panel') ?? []);
 
-  if (!section || !panels.length) return;
+    const section   = document.querySelector('.trusted_leader');
+    const separator = section?.querySelector('.bordered_separator span');
+    const panels    = gsap.utils.toArray('.trusted_leader .accordion_panel');
 
-  const getContent = (panel) => panel.querySelector('.wp-block-group__inner-container > .wp-block-group');
+    if (!section || !panels.length) return;
 
-  const tl = gsap.timeline({ paused: true });
+    const getContent = p => p.querySelector('.wp-block-group__inner-container > .wp-block-group');
+    const segDuration = 1 / (panels.length - 1 || 1);
 
-  const segDuration = 1 / (panels.length - 1 || 1);
-  const totalScroll = window.innerHeight * 0.5 * (panels.length - 1) + window.innerHeight * 0.3;
+    const tl = gsap.timeline({ paused: true });
 
-  panels.forEach((panel, i) => {
-    const content = getContent(panel);
-    if (!content) return;
+        panels.forEach((panel, i) => {
+            const content = getContent(panel);
+            if (!content) return;
 
-    gsap.set(content, {
-      opacity:  i === 0 ? 1 : 0,
-      y:        i === 0 ? 0 : 14,
-      height:   i === 0 ? content.scrollHeight : 0,
-      overflow: 'hidden',
+            gsap.set(content, {
+                opacity:  i === 0 ? 1 : 0,
+                y:        i === 0 ? 0 : 14,
+                height:   i === 0 ? 'auto' : 0,
+                overflow: 'hidden',
+            });
+
+            if (i === 0) return;
+
+            const pos = `${(i - 1) * segDuration}`;
+            tl.to(getContent(panels[i - 1]), { opacity: 0, y: -10, height: 0, ease: 'power2.inOut', duration: segDuration }, pos);
+            tl.to(content, { opacity: 1, y:   0, height: 'auto', ease: 'power2.inOut', duration: segDuration }, pos);
+        });
+
+    ScrollTrigger.create({
+        trigger: section,
+        start:   'top top',
+        end: 'bottom top',
+        pin:     true,
+        scrub:   1,
+        invalidateOnRefresh: true,
+        onUpdate:  self => { tl.progress(self.progress); gsap.set(separator, { width: `${self.progress * 100}%` }); },
+        onRefresh: self => { tl.progress(self.progress); gsap.set(separator, { width: `${self.progress * 100}%` }); },
     });
-
-    if (i === 0) return;
-
-    const segStart = (i - 1) * segDuration;
-
-    tl.to(getContent(panels[i - 1]), { opacity: 0, y: -10, height: 0,                    ease: 'power2.inOut', duration: segDuration }, segStart);
-    tl.to(content,                   { opacity: 1, y:   0, height: content.scrollHeight,  ease: 'power2.inOut', duration: segDuration }, segStart);
-  });
-
-  ScrollTrigger.create({
-    trigger: section,
-    start:   'top top',
-    end:     `+=${totalScroll * 1.3}`,
-    pin:     true,
-    scrub:   1,
-    invalidateOnRefresh: true, // ← already present, good
-    markers: false,            // ← remove markers
-    onUpdate: self => {
-      tl.progress(self.progress);
-      gsap.set(separator, { width: `${self.progress * 100}%` });
-    },
-    onRefresh: self => {
-      tl.progress(self.progress);
-      gsap.set(separator, { width: `${self.progress * 100}%` });
-    },
-  });
 }
+
+
 
 function initPatternBg() {
   const section = document.querySelector(".learn_solutions");
@@ -731,17 +785,10 @@ function initHeaderTheme() {
   });
 }
 
-function initLoadAnimations() {
-
-     const isHardRefresh = !sessionStorage.getItem('headerAnimated') 
-    || performance.getEntriesByType('navigation')[0]?.type === 'reload';
-
-  if (!isHardRefresh) return;
-  sessionStorage.setItem('headerAnimated', '1');
-  
-    const header = document.querySelector('.site-header');
+function initHeaderAnimations() {
+    const header = document.querySelector('.is-first-load .site-header');
     if (!header) return;
-
+    gsap.set(header, {autoAlpha: 1});
     const logo = header.querySelector('.site_branding a');
     const navItems = header.querySelectorAll('.nav-list > .nav-item');
 
@@ -822,16 +869,16 @@ function initBrandIconAnim() {
     },
   });
 }
-setInitialStates();
+
+
 function init() {
-  
   initPatternBg();
   initBrandIconAnim();
-//   initShriCatalogScroll();
   initHeaderTheme();
   initNav();
+  initShriCatalogScroll();
   stickyPanels();
-  initLoadAnimations();
+  
 }
 
 function waitForImages() {
@@ -849,17 +896,21 @@ function waitForImages() {
     )
   );
 }
-
-document.addEventListener('DOMContentLoaded', async () => {
-  await Promise.all([
+setInitialStates();
+document.addEventListener('DOMContentLoaded', () => {
+    
+  Promise.all([
     document.fonts.ready,
     waitForImages(),
-  ]);
-
-  requestAnimationFrame(() => {
+  ]).then(() => {
+    initLenis();
     init();
-    initScrollAnimations();
-    ScrollTrigger.refresh(true);
+    setTimeout(()=>{
+        document.documentElement.classList.remove("is-loading");
+        initHeaderAnimations();
+        initScrollAnimations();
+    }, 500);
+    ScrollTrigger.refresh(true); 
   });
 });
 
@@ -869,5 +920,5 @@ window.addEventListener('resize', () => {
   clearTimeout(resizeTimer);
   resizeTimer = setTimeout(() => {
     ScrollTrigger.refresh();
-  }, 250);
+  }, 150);
 });

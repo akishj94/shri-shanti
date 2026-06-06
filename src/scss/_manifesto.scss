@@ -20,7 +20,8 @@
     .scale-down{
         display: grid;
         min-height: 100lvh;
-        @include fluid(padding-block-start, 170px, 255px);
+        // @include fluid(padding-block-start, 170px, 255px);
+        padding-block-start: rem(100px);
         @include fluid(padding-block-end, 42px, 60px);
     }
     h1{

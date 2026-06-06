@@ -50,6 +50,15 @@
             transform: none;
             img{
                 max-height: none;
+                width: auto;
+            }
+        }
+    }
+    @media (max-width: 992px) and (orientation: landscape){
+        figure{
+            img{
+                max-height: 35vh;
+                width: auto;
             }
         }
     }

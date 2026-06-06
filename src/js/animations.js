@@ -7,86 +7,27 @@ gsap.registerPlugin(ScrollTrigger, SplitText);
 
 // ─────────────────────────────────────────────────────────────
 // 1. SET INITIAL STATES
-//    Call once on DOMContentLoaded — before any animation runs.
-//    Ensures no flash of un-animated content.
 // ─────────────────────────────────────────────────────────────
 
 export function setInitialStates() {
 
-  // Fade up
   gsap.set('.fade-up', { opacity: 0, y: 40 });
-
-  // Fade in
   gsap.set('.fade-in', { opacity: 0 });
+  gsap.set('.scale-down', { transformOrigin: 'top center' });
 
-  // Staggered children — fade up
   document.querySelectorAll('.fade-up-group').forEach((section) => {
     const items = section.querySelectorAll('.fade-up-item');
     if (items.length) gsap.set(items, { opacity: 0, y: 40 });
   });
 
-  // Staggered children — fade in
   document.querySelectorAll('.fade-in-group').forEach((section) => {
     const items = section.querySelectorAll('.fade-in-item');
     if (items.length) gsap.set(items, { opacity: 0 });
   });
-
-  // Mask up
-   gsap.utils.toArray('.mask-up').forEach((el) => {
-    SplitText.create(el, {
-      type: 'lines,words',
-      mask: 'lines',
-      autoSplit: true,
-      onSplit: (self) => {
-        gsap.set(self.words, { yPercent: 110 });
-
-        return gsap.to(self.words, {
-          yPercent: 0,
-          duration: 0.8,
-          ease: 'power3.out',
-          stagger: 0.04,
-          scrollTrigger: {
-            trigger: el,
-            start: 'top 99%',
-            once: true,
-          },
-        });
-      },
-    });
-  });
-  // Char opacity — chars start at 0.2
-  // document.querySelectorAll('.fade-text').forEach((el) => {
-  //   const split = new SplitText(el, { type: 'chars', autoSplit: true, });
-  //   el._split = split;
-  //   gsap.set(split.chars, { opacity: 0.2 }); // ← was split.words
-  // });
-  gsap.utils.toArray('.fade-text').forEach((el) => {
-    SplitText.create(el, {
-      type: 'chars',
-      autoSplit: true,
-      onSplit: (self) => {
-        gsap.set(self.chars, { opacity: 0.2 });
-
-        return gsap.to(self.chars, {
-          opacity: 1,
-          stagger: 0.02,
-          ease: 'none',
-          duration: 'none',
-          scrollTrigger: {
-            trigger: el,
-            start: 'top 99%',
-          },
-        });
-      },
-    });
-  });
-  // Scale Down
-  gsap.set('.scale-down', { transformOrigin: 'top center' });
 }
 
 // ─────────────────────────────────────────────────────────────
 // 2. SCROLL ANIMATIONS
-//    Call after setInitialStates().
 // ─────────────────────────────────────────────────────────────
 
 export function initScrollAnimations() {
@@ -151,40 +92,70 @@ export function initScrollAnimations() {
     });
   });
 
-  // ── Char opacity ───────────────────────────────────────
-  // document.querySelectorAll('.fade-text').forEach((el) => {
-  //   if (!el._split) return;
+  // ── Mask up ────────────────────────────────────────────
+  gsap.utils.toArray('.mask-up').forEach((el) => {
+    SplitText.create(el, {
+      type: 'lines,words',
+      mask: 'lines',
+      autoSplit: true,
+      onSplit: (self) => {
+        gsap.set(self.words, { yPercent: 110 });
 
-  //   ScrollTrigger.create({
-  //     trigger: el,
-  //     start: 'top 99%',
-  //     once: true,
-  //     onEnter: () => gsap.to(el._split.chars, {
-  //       opacity: 1,
-  //       duration: 0,
-  //       ease: 'none',
-  //       stagger: 0.02,
-  //     }),
-  //   });
-  // });
-  // ── Scale away (mobile only) ───────────────────────────
-  document.querySelectorAll('.scale-down').forEach((el) => {
-    const target = el.firstElementChild;
-
-    ScrollTrigger.matchMedia({
-      '(min-width: 768px)': () => {
-        gsap.to(target, {
-          scale: 0.85,
-          ease: 'none',
-          y: '60%',
+        return gsap.to(self.words, {
+          yPercent: 0,
+          duration: 0.8,
+          ease: 'power3.out',
+          stagger: 0.04,
           scrollTrigger: {
             trigger: el,
-            start: 'top top',
-            end: 'bottom+=50% top',
-            scrub: true,
+            start: 'top 99%',
+            once: true,
           },
         });
       },
+    });
+  });
+
+  // ── Fade text (char opacity) ───────────────────────────
+  gsap.utils.toArray('.fade-text').forEach((el) => {
+    SplitText.create(el, {
+      type: 'chars',
+      autoSplit: true,
+      onSplit: (self) => {
+        gsap.set(self.chars, { opacity: 0.2 });
+
+        return gsap.to(self.chars, {
+          opacity: 1,
+          stagger: 0.02,
+          ease: 'none',
+          duration: 0,
+          scrollTrigger: {
+            trigger: el,
+            start: 'top 80%',
+          },
+        });
+      },
+    });
+  });
+
+  // ── Scale down (desktop only) ──────────────────────────
+  const mm = gsap.matchMedia();
+
+  document.querySelectorAll('.scale-down').forEach((el) => {
+    const target = el.firstElementChild;
+
+    mm.add('(min-width: 768px)', () => {
+      gsap.to(target, {
+        scale: 0.85,
+        y: '60%',
+        ease: 'none',
+        scrollTrigger: {
+          trigger: el,
+          start: 'top top',
+          end: 'bottom+=50% top',
+          scrub: true,
+        },
+      });
     });
   });
 }
