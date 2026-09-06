@@ -41,7 +41,3 @@
     </div>
   </div>  
 </header>
-
-<div class="site__loader">
-    
-  </div>

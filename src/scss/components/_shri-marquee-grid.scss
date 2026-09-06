@@ -20,6 +20,7 @@
         flex: 0 0 auto;
         @include fluid(gap, 24px, 51px);
         @include fluid(padding-inline-end, 24px, 51px);
+        will-change: transform;
         .grid__item {
             display: flex;
             align-items: center;
@@ -32,8 +33,11 @@
             @include fluid(padding-inline, 36px, 52px);
             min-width: 165px;
             img {
-                object-fit: contain;
+                object-fit: scale-down;
                 display: block;
+                max-width: 165px;
+                aspect-ratio: 1/1;
+                height: 100%;
             }
         }
         @include bp('md'){
@@ -47,6 +51,6 @@
 
 @keyframes marquee {
     to {
-        transform: translate(-50%);
+        transform: translate(-100%);
     }
 }

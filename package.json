@@ -6,10 +6,10 @@
   "scripts": {
     "js": "esbuild src/js/index.js --bundle --sourcemap --outfile=assets/js/main.js",
     "css": "sass src/scss/main.scss assets/css/main.css --source-map",
-    "css:blog": "sass src/scss/blog_boilerplate.scss assets/css/blog.css --source-map",
+    "css:blog": "sass src/scss/blog.scss assets/css/blog.css --source-map",
     "js:prod": "esbuild src/js/index.js --bundle --minify --outfile=assets/js/main.js",
     "css:prod": "sass src/scss/main.scss assets/css/main.css --style=compressed --no-source-map",
-    "css:blog:prod": "sass src/scss/blog_boilerplate.scss assets/css/blog.css --style=compressed --no-source-map",
+    "css:blog:prod": "sass src/scss/blog.scss assets/css/blog.css --style=compressed --no-source-map",
     "js:watch": "npm run js -- --watch",
     "css:watch": "sass --watch src/scss:assets/css",
     "build": "npm-run-all js:prod css:prod css:blog:prod",

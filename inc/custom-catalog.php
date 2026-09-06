@@ -69,7 +69,8 @@ function shri_catalog_shortcode( $atts ) {
             $items[] = [
                 'thumb' => get_the_post_thumbnail_url( get_the_ID(), 'large' ),
                 'title' => get_the_title(),
-                'desc'  => get_the_excerpt(),
+                'desc'  => get_the_content(),
+                'id'    => get_the_ID(),
             ];
         }
         wp_reset_postdata();
@@ -96,21 +97,35 @@ function shri_catalog_shortcode( $atts ) {
 
                 <?php foreach ( $row_items as $item ) : ?>
                 <div class="shri-catalog-grid__item fade-up-item">
-                    <figure>
-                        <?php if ( $item['thumb'] ) : ?>
-                            <img
-                                src="<?php echo esc_url( $item['thumb'] ); ?>"
-                                alt="<?php echo esc_attr( $item['title'] ); ?>"
-                                loading="lazy"
-                            />
-                        <?php else : ?>
-                            <div class="shri-catalog-placeholder" aria-hidden="true"></div>
+                    <div class="shriCatalog_media grid">
+                        <figure>
+                            <?php if ( $item['thumb'] ) : ?>
+                                <img
+                                    src="<?php echo esc_url( $item['thumb'] ); ?>"
+                                    alt="<?php echo esc_attr( $item['title'] ); ?>"
+                                    loading="lazy"
+                                />
+                            <?php else : ?>
+                                <div class="shri-catalog-placeholder" aria-hidden="true"></div>
+                            <?php endif; ?>                        
+                        </figure>                        
+                        
+                        <?php
+                            $product_details = get_post_meta( $item['id'], '_shri_catalog_product_details', true );
+                            if ( $product_details ) :
+                            ?>
+                                <input type="checkbox" id="show_details-<?php echo esc_attr( $item['id'] ); ?>" name="show_details[<?php echo esc_attr( $item['id'] ); ?>]">
+                                <label for="show_details-<?php echo esc_attr( $item['id'] ); ?>">&#x24D8; More Details</label>
+                                <div class="shri-catalog-grid__caption">
+                                    <?php echo nl2br( wp_kses_post( $product_details ) ); ?>
+                                </div>
                         <?php endif; ?>
-                    </figure>
-                    <h5><?php echo esc_html( $item['title'] ); ?></h5>
-                    <?php if ( $item['desc'] ) : ?>
-                        <p><?php echo esc_html( $item['desc'] ); ?></p>
-                    <?php endif; ?>
+                        <h5><?php echo esc_html( $item['title'] ); ?></h5>
+                        <?php if ( $item['desc'] ) : ?>
+                            <p><?php echo $item['desc']; ?></p>
+                        <?php endif; ?>
+                        
+                    </div>                    
                 </div>
                 <?php endforeach; ?>
 

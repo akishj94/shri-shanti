@@ -37,66 +37,6 @@ function pageEnter() {
 //     video.removeAttribute('controls');
 //   });
 }
-
-// function stickyPanels() {
-//   const section   = document.querySelector('.trusted_leader');
-//   const separator = section?.querySelector('.bordered_separator span');
-  
-//   const panels    = Array.from(section?.querySelectorAll('.accordion_panel') ?? []);
-
-//   if (!section || !panels.length) return;
-
-//   const panelCol = section?.querySelector('.accordion_col');
-//   if (panelCol) {
-//         const clone = panelCol.cloneNode(true);
-//         clone.setAttribute('aria-hidden', 'true');
-//         panelCol.insertAdjacentElement('afterend', clone);
-//     }
-
-//   const getContent = (panel) => panel.querySelector('.wp-block-group__inner-container > .wp-block-group');
-
-//   const tl = gsap.timeline({ paused: true });
-
-//   const segDuration = 1 / (panels.length - 1 || 1);
-//   const totalScroll = window.innerHeight * 0.5 * (panels.length - 1) + window.innerHeight * 0.3;
-
-//   panels.forEach((panel, i) => {
-//     const content = getContent(panel);
-//     if (!content) return;
-
-//     gsap.set(content, {
-//       opacity:  i === 0 ? 1 : 0,
-//       y:        i === 0 ? 0 : 14,
-//       height:   i === 0 ? content.scrollHeight : 0,
-//       overflow: 'hidden',
-//     });
-
-//     if (i === 0) return;
-
-//     const segStart = (i - 1) * segDuration;
-
-//     tl.to(getContent(panels[i - 1]), { opacity: 0, y: -10, height: 0, ease: 'power2.inOut', duration: segDuration }, segStart);
-//     tl.to(content, { opacity: 1, y:   0, height: content.scrollHeight,  ease: 'power2.inOut', duration: segDuration }, segStart);
-//   });
-
-//   ScrollTrigger.create({
-//     trigger: section,
-//     start:   'top top',
-//     end:     `+=${totalScroll * 1.3}`,
-//     pin:     true,
-//     scrub:   1,
-//     invalidateOnRefresh: true, // ← already present, good
-//     markers: false,
-//     onUpdate: self => {
-//       tl.progress(self.progress);
-//       gsap.set(separator, { width: `${self.progress * 100}%` });
-//     },
-//     onRefresh: self => {
-//       tl.progress(self.progress);
-//       gsap.set(separator, { width: `${self.progress * 100}%` });
-//     },
-//   });
-// }
 function stickyPanels() {
 
     const section   = document.querySelector('.trusted_leader');
@@ -139,8 +79,6 @@ function stickyPanels() {
         onRefresh: self => { tl.progress(self.progress); gsap.set(separator, { width: `${self.progress * 100}%` }); },
     });
 }
-
-
 
 function initPatternBg() {
   const section = document.querySelector(".learn_solutions");
@@ -581,7 +519,9 @@ function initNav() {
 
     function resetMobileState() {
         resetCommon();
-        gsap.set([header, logo, mobileBg, ...toggler.children], { clearProps: 'all' });
+        gsap.set(header, { clearProps: 'height' });
+        gsap.set(logo, { clearProps: 'filter' });
+        gsap.set([mobileBg, ...toggler.children], { clearProps: 'all' });
         gsap.set(getStaggerItems(), { opacity: 0, y: 12 });
         siteNav.classList.remove('is-visible');
         navList.querySelectorAll('.nav-item.is-open').forEach(closeMobileSubmenu);        
@@ -589,7 +529,9 @@ function initNav() {
 
     function resetDesktopState() {
         resetCommon();
-        gsap.set([header, logo, mobileBg, siteNav, navList, ...getStaggerItems(), ...toggler.children], { clearProps: 'all' });
+        gsap.set(header, { clearProps: 'height' });
+        gsap.set(logo, { clearProps: 'filter' });
+        gsap.set([mobileBg, siteNav, navList, ...getStaggerItems(), ...toggler.children], { clearProps: 'all' });
         siteNav.classList.remove('is-visible');
         navList.querySelectorAll('.nav-item.is-open').forEach(item => item.classList.remove('is-open'));
         navList.querySelectorAll('.nav-dropdown--default .nav-dropdown-item')
@@ -763,26 +705,35 @@ function initNav() {
 
     isMobile() ? resetMobileState() : resetDesktopState();
 }
-function initHeaderTheme() {
+
+let headerThemeTriggers = [];
+
+export function initHeaderTheme() {
   const header = document.querySelector('.site-header');
   if (!header) return;
 
-  const sections = document.querySelectorAll('.header--theme-light');
+  headerThemeTriggers.forEach(t => t.kill());
+  headerThemeTriggers = [];
+
+  const sections = Array.from(document.querySelectorAll('.header--theme-light')).map(el => {
+    const parent = el.parentElement;
+    return parent && parent.classList.contains('pin-spacer') ? parent : el;
+  });
+
   if (!sections.length) return;
 
   const headerHeight = header.offsetHeight + 2 + 'px';
 
-  sections.forEach(section => {
-    ScrollTrigger.create({
-      trigger:     section,
-      start:       `top ${headerHeight}`,
-      end:         `bottom ${headerHeight}`,
-      onEnter:     () => header.setAttribute('data-theme', 'light'),
-      onEnterBack: () => header.setAttribute('data-theme', 'light'),
-      onLeave:     () => header.removeAttribute('data-theme'),
-      onLeaveBack: () => header.removeAttribute('data-theme'),
-    });
-  });
+  headerThemeTriggers = sections.map(section => ScrollTrigger.create({
+    trigger:             section,
+    start:               `top ${headerHeight}`,
+    end:                 `bottom ${headerHeight}`,
+    invalidateOnRefresh: true,
+    onEnter:             () => header.setAttribute('data-theme', 'light'),
+    onEnterBack:         () => header.setAttribute('data-theme', 'light'),
+    onLeave:             () => header.removeAttribute('data-theme'),
+    onLeaveBack:         () => header.removeAttribute('data-theme'),
+  }));
 }
 
 function initHeaderAnimations() {
@@ -874,27 +825,35 @@ function initBrandIconAnim() {
 function init() {
   initPatternBg();
   initBrandIconAnim();
-  initHeaderTheme();
+  
   initNav();
   initShriCatalogScroll();
   stickyPanels();
-  
+  initHeaderTheme();
 }
 
 function waitForImages() {
   const imgs = [...document.querySelectorAll('img:not([loading="lazy"])')];
   if (!imgs.length) return Promise.resolve();
 
-  return Promise.all(
-    imgs.map(img =>
-      img.complete
-        ? Promise.resolve()
-        : new Promise(resolve => {
-            img.addEventListener('load',  resolve, { once: true });
-            img.addEventListener('error', resolve, { once: true });
-          })
-    )
-  );
+  return Promise.all(imgs.map(decodeImage));
+}
+
+function decodeImage(img) {
+  // Broken image (404, bad src) — naturalWidth is 0 even though `complete` is true.
+  // Nothing to decode, just resolve so it doesn't block the rest.
+  if (img.complete && img.naturalWidth === 0) return Promise.resolve();
+
+  if (img.complete) {
+    return img.decode ? img.decode().catch(() => {}) : Promise.resolve();
+  }
+
+  return new Promise(resolve => {
+    img.addEventListener('load', () => {
+      img.decode ? img.decode().then(resolve, resolve) : resolve();
+    }, { once: true });
+    img.addEventListener('error', resolve, { once: true });
+  });
 }
 setInitialStates();
 document.addEventListener('DOMContentLoaded', () => {

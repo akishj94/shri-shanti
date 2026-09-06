@@ -35,7 +35,9 @@ main{
   width: 100%;
 }
 .container_medium{
-  max-width: calc(54rem + 30px);
+  @include bp('lg'){
+    max-width: calc(54rem + 30px);
+  }
   margin: auto;
   width: 100%;
   padding-inline: 15px;

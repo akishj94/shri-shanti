@@ -8,7 +8,6 @@
         color: white;
         min-height: 100svh;
         display: grid;
-        background-image: url('../../assets/images/hero-img.webp');
         background-size: cover;
         background-repeat: no-repeat;
         background-position: center;
@@ -37,7 +36,7 @@
         .scale-down{
             // @include fluid(padding-block-start, 240px, 352px);
             padding-block-end: rem(27px);
-            padding-block-start: rem(70px);
+            padding-block-start: rem(150px);
         }
         p{
             max-width: clamp(340px, 30vw, 372px);
@@ -59,7 +58,9 @@
                 margin-left: auto;
             }
         }
-        
+        &>.wp-block-group__inner-container{
+            position: static !important;
+        }
     }
     .featureGrid_home{
         background-color: #F8F8F8;
@@ -88,12 +89,16 @@
                     padding-inline: rem(20px);
                     border-radius: rem(10px);
                     width: max(70vw, 300px);
-                    aspect-ratio: 4 / 2;
                     scroll-snap-align: start;
+                    height: 100%;
                     figure{
                         margin-block-end: auto;
                         @include fluid(padding-block-end, 36px, 55px);
                         @include fluid(width, 48px, 55px);
+                    }
+                    @include bp('md'){
+                        height: auto;
+                        aspect-ratio: 4 / 2;
                     }
                     p{
                         margin: 0px;
@@ -171,7 +176,7 @@
                     justify-content: space-between;
                     p{
                         &:first-of-type{
-                            max-width: min(50vw, rem(400px));
+                            max-width: min(50vw, rem(420px));
                             flex: 1;
                         }
                         &:last-of-type{
@@ -277,10 +282,16 @@
             width: 100%;
             figure{
                 margin-block-start: 12px;
-                img{
+                img, video{
                     margin: auto;
                     border-radius: 16px;
                     height: auto;
+                    object-fit: cover;
+                    pointer-events: none;
+                    aspect-ratio: unset !important;
+                    @include bp('lg'){
+                        width: 70%;
+                    }
                 }
             }
         }
@@ -393,15 +404,16 @@
                 }
                 p{
                     margin: 0px;
-                    &:last-of-type{
-                        @extend %shri_text_sm;
-                        margin: 0px;
-                        color: $color-bg;
-                    }
+                    // &:last-of-type{
+                    //     @extend %shri_text_sm;
+                    //     margin: 0px;
+                    //     color: $color-bg;
+                    // }
                 }
             }
             img{
-                max-height: 63px;
+                width: 90px;
+                object-fit: contain;
             }
         }
         @include bp('md'){
@@ -483,6 +495,22 @@
                         height: 100%;
                     }
                 }
+            }
+        }
+    }
+}
+.page-template-default{
+    &.privacy-policy{
+        @include fluid(padding-block-start, 100px, 130px);
+        main.site-main{
+            ul{
+                padding: revert;
+            }
+        }
+        .container_medium{
+            padding-inline: 0px;
+            @include bp('md'){
+                padding-inline: 15px;
             }
         }
     }

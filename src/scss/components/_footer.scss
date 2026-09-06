@@ -30,7 +30,7 @@
         }
         .footerLogoText{
             width: 100%;
-            @include fluid(max-width, 220px, 355px, 320px, 992px);
+            @include fluid(max-width, 170px, 355px, 320px, 992px);
         }
     }
     .footerNav{
@@ -87,6 +87,7 @@
                 color: #FF9474;
                 @include fluid(column-gap, 24px, 38px);
                 row-gap: 12px;
+                justify-content: end;
                 a{
                     color: inherit;
                     font-weight: bold;
@@ -161,7 +162,7 @@
             text-align: right;
         }
         .footerContact{
-            grid-template-columns: auto auto;
+            grid-template-columns: 1fr 1fr;
             .contactInfo{
                 ul{
                     li{
@@ -183,6 +184,9 @@
                 flex-direction: row;
                 align-items: end;
             }
-        }        
+        }
+        .footerContact{
+            grid-template-columns: auto auto;
+        }
      }
 }

@@ -103,3 +103,9 @@
         }
     }
 }
+.aspect_32{
+    img{
+        aspect-ratio: 3 / 1.2;
+        object-fit: cover;
+    }
+}

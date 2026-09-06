@@ -22,7 +22,7 @@
         'menu_class'      => 'nav-list',
     ]);
     ?>
-    <button class="site-btn" data-link="quote-form">
+    <button class="site-btn" data-link="contact-form">
         <span class="hover-text"><span class="hover-text__inner">Connect</span></span>
     </button>
 </nav>

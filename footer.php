@@ -1,4 +1,4 @@
-<footer class="site-footer" data-animate>
+<footer class="site-footer header--theme-light" data-animate>
   
   <div class="container">
     <div class="footer_branding flex align-center space-between">

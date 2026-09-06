@@ -6,14 +6,28 @@ import { SplitText } from 'gsap/SplitText';
 gsap.registerPlugin(ScrollTrigger, SplitText);
 
 // ─────────────────────────────────────────────────────────────
+// 0. HELPER FUNCTIONS
+// ─────────────────────────────────────────────────────────────
+function fixNestedInlineTags(container) {
+  container.querySelectorAll('em, strong, span, i, b, a, u, mark').forEach((tag) => {
+    gsap.set(tag, { display: 'inline' });
+  });
+}
+
+// ─────────────────────────────────────────────────────────────
 // 1. SET INITIAL STATES
 // ─────────────────────────────────────────────────────────────
 
 export function setInitialStates() {
 
-  gsap.set('.fade-up', { opacity: 0, y: 40 });
-  gsap.set('.fade-in', { opacity: 0 });
-  gsap.set('.scale-down', { transformOrigin: 'top center' });
+  const fadeUp = document.querySelectorAll('.fade-up');
+  if (fadeUp.length) gsap.set(fadeUp, { opacity: 0, y: 40 });
+
+  const fadeIn = document.querySelectorAll('.fade-in');
+  if (fadeIn.length) gsap.set(fadeIn, { opacity: 0 });
+
+  const scaleDown = document.querySelectorAll('.scale-down');
+  if (scaleDown.length) gsap.set(scaleDown, { transformOrigin: 'top center' });
 
   document.querySelectorAll('.fade-up-group').forEach((section) => {
     const items = section.querySelectorAll('.fade-up-item');
@@ -23,6 +37,9 @@ export function setInitialStates() {
   document.querySelectorAll('.fade-in-group').forEach((section) => {
     const items = section.querySelectorAll('.fade-in-item');
     if (items.length) gsap.set(items, { opacity: 0 });
+  });
+  document.querySelectorAll('video').forEach(video => {
+    video.removeAttribute('controls');
   });
 }
 
@@ -98,7 +115,9 @@ export function initScrollAnimations() {
       type: 'lines,words',
       mask: 'lines',
       autoSplit: true,
+      smartWrap: !el.classList.contains('no_smart_wrapper'),
       onSplit: (self) => {
+        fixNestedInlineTags(el);
         gsap.set(self.words, { yPercent: 110 });
 
         return gsap.to(self.words, {
@@ -111,6 +130,9 @@ export function initScrollAnimations() {
             start: 'top 99%',
             once: true,
           },
+          onComplete: ()=>{
+            self.revert();
+          }
         });
       },
     });
@@ -121,7 +143,9 @@ export function initScrollAnimations() {
     SplitText.create(el, {
       type: 'chars',
       autoSplit: true,
+      smartWrap: !el.classList.contains('no_smart_wrapper'),
       onSplit: (self) => {
+        fixNestedInlineTags(el);
         gsap.set(self.chars, { opacity: 0.2 });
 
         return gsap.to(self.chars, {
@@ -133,8 +157,12 @@ export function initScrollAnimations() {
             trigger: el,
             start: 'top 80%',
           },
+           onComplete: ()=>{
+            // self.revert();
+          }
         });
-      },
+       
+      },      
     });
   });
 

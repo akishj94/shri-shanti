@@ -20,38 +20,3 @@
 @use 'industries';
 @use 'blog_custom';
 @use 'not_found';
-
-#wpadminbar{
-    opacity: 0;
-    &:hover{
-        opacity: 1;
-    }
-}
-html{
-    margin: 0px !important;
-}
-
-// @view-transition{
-//     navigation: auto;
-// }
-// ::view-transition-old(root) {
-//   animation: fade-out 0.2s ease-out;
-// }
-
-// ::view-transition-new(root) {
-//   animation: fade-in 0.2s ease-in;
-// }
-
-// @keyframes fade-out {
-//   to {
-//     opacity: 0;
-//     filter: blur(10px);
-//   }
-// }
-
-// @keyframes fade-in {
-//   from {
-//     opacity: 0;
-//     filter: blur(10px);
-//   }
-// }
